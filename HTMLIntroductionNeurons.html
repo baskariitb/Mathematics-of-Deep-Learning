@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Neurons</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML ">
+    </script>
+    <style>
+        body, p, li, div {
+        color: black !important;
+        line-height: 1.6;
+        }
+        ol.latex-enumerate, ol.latex-enumerate li {
+            line-height: 1.6 !important;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        /* Updated TOC styles */
+        #toc-panel {
+            font-size: 0.9em;
+        }
+        .toc-chapter, 
+        .toc-section, 
+        .toc-subsection {
+            color: black !important;
+        }
+        .toc-chapter a,
+        .toc-section a,
+        .toc-subsection a {
+            color: black !important;
+            text-decoration: none;
+        }
+        .toc-chapter.current {
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+        #toc-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #1a73e8;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #toc-panel {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            transition: left 0.3s ease-out;
+            will-change: transform;
+        }
+        #toc-panel.open {
+            left: 0;
+        }
+        #close-toc {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #content {
+            padding: 20px;
+            padding-top: 60px;
+            max-width: 100%;
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+        .toc-chapter {
+            margin-bottom: 10px;
+            border-left: 3px solid #94714B;
+            padding-left: 10px;
+        }
+        .toc-chapter.current {
+            background-color: #F0EAE4;
+        }
+        .chapter-link {
+            font-weight: bold;
+            color: #1a73e8;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .toc-sections {
+            margin-left: 15px;
+            display: none;
+        }
+        .toc-sections.expanded {
+            display: block;
+        }
+        .toc-section {
+           font-weight: bold;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .toc-subsection {
+            padding: 1.5px 0;
+            margin-left: 25px;
+            font-size: 0.95em;
+        }
+        .toc-subsubsection {
+            padding: 3px 0;
+            margin-left: 40px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        :target {
+            scroll-margin-top: 80px;
+            animation: highlight 1.5s ease;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(26, 115, 232, 0.1); }
+            100% { background-color: transparent; }
+        }
+        @media (max-width: 768px) {
+            #toc-panel {
+                width: 85%;
+                left: -90%;
+            }
+            #toc-panel.open {
+                left: 0;
+                box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            }
+            #content {
+                transition: transform 0.3s ease-out;
+            }
+            #toc-panel.open ~ #content {
+                transform: translateX(85%);
+            }
+        }
+        .note {
+  background-color: color-mix(in srgb, var(--primary) 7%, white);
+border: 5px solid var(--primary);
+  padding: 5px;
+  margin: 10px;
+}
+.problem {
+  background-color: color-mix(in srgb, var(--primary) 18%, white);
+border: 1px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.example {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 10px;
+  margin: 10px;
+}
+.remark {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 20px;
+  margin: 10px;
+}
+.definition {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px double var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.lemma {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.theorem {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.proofs {
+  background-color: var(--environmentBackground);
+border: 5px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.project {
+  background-color: var(--environmentBackground);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.hint {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.code {
+  background-color: color-mix(in srgb, var(--primary) 13%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.algorithm {
+  background-color: color-mix(in srgb, var(--primary) 5%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+    </style>
+</head>
+
+
+<body>
+    <button id="toc-button">☰ Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">×</button>
+       
+       <!-- Small Main Page Button -->
+<div style="text-align:right; margin-bottom: 10px;">
+  <a href="index.html" 
+     style="
+       background: var(--toc-primary, #94714B);
+       color: white;
+       padding: 4px 10px;
+       border-radius: 16px;
+       font-size: 0.75em;
+       font-weight: 900;
+       text-decoration: none;
+       display: inline-block;
+       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+     ">
+    Main Page
+  </a>
+</div>
+       
+        <div class="full-toc">
+
+            <div class="toc-chapter current">
+            <a href="HTMLIntroductionNeurons.html" class="chapter-link">
+                CH 1: Introduction to Neurons
+            </a>
+             <div class="toc-sections expanded">
+
+                <div class="toc-item ">
+                    <a href="HTMLIntroductionNeurons.html#introduction.neurons.ch">
+                        Introduction to Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#motivating.example.sec">
+                        Motivating Example
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#water-source-sink-control-problem">
+                        Water Source-Sink Control Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#electric.circuit.ssec">
+                        Electric Circuit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#linear.regression.subs">
+                        Linear Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#artificial.neurons.sec">
+                        Artificial Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#mathematical.formulation.subs">
+                        Mathematical Formulation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#comparison-with-biological-neurons">
+                        Comparison with Biological Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#learning.model.subs">
+                        Supervised Learning: An Overview
+                    </a>
+                </div>
+</div></div>
+
+            <div class="toc-chapter ">
+            <a href="HTMLPerceptrons.html" class="chapter-link">
+                CH 2: Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLPerceptrons.html#perceptrons.ch">
+                        Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#perceptrons.sec">
+                        Neuron Model
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#boolean-functions">
+                        Boolean Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#illustrative-datasets">
+                        Illustrative Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#separability-and-algorithm">
+                        Separability and Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#linear-separability">
+                        Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#perceptron.convergence.theorem.subs">
+                        Perceptron Convergence Theorem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#beyond-linear-separability">
+                        Beyond Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#feature-space-mapping">
+                        Feature Space Mapping
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSupportVectorMachine.html" class="chapter-link">
+                CH 3: Support Vector Machine
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSupportVectorMachine.html#support-vector-machine">
+                        Support Vector Machine
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#linearly-separable-dataset">
+                        Linearly Separable Dataset
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#hard-and-soft-margins">
+                        Hard and Soft Margins
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#loss-function-form">
+                        Loss-function form
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#subgradient-descent-algorithm">
+                        Subgradient Descent Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#dual-optimazation-problem">
+                        Dual Optimazation Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#nonlinearly-separable-datasets">
+                        Nonlinearly Separable Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-method-implicit-feature-mapping">
+                        Kernel Method: Implicit Feature Mapping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-trick">
+                        Kernel Trick
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLMultilayerPerceptrons.html" class="chapter-link">
+                CH 4: Multilayer Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLMultilayerPerceptrons.html#multilayer.perceptrons.ch">
+                        Multilayer Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#fully-connected-feedforward-networks">
+                        Fully Connected Feedforward Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#definition-and-network-dimensions">
+                        Definition and Network Dimensions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#shallow-networks">
+                        Shallow Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-forward-propagation">
+                        Batch Forward Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-propagation">
+                        Batch Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#activation-functions">
+                        Activation Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#step-functions">
+                        Step Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#heaviside-function">
+                        Heaviside function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bipolar-function">
+                        Bipolar Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-functions-logistic-regression">
+                        Sigmoid Functions: Logistic Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hyperbolic-tangent-function">
+                        Hyperbolic Tangent Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bumped-type-functions">
+                        Bumped-type Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hockey-stick-functions">
+                        Hockey-stick Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#leaky-rectified-linear-unit">
+                        Leaky Rectified Linear Unit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-linear-units">
+                        Sigmoid Linear Units
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softplus-function">
+                        Softplus Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#multi-class-classification">
+                        Multi-class Classification
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softmax-function">
+                        Softmax Function
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLTrainingNeuralNetwork.html" class="chapter-link">
+                CH 5: Training Neural Network
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLTrainingNeuralNetwork.html#learning.mechanism.ch">
+                        Training Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#cost.functions.sec">
+                        Cost Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mean-square-error">
+                        Mean Square Error
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#cross-entropy">
+                        Cross-Entropy
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#kullback-leibler-divergence">
+                        Kullback-Leibler divergence
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#backpropagation.sec">
+                        Backpropagation Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#chain-rule-and-gradient-computation">
+                        Chain Rule and Gradient Computation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#gradient-for-a-neuron">
+                        Gradient for a Neuron
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#shallow-network">
+                        Shallow Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#deep-network">
+                        Deep Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#weight-updates-using-gradient-descent">
+                        Weight Updates Using Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#batch-gradient-descent-method">
+                        Batch Gradient Descent Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#stochastic-gradient-descent-sgd">
+                        Stochastic Gradient Descent (SGD)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mini-batch-gradient-descent">
+                        Mini-batch Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#momentum-method">
+                        Momentum Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-step-size-methods">
+                        Adaptive Step Size Methods
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adagrad">
+                        AdaGrad.
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#root-mean-square-propagation-rmsprop">
+                        Root Mean Square Propagation (RMSProp)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-moments-adam">
+                        Adaptive Moments (Adam).
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#regularization-and-generalization">
+                        Regularization and Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#underfitting-and-overfitting">
+                        Underfitting and Overfitting
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#parameter-based-regularization">
+                        Parameter-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#process-based-regularization">
+                        Process-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#early-stopping">
+                        Early Stopping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#dropout">
+                        Dropout
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#generalization">
+                        Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#bias-variance-tradeoff">
+                        Bias-Variance Tradeoff
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLExpressivityoverFunctionSpaces.html" class="chapter-link">
+                CH 6: Expressivity Over Function Spaces
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#expressivity.over.function.spaces.ch">
+                        Expressivity over Function Spaces
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#universal.approximation.sec">
+                        Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#continuous-function-approximations">
+                        Continuous Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#feature-mapping-perspective">
+                        Feature Mapping Perspective
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#connection-to-kernel-machines">
+                        Connection to kernel machines
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#learning-dynamics-and-the-neural-tangent-kernel">
+                        Learning dynamics and the Neural Tangent Kernel
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#pinns.sec">
+                        Physics Informed Neural Networks for ODEs
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#trial-solution">
+                        Trial Solution
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#residual-and-training-loss">
+                        Residual and Training Loss
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#research-perspectives">
+                        Research Perspectives
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSpecialArchitectures.html" class="chapter-link">
+                CH 7: Special Architectures
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSpecialArchitectures.html#advanced.architectures.ch">
+                        Special Architectures
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#convolution.neural.network.sec">
+                        Convolution Neural Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#networks-of-one-dimensional-signals">
+                        Networks of One-Dimensional Signals
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#one-dimensional-convolutional-layer">
+                        One-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#two-dimensional-convolutional-layer">
+                        Two-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#convolution-operator">
+                        Convolution Operator
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#2d-convolution-layer">
+                        2D Convolution Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#recurrent-neural-networks">
+                        Recurrent Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#transformers">
+                        Transformers
+                    </a>
+                </div>
+</div></div>
+
+</div>
+    </div>
+    <div id="content">
+        <p>
+<h1 id="introduction.neurons.ch">Introduction to Neurons</h1></p><p>This chapter is mainly divided into two sections.  The first <a href="HTMLIntroductionNeurons.html#motivating.example.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a> presents a few motivating examples that work similarly to artificial neurons. The mathematical formulation of artificial neurons is then provided in  the second <a href="HTMLIntroductionNeurons.html#artificial.neurons.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>, and the reason behind the name neuron is made clear by comparing the formulation with the functionality of  biological neurons.  The chapter ends with an outline of the algorithm to learn a neuron model.</p><p><h2 id="motivating.example.sec">Motivating Example</h2></p><p>In this we give two simple examples to set a fundamental idea behind the way artificial neurons are formulated.   The first example is intuitive from physics that illustrates an important and commonly used activation function called rectifiable linear unit (ReLU) and another from electric circuit which involves the step function as the activation function which is fundamental in defining perceptrons. </p><p><h3 id="water-source-sink-control-problem">Water Source-Sink Control Problem</h3>
+</p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Refer to Section 1.1 (page 3) in the following book:</p><p>Calin, Ovidiu, <i>Deep Learning Architectures: A Mathematical Approach</i>, Springer,	2020.</p><p><a href="https://link.springer.com/book/10.1007/978-3-030-36721-3" style="color: #008080; font-family: monospace;">
+  Click here to see the details of the book
+</a>
+</div></p><p><b>Mathematical Problem</b></p><p>The task is to adjust the knobs and the rate of outlet,  depending on the inlet water pressure, such that the volume of water in the tank after time <span class="math">\(t\)</span> is exactly at <span class="math">\(V\)</span>.</p><p>The problem can be posed mathematically as follows:
+Given <span class="math">\(V>0\)</span>, <span class="math">\(t>0\)</span>, and the vector <span class="math">\(\boldsymbol{P} = (P_1, P_2, \ldots, P_n)\)</span>, for <span class="math">\(P_i> 0\)</span>, find a vector <span class="math">\(\boldsymbol{w} = (w_1, w_2, \ldots, w_n)\)</span> and <span class="math">\(R>0\)</span> such that
+</p><div class="math">\[
+\phi_t\big(\boldsymbol{P} \cdot \boldsymbol{w} - R\big) = V.
+\]</div><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+It is easy to see that there are infinitely many solutions for this problem and it is straightforward to choose one.  For instance, choose any set of values <span class="math">\(w_k> 0\)</span>, for each <span class="math">\(k=1,2,\ldots, n\)</span>, such that <span class="math">\(\boldsymbol{P} \cdot \boldsymbol{w} > {V}/{t}\)</span> and then choose 
+</p><div class="math">\[
+R = \boldsymbol{P} \cdot \boldsymbol{w} - \frac{V}{t}.
+\]</div><p>
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+If each component of <span class="math">\(\boldsymbol{w}\)</span> is bounded, then we may not have a solution for the above problem.
+</div></p><p>The mathematical problem posed above takes <span class="math">\((\boldsymbol{P},V)\in (0,\infty)^n \times (0,\infty)\)</span> as an input and provides <span class="math">\((\boldsymbol{w},R)\)</span> as an output. Often the interest is to obtain one set of parameters <span class="math">\((\boldsymbol{w}^*,R^*)\)</span> such that 
+</p><div class="math">\[
+V \approx \phi_t \left(
+				\boldsymbol{P}\cdot \boldsymbol{w}^* - R^*
+				\right),
+\]</div><p>
+for all <span class="math">\((\boldsymbol{P},V)\in \mathcal{D},\)</span> where
+</p><div class="math" >\begin{eqnarray}
+\mathcal{D} = \big\{\big(\boldsymbol{P}^{(k)},V^{(k)}\big) ~|~k = 1,2,\dots, N\big\} \subset (0,\infty)^n\times (0,\infty),
+\end{eqnarray}<div style="text-align:right;">(1.1)</div></div><p>
+is a given finite dataset. Further, it is desirable to obtain an optimal pair <span class="math">\((\boldsymbol{w}^*,R^*)\)</span> that best fits the given dataset.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Consider the dataset <span class="math">\(\mathcal{D}\)</span> with <span class="math">\(n=3\)</span> and <span class="math">\(N=5\)</span> as given in the following table:</p><p><div class="figure">
+
+<img src="Figures/Ch01Pr01Table.png" class="standalone-figure">
+
+</div></p><p>Given <span class="math">\(t=1\)</span> hour and the outlet flow rate is <span class="math">\(R=450\)</span> L/h, determine the weight vector  <span class="math">\(\boldsymbol{w} = (w_1, w_2, w_3)\)</span>.
+</div></p><p><div class="hint">
+<div class="heading-container">
+<b class="heading">Hint:</b>
+</div>
+Since <span class="math">\(V\)</span> is defined using <span class="math">\(\phi_t\)</span>, it is enough to have a negative value for the affine function whenever <span class="math">\(V=0\)</span> in the above dataset.
+</div></p><p><h3 id="electric.circuit.ssec">Electric Circuit</h3></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Refer to Section 1.2 (page 6) in the following book:</p><p>Calin, Ovidiu, <i>Deep Learning Architectures: A Mathematical Approach</i>, Springer,	2020.</p><p><a href="https://link.springer.com/book/10.1007/978-3-030-36721-3" style="color: #008080; font-family: monospace;">
+  Click here to see the details of the book
+</a></p><p>
+</div></p><p><b>Mathematical Problem</b></p><p>The problem we are interested in the present example is similar to the one posed in the above example.</p><p>Given a dataset <span class="math">\(\mathcal{D} = \{(\boldsymbol{x}^{(k)}, y^{(k)})~|~k=1,2,\cdots, N\} \subset \mathbb{R}^n \times (0, \infty)\)</span>, the problem of interest is to find the weights vector and bias <span class="math">\((\boldsymbol{w}^*, \beta^*)\)</span> such that 
+</p><div class="math">\[
+y \approx c\phi_0\big(\boldsymbol{w}^{*}\cdot \boldsymbol{x} - \beta^*\big), ~~\text{for all}~(\boldsymbol{x}, \beta)\in \mathcal{D}.
+\]</div><p><h3 id="linear.regression.subs">Linear Regression</h3></p><p>Linear regression is one of the most fundamental and widely used methods in both statistics and machine learning. It aims to model the relationship between a dependent variable and one or more independent variables by fitting a linear equation to the observed data.</p><p>In linear regression, the given dataset consists of
+
+    <li>A set of observations for the dependent or the response variable: \( y^{(1)}, y^{(2)}, \ldots, y^{(N)} \)
+    </li><li>Corresponding sets of observations for the independent or the predictor variables: \(\boldsymbol{x}^{(1)}, \boldsymbol{x}^{(2)}, \ldots, \boldsymbol{x}^{(N)}\) where
+\(\boldsymbol{x}=(x_{1}, x_{2}, \ldots, x_{n})\in \mathbb{R}^n\).
+
+The objective is to find the <i>regression coefficients</i> \( w_0, w_1, \ldots, w_n \) that best describe the linear relationship between the independent variables and the dependent variable.
+Thus, the basic form of a <i>linear regression model</i> is
+</p><div class="math" >\begin{eqnarray} y = w_0 + w_1 x_1 + w_2 x_2 + \ldots + w_n x_n + \epsilon \end{eqnarray}<div style="text-align:right;">(1.2)</div></div><p>
+where \( \epsilon \) is the error term, representing the deviation of the observed values from the true values.</p><p>An illustration for the case <span class="math">\(n=1\)</span> is depicted in the following figure:</p><p><div class="figure">
+
+
+<img src="Figures/Ch01LinearRegrationFig.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Illustration of a linear regression model with fitted line and data points.</div>
+
+
+</div></p><p><b>Mathematical Problem</b></p><p>Let us give a precise formulation of a linear regression model.</p><p>For the given dataset
+</p><div class="math" >\begin{eqnarray}
+\mathcal{D} = \big\{(\boldsymbol{x}^{(k)}, y^{(k)})~|~\boldsymbol{x}^{(k)}\in \mathbb{R}^n,~ y^{(k)}\in \mathbb{R},~k=1,2,\cdots, N\},
+\end{eqnarray}<div style="text-align:right;">(1.3)</div></div><p>
+the primary objective is to find the values of the coefficients \((w_0, w_1, \ldots, w_n)\) such that the sum of the squared errors is minimized.</p><p>In other words, we aim to minimize the <b>sum of squares error</b> function
+</p><div class="math" id="sum.square.error.eq">\begin{eqnarray}
+L(\overline{\boldsymbol{w}}) = \sum_{i=1}^N \Big( y_i - (w_0 + w_1 x_{i1} + w_2 x_{i2} + \ldots + w_n x_{in}) \Big)^2,
+\end{eqnarray}<div style="text-align:right;">(1.4)</div></div><p>
+where <span class="math">\(\overline{\boldsymbol{w}}=(w_0, w_1, \ldots, w_m)\)</span> is the regression coefficient vector. That is, to find the <b>optimal coefficient</b> \(\overline{\boldsymbol{w}}^*\) such that
+</p><div class="math" >\begin{eqnarray}
+L(\overline{\boldsymbol{w}}^*) = \min_{ \overline{\boldsymbol{w}}} L(\overline{\boldsymbol{w}})
+~~{or}~~
+\overline{\boldsymbol{w}}^* = {arg} \min_{\overline{\boldsymbol{w}}} L(\overline{\boldsymbol{w}})
+\end{eqnarray}<div style="text-align:right;">(1.5)</div></div><p>
+The optimal coefficients best fit the given dataset in the least squares sense and this method is known as the <b>least squares</b> method.</p><p><h2 id="artificial.neurons.sec">Artificial Neurons</h2></p><p>The physical problems discussed in <a href="HTMLIntroductionNeurons.html#motivating.example.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a> resemble the mathematical framework of an artificial neuron involving weights (control knobs and resistors), a bias term acting as a threshold  (like the outflow rate and flow of current to ground), and a nonlinear activation function. </p><p><h3 id="mathematical.formulation.subs">Mathematical Formulation</h3></p><p>We now formalize the physical intuitions through the mathematical definition of an artificial neuron. </p><p><div class="definition" id="artificial.neuron.def">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Artificial Neuron</b>]</p><p>An <b>artificial neuron</b> is a tuple <span class="math">\( (\overline{\boldsymbol{w}}, \mathscr{A}) \)</span>, where
+<ol class="latex-enumerate">
+</li><li><span class="math">\(\overline{\boldsymbol{w}}=(w_0, \boldsymbol{w})\in \mathbb{R}\times \mathbb{R}^{n}\)</span> is the augmented weights vector, with <span class="math">\(w_0=b\in \mathbb{R}\)</span> as the bias and <span class="math">\(\boldsymbol{w}=(w_1,w_2,\ldots,w_n)\in \mathbb{R}^n\)</span> as the weight vector; and 
+</li><li><span class="math">\(\mathscr{A}:\mathbb{R}\rightarrow \mathbb{R}\)</span>, is an (nonlinear) <b>activation function</b>.
+</li></ol>
+Given an <b>augmented input vector</b>  <span class="math">\(\overline{\boldsymbol{x}}=(x_0,\boldsymbol{x})\in \{-1\}\times \mathbb{R}^{n}\)</span>,  with <span class="math">\(x_0=-1\)</span> and <span class="math">\(\boldsymbol{x}=( x_1,x_2,\ldots,x_n)\in \mathbb{R}^n\)</span> is an input vector, the <b>output</b> <span class="math">\(y\)</span> of the neuron is defined as
+</p><div class="math">\[
+y = \mathscr{A}\big(\overline{\boldsymbol{w}}\cdot \overline{\boldsymbol{x}}\big).
+\]</div><p>
+For a given <span class="math">\(\overline{\boldsymbol{w}}\)</span>, the right hand side function is the composition of the <b>affine function</b> <span class="math">\(\text{𝕒}: \{-1\}\times \mathbb{R}^n\rightarrow \mathbb{R}\)</span> given by
+</p><div class="math">\[
+\text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}) = \sum_{k=0}^n w_k x_k = \sum_{k=1}^n w_k x_k - b,
+\]</div><p> 
+and the activation function <span class="math">\(\mathscr{A}\)</span>. We define the <b>neuron function</b> (or the <b>primitive function</b>) <span class="math">\(\text{𝕗}:\{-1\}\times \mathbb{R}^n\rightarrow \mathbb{R}\)</span> as 
+</p><div class="math" >\begin{eqnarray}
+\text{𝕗}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}) = \mathscr{A}(\text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}) ).
+\end{eqnarray}<div style="text-align:right;">(1.6)</div></div><p>
+</div></p><p>A schematic diagram of an artificial neuron is depicted in the following figure.</p><p><div class="figure">
+
+<img src="Figures/Ch01ANFig.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Schematic of an artificial neuron architecture. </div>
+
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Since the information flows from the input layer through the function evaluation to the output without any feedback, an artificial neuron can be regarded as part of a <b>feedforward</b> architecture.</p><p>An artificial neuron can be viewed as a special case of a single-layer neural network with just a single output unit.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+See Section 5.1 (page 133) in the following book:</p><p>Calin, Ovidiu, <i>Deep Learning Architectures: A Mathematical Approach</i>, Springer,	2020.</p><p><a href="https://link.springer.com/book/10.1007/978-3-030-36721-3" style="color: #008080; font-family: monospace;">
+  Click here to see the details of the book
+</a></p><p>Note the notational differences between our definition above and the definition given in the book. For the examination point of view, students are requested to follow the notations  used in our notes.
+</div></p><p><div class="example" id="AN.example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+
+We are already familiar with two real-world examples that can be interpreted within the framework of an artificial neuron.
+<ol class="latex-enumerate">
+<li>The water supply problem discussed in <a href="HTMLIntroductionNeurons.html#controlling.water.source.and.sink.subs" class="internal-link">Section  &laquo;Click Here&raquo;</a> can be viewed as an artificial neuron <span class="math">\((\overline{\boldsymbol{w}}, \texttt{ReLU})\)</span>, where 
+</p><div class="math">\[
+\texttt{ReLU}(x) = \max\{0, x\},
+\]</div><p> and the bias <span class="math">\(b\)</span> is the outflow rate <span class="math">\(R\)</span>.</p><p></li><li>The electric circuit problem discussed in <a href="HTMLIntroductionNeurons.html#electric.circuit.ssec" class="internal-link">Section  &laquo;Click Here&raquo;</a> can also be viewed as an artificial neuron <span class="math">\((\overline{\boldsymbol{w}}, H)\)</span>, where <span class="math">\(H\)</span> denotes the Heaviside function given by
+</p><div class="math">\[
+H(x) = \left\{\begin{array}{lc}
+		0,&amp;\text{if}~x<0\\
+		1,&amp;\text{if}~x\ge 0
+	\end{array}\right.
+\]</div><p>
+An artificial neuron with Heaviside function as the activation function is called the <b>perceptron</b>. We will discuss perceptrons in more details in <a href="HTMLIntroductionNeurons.html#perceptrons.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>.
+</li></ol>
+</div></p><p><h3 id="comparison-with-biological-neurons">Comparison with Biological Neurons</h3></p><p>The mathematical definition of <span class="math">\(\text{𝕗}\)</span> (given in <a href="HTMLIntroductionNeurons.html#artificial.neuron.def">Definition &laquo;Click Here&raquo; </a>) is named as neuron by taking the inspiration from the biological neurons in brains.  To have a clear understanding of these two concepts, we briefly understand the structure and the functionality of biological neurons in brains and then make a comparison with the artificial neuron formulation.</p><p>From the <a href="HTMLIntroductionNeurons.html#artificial.neuron.def">Definition &laquo;Click Here&raquo; </a> on artificial neurons, we see that an artificial neuron includes a simple mathematical function (neuron function) with inputs, weights, bias, activation function and output.  On the other hand, a <b>biological neuron</b> is a specialized type of cell in the nervous system with dendrites, soma, axon, and synapses. Biological neurons are responsible for transmitting and processing information through electrical and chemical signals.</p><p><div class="figure">
+
+<img src="Figures/Ch01BNFig.png" class="standalone-figure"></p><p><div style="text-align: center; font-weight: bold;">An illustration of a biological neuron. The direction of the flow of information during neurotransmission is indicated by three arrows.</div>
+
+</div></p><p>A typical neuron has four main parts (shown in the above figure):
+<ol class="latex-enumerate">
+<li><b>Dendrites:</b> Branch-like structures that receive input signals from other neurons in the form of chemical signals, specifically neurotransmitters.
+
+</li><li><b>Soma (Cell Body):</b> Contains the nucleus and most of the cell's organelles where input signals (electrical impulses) are integrated and a nonlinear threshold is applied. If the combined input exceeds this threshold, the axon hillock triggers an action potential, which is then propagated down the axon.
+
+</li><li><b>Axon:</b> A long projection that transmits electrical signals from the soma to other neurons. The axon terminal of one neuron connects to the dendrites of another neuron via synapses.
+
+</li><li><b>Synaptic Boutons:</b> These are the small, bulb-like endings of axon terminals that are involved in transmitting signals to other neurons. When an electrical signal (action potential) reaches a synaptic bouton, it triggers the release of chemical messengers called neurotransmitters into the synaptic cleft, which is a tiny gap between the axon terminal and the dendrite of the next neuron. Electrical signals cannot cross this gap directly, so neurotransmitters are used to carry the signal across.
+</li></ol></p><p><div class="figure">
+
+<img src="Figures/Ch01BNTable.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Comparison of Biological and Artificial Neurons</div>
+
+</div></p><p>A comparison between biological neurons and artificial neurons is summarized in the above table. As we can see, biological neurons are more complex in nature, whereas artificial neurons are simplified mathematical models that only resemble biological neurons. Artificial neurons are not intended to be accurate models of biological neurons. Rather, they are designed to mimic certain features, such as signal integration and nonlinear activation, to build systems capable of performing tasks through self-learning, giving rise to artificial intelligence.</p><p>A neuron can connect to many other neurons through its axon terminals, and similarly, it can receive inputs from several neurons via its dendrites, forming a biological neural network. Similarly, multiple artificial neurons can be connected through layers to form an artificial neural network, which we will discuss in a later chapter.</p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Throughout this course, the term ‘neuron’ refers to an artificial neuron. Discussions involving biological neurons will indicate this explicitly. This convention is adopted, as the focus of the course is on artificial neural networks, and our discussions on biological neural networks are intended only for motivational purposes.
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+At a party, Mrs. Sahana is offered several glasses of juice. The juices are either <b>mango</b> or <b>orange</b>, and they look quite similar. To identify mango juice, her brain subconsciously evaluates three features:
+<ol class="latex-enumerate">
+    <li><span class="math">\(x_1\)</span>: <i>Smell intensity</i> (scale 0-10; mango juice has a stronger smell),
+    </li><li><span class="math">\(x_2\)</span>: <i>Color richness</i> (scale 0-10; varies between orange and yellow),
+    </li><li><span class="math">\(x_3\)</span>: <i>Pulp density</i> (scale 0-10; mango juice is thicker).
+</li></ol></p><p>Model Mrs. Sahana's decision-making using an <b>artificial neuron</b>  by indicating appropriate parameters and the activation function, but describe its working using the terminology of <b>biological neurons</b> as follows:</p><p><ol class="latex-enumerate">
+    <li>The sensory inputs arrive at the neuron's <b>dendrites</b>.
+    </li><li>Each input is modulated by a corresponding <b>synaptic weight</b>.
+    </li><li>These weighted signals are summed in the <b>cell body</b> and combined with a <b>bias</b>, representing the neuron's threshold.
+    </li><li>If the total input exceeds a threshold (modeled by an activation function), the neuron <b>fires an action potential</b>. 
+</li></ol>
+Choose some values for the synaptic weights (as per your choice) and the bias, and specify a step activation function. Then, provide two specific sets of input values <span class="math">\((x_1,x_2,x_3)​​​\)</span>: one for which the neuron classifies the juice as {orange}, and another for which it classifies the juice as {mango}.
+</div></p><p><h3 id="learning.model.subs">Supervised Learning: An Overview</h3></p><p>The mathematical formulation of a neuron (AN) takes <span class="math">\(\boldsymbol{x}=(x_1,x_2\ldots,x_n)\in \mathbb{R}^{n}\)</span> as input and computes the output <span class="math">\(y\in \mathbb{R}\)</span> as the value of the neuron function <span class="math">\(\text{𝕗}\)</span>. A complete AN model for a given problem therefore involves a well-defined neuron function, which in turn includes three choices, namely,
+<ol class="latex-enumerate">
+<li>the dimension of the input vector <span class="math">\(n\)</span>;
+</li><li>a suitably chosen activation function <span class="math">\(\mathscr{A}\)</span>; and
+</li><li>a fixed choice of the bias and weights <span class="math">\(\overline{\boldsymbol{w}}=(b,\boldsymbol{w})\in \mathbb{R}\times \mathbb{R}^{n}\)</span>.
+</li></ol>
+The choice of <span class="math">\(n\)</span> and <span class="math">\(\mathscr{A}\)</span> depends on the problem under consideration. Whereas, the choice of <span class="math">\(\overline{\boldsymbol{w}}\)</span> is more mathematical and is achieved through some optimization method.</p><p>The process of obtaining <span class="math">\(\overline{\boldsymbol{w}}=(b, \boldsymbol{w})\)</span> is referred to as <b>learning a model</b> (or <b>training a model</b>) from a given dataset <span class="math">\(\mathcal{D} \subset \mathbb{R}^{n} \times \mathbb{R}\)</span> of the form
+</p><div class="math">\[
+\mathcal{D} = \{ (\boldsymbol{x}_k, y_k)~|~k=1,2,\ldots, N\},
+\]</div><p>
+where <span class="math">\(\boldsymbol{x}_k\in \mathbb{R}^n\)</span> is an input vector (also called a <b>feature vector</b>) and <span class="math">\(y_k \in \mathbb{R}\)</span> is the corresponding output or <b>label</b>.  The dataset <span class="math">\(\mathcal{D}\)</span> is called a <b>labeled dataset</b>, and each point <span class="math">\((\boldsymbol{x}_k, y_k)\)</span> in <span class="math">\(\mathcal{D}\)</span> is called an <b>example</b> or a <b>training sample</b>. </p><p>Learning from such a labeled dataset is called <b>supervised learning</b>, where the goal is to approximate a function (or a model) that maps inputs <span class="math">\(\boldsymbol{x}_k\)</span> to outputs <span class="math">\(y_k\)</span>.</p><p>A general outline of the learning procedure is as follows:
+
+<li><b>Data Preparation:</b> As a first step, we decompose the dataset <span class="math">\(\mathcal{D}\)</span> into three disjoint sets, 
+</p><div class="math" >\begin{eqnarray}
+\mathcal{D} = \mathcal{D}_\text{train} \cup \mathcal{D}_\text{val} \cup \mathcal{D}_\text{test}.
+\end{eqnarray}<div style="text-align:right;">(1.7)</div></div><p> 
+Here, <span class="math">\(\mathcal{D}_\text{train}\)</span> is the <b>training set</b>, <span class="math">\(\mathcal{D}_\text{test}\)</span> is the <b>test set</b>, and <span class="math">\(\mathcal{D}_\text{val}\)</span> is the <b>valudation set</b>.  
+Typically, <span class="math">\(\mathcal{D}_\text{train}\)</span> contains a significantly larger portion of the data, often at least 70% of <span class="math">\(\mathcal{D}\)</span>, selected randomly in an unbiased manner. Let us use the notation
+</p><div class="math">\[
+\mathcal{D}_\text{train} :=  \big\{(\boldsymbol{x}_{k}^\text{train},y_{k}^\text{train}) ~|~k = 1,2,\dots, N_\text{train}\big\},
+\]</div><p>
+where <span class="math">\(N_\text{train} = \#(\mathcal{D}_\text{train})\)</span>.</p><p></li><li><b>Training a Model:</b> Consider a suitable <b>cost function</b> (error) <span class="math">\(C(b, \boldsymbol{w})\)</span> defined on the training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span>. The goal is to find parameters <span class="math">\((b, \boldsymbol{w})\)</span> that minimize the cost function, <i>i.e.</i>,
+</p><div class="math">\[
+(b^*, \boldsymbol{w}^*) = \text{argmin}_{b, { \boldsymbol{w}}} C(b, \boldsymbol{w}).
+\]</div><p>
+For instance, a commonly used cost function is the <b>mean squared error</b>
+</p><div class="math" >\begin{eqnarray}
+C(b, \boldsymbol{w}) = \frac{1}{N_\text{train}} \sum_{k=1}^{N_\text{train}} \big( \mathscr{A}(\boldsymbol{w} \cdot \boldsymbol{x}_{k}^\text{train} - b) - y_{k}^\text{train} \big)^2,
+\end{eqnarray}<div style="text-align:right;">(1.8)</div></div><p>
+where <span class="math">\(\mathscr{A}\)</span> is the activation function of the neuron.</p><p>An optimization method such as the <b>gradient descent method</b> is used to compute \( (b^*, \boldsymbol{w}^*) \).  This step is called the <b>training step</b> or <b>learning step</b>.</p><p>Once the optimal parameters are computed by minimizing the cost on the training data, we typically say that the <b>model is trained</b>. </p><p></li><li><b>Evaluating the Model:</b> The next step is to assess how well the trained model performs on unseen data.  For this, we compute the cost function on the test dataset <span class="math">\(\mathcal{D}_\text{test}\)</span>.  If this value is sufficiently small, we say that the model `generalizes well' to unseen data.  This step is called <b>testing step</b>.  If the model does not generalize well, then we need to apply additional techniques to improve <b>generalization</b>, such as regularization, or early stopping, or collecting more data, or architecture changes.</p><p>Regularization generally includes fine tuning some key parameters, referred to as <b>hyperparameters</b>.  The validation set <span class="math">\(\mathcal{D}_\text{val}\)</span> is used to tune hyperparameters.
+</p>
+    </div>
+
+<footer>
+  © S. Baskar, Department of Mathematics, IIT Bombay. 2025 — Updated: 09-Aug-2025
+</footer>
+
+<style>
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f8f8f8;
+  color: #888;
+  font-size: 0.75em;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 1px solid #ddd;
+  z-index: 10;               /* low z-index */
+  pointer-events: none;      /* allows clicks to pass through */
+}
+
+/* Small screen adjustments */
+@media (max-width: 600px) {
+  footer {
+    font-size: 0.68em;
+    padding: 4px 0;
+  }
+}
+</style>
+
+    
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilayer Perceptrons</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML ">
+    </script>
+    <style>
+        body, p, li, div {
+        color: black !important;
+        line-height: 1.6;
+        }
+        ol.latex-enumerate, ol.latex-enumerate li {
+            line-height: 1.6 !important;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        /* Updated TOC styles */
+        #toc-panel {
+            font-size: 0.9em;
+        }
+        .toc-chapter, 
+        .toc-section, 
+        .toc-subsection {
+            color: black !important;
+        }
+        .toc-chapter a,
+        .toc-section a,
+        .toc-subsection a {
+            color: black !important;
+            text-decoration: none;
+        }
+        .toc-chapter.current {
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+        #toc-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #1a73e8;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #toc-panel {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            transition: left 0.3s ease-out;
+            will-change: transform;
+        }
+        #toc-panel.open {
+            left: 0;
+        }
+        #close-toc {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #content {
+            padding: 20px;
+            padding-top: 60px;
+            max-width: 100%;
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+        .toc-chapter {
+            margin-bottom: 10px;
+            border-left: 3px solid #94714B;
+            padding-left: 10px;
+        }
+        .toc-chapter.current {
+            background-color: #F0EAE4;
+        }
+        .chapter-link {
+            font-weight: bold;
+            color: #1a73e8;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .toc-sections {
+            margin-left: 15px;
+            display: none;
+        }
+        .toc-sections.expanded {
+            display: block;
+        }
+        .toc-section {
+           font-weight: bold;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .toc-subsection {
+            padding: 1.5px 0;
+            margin-left: 25px;
+            font-size: 0.95em;
+        }
+        .toc-subsubsection {
+            padding: 3px 0;
+            margin-left: 40px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        :target {
+            scroll-margin-top: 80px;
+            animation: highlight 1.5s ease;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(26, 115, 232, 0.1); }
+            100% { background-color: transparent; }
+        }
+        @media (max-width: 768px) {
+            #toc-panel {
+                width: 85%;
+                left: -90%;
+            }
+            #toc-panel.open {
+                left: 0;
+                box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            }
+            #content {
+                transition: transform 0.3s ease-out;
+            }
+            #toc-panel.open ~ #content {
+                transform: translateX(85%);
+            }
+        }
+        .note {
+  background-color: color-mix(in srgb, var(--primary) 7%, white);
+border: 5px solid var(--primary);
+  padding: 5px;
+  margin: 10px;
+}
+.problem {
+  background-color: color-mix(in srgb, var(--primary) 18%, white);
+border: 1px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.example {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 10px;
+  margin: 10px;
+}
+.remark {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 20px;
+  margin: 10px;
+}
+.definition {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px double var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.lemma {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.theorem {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.proofs {
+  background-color: var(--environmentBackground);
+border: 5px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.project {
+  background-color: var(--environmentBackground);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.hint {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.code {
+  background-color: color-mix(in srgb, var(--primary) 13%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.algorithm {
+  background-color: color-mix(in srgb, var(--primary) 5%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+    </style>
+</head>
+
+
+<body>
+    <button id="toc-button">☰ Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">×</button>
+       
+       <!-- Small Main Page Button -->
+<div style="text-align:right; margin-bottom: 10px;">
+  <a href="index.html" 
+     style="
+       background: var(--toc-primary, #94714B);
+       color: white;
+       padding: 4px 10px;
+       border-radius: 16px;
+       font-size: 0.75em;
+       font-weight: 900;
+       text-decoration: none;
+       display: inline-block;
+       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+     ">
+    Main Page
+  </a>
+</div>
+       
+        <div class="full-toc">
+
+                <div class="toc-chapter ">
+            <a href="HTMLIntroductionNeurons.html" class="chapter-link">
+                CH 1: Introduction to Neurons
+            </a>
+             <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLIntroductionNeurons.html#introduction.neurons.ch">
+                        Introduction to Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#motivating.example.sec">
+                        Motivating Example
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#water-source-sink-control-problem">
+                        Water Source-Sink Control Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#electric.circuit.ssec">
+                        Electric Circuit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#linear.regression.subs">
+                        Linear Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#artificial.neurons.sec">
+                        Artificial Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#mathematical.formulation.subs">
+                        Mathematical Formulation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#comparison-with-biological-neurons">
+                        Comparison with Biological Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#learning.model.subs">
+                        Supervised Learning: An Overview
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLPerceptrons.html" class="chapter-link">
+                CH 2: Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLPerceptrons.html#perceptrons.ch">
+                        Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#perceptrons.sec">
+                        Neuron Model
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#boolean-functions">
+                        Boolean Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#illustrative-datasets">
+                        Illustrative Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#separability-and-algorithm">
+                        Separability and Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#linear-separability">
+                        Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#perceptron.convergence.theorem.subs">
+                        Perceptron Convergence Theorem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#beyond-linear-separability">
+                        Beyond Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#feature-space-mapping">
+                        Feature Space Mapping
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSupportVectorMachine.html" class="chapter-link">
+                CH 3: Support Vector Machine
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSupportVectorMachine.html#support-vector-machine">
+                        Support Vector Machine
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#linearly-separable-dataset">
+                        Linearly Separable Dataset
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#hard-and-soft-margins">
+                        Hard and Soft Margins
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#loss-function-form">
+                        Loss-function form
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#subgradient-descent-algorithm">
+                        Subgradient Descent Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#dual-optimazation-problem">
+                        Dual Optimazation Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#nonlinearly-separable-datasets">
+                        Nonlinearly Separable Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-method-implicit-feature-mapping">
+                        Kernel Method: Implicit Feature Mapping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-trick">
+                        Kernel Trick
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter current">
+            <a href="HTMLMultilayerPerceptrons.html" class="chapter-link">
+                CH 4: Multilayer Perceptrons
+            </a>
+            <div class="toc-sections expanded">
+
+                <div class="toc-item ">
+                    <a href="HTMLMultilayerPerceptrons.html#multilayer.perceptrons.ch">
+                        Multilayer Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#fully-connected-feedforward-networks">
+                        Fully Connected Feedforward Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#definition-and-network-dimensions">
+                        Definition and Network Dimensions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#shallow-networks">
+                        Shallow Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-forward-propagation">
+                        Batch Forward Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-propagation">
+                        Batch Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#activation-functions">
+                        Activation Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#step-functions">
+                        Step Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#heaviside-function">
+                        Heaviside function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bipolar-function">
+                        Bipolar Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-functions-logistic-regression">
+                        Sigmoid Functions: Logistic Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hyperbolic-tangent-function">
+                        Hyperbolic Tangent Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bumped-type-functions">
+                        Bumped-type Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hockey-stick-functions">
+                        Hockey-stick Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#leaky-rectified-linear-unit">
+                        Leaky Rectified Linear Unit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-linear-units">
+                        Sigmoid Linear Units
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softplus-function">
+                        Softplus Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#multi-class-classification">
+                        Multi-class Classification
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softmax-function">
+                        Softmax Function
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLTrainingNeuralNetwork.html" class="chapter-link">
+                CH 5: Training Neural Network
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLTrainingNeuralNetwork.html#learning.mechanism.ch">
+                        Training Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#cost.functions.sec">
+                        Cost Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mean-square-error">
+                        Mean Square Error
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#cross-entropy">
+                        Cross-Entropy
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#kullback-leibler-divergence">
+                        Kullback-Leibler divergence
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#backpropagation.sec">
+                        Backpropagation Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#chain-rule-and-gradient-computation">
+                        Chain Rule and Gradient Computation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#gradient-for-a-neuron">
+                        Gradient for a Neuron
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#shallow-network">
+                        Shallow Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#deep-network">
+                        Deep Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#weight-updates-using-gradient-descent">
+                        Weight Updates Using Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#batch-gradient-descent-method">
+                        Batch Gradient Descent Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#stochastic-gradient-descent-sgd">
+                        Stochastic Gradient Descent (SGD)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mini-batch-gradient-descent">
+                        Mini-batch Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#momentum-method">
+                        Momentum Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-step-size-methods">
+                        Adaptive Step Size Methods
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adagrad">
+                        AdaGrad.
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#root-mean-square-propagation-rmsprop">
+                        Root Mean Square Propagation (RMSProp)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-moments-adam">
+                        Adaptive Moments (Adam).
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#regularization-and-generalization">
+                        Regularization and Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#underfitting-and-overfitting">
+                        Underfitting and Overfitting
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#parameter-based-regularization">
+                        Parameter-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#process-based-regularization">
+                        Process-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#early-stopping">
+                        Early Stopping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#dropout">
+                        Dropout
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#generalization">
+                        Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#bias-variance-tradeoff">
+                        Bias-Variance Tradeoff
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLExpressivityoverFunctionSpaces.html" class="chapter-link">
+                CH 6: Expressivity Over Function Spaces
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#expressivity.over.function.spaces.ch">
+                        Expressivity over Function Spaces
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#universal.approximation.sec">
+                        Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#continuous-function-approximations">
+                        Continuous Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#feature-mapping-perspective">
+                        Feature Mapping Perspective
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#connection-to-kernel-machines">
+                        Connection to kernel machines
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#learning-dynamics-and-the-neural-tangent-kernel">
+                        Learning dynamics and the Neural Tangent Kernel
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#pinns.sec">
+                        Physics Informed Neural Networks for ODEs
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#trial-solution">
+                        Trial Solution
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#residual-and-training-loss">
+                        Residual and Training Loss
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#research-perspectives">
+                        Research Perspectives
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSpecialArchitectures.html" class="chapter-link">
+                CH 7: Special Architectures
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSpecialArchitectures.html#advanced.architectures.ch">
+                        Special Architectures
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#convolution.neural.network.sec">
+                        Convolution Neural Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#networks-of-one-dimensional-signals">
+                        Networks of One-Dimensional Signals
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#one-dimensional-convolutional-layer">
+                        One-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#two-dimensional-convolutional-layer">
+                        Two-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#convolution-operator">
+                        Convolution Operator
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#2d-convolution-layer">
+                        2D Convolution Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#recurrent-neural-networks">
+                        Recurrent Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#transformers">
+                        Transformers
+                    </a>
+                </div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <p>
+<h1 id="multilayer.perceptrons.ch">Multilayer Perceptrons</h1></p><p>So far, we have studied models based on a single neuron. More precisely, from our discussions on perceptrons and their learning algorithms, we see that a single neuron model can learn a linear decision boundary. The same holds for SVMs when we directly apply those models to the dataset in the input space. By defining a suitable feature map to transform the dataset from the input space to a feature space, we can learn datasets that are not linearly separable. However, such feature maps have to be chosen manually (in perceptrons) or through kernel tricks (in SVMs), where the kernel needs to be chosen suitably. Many real-world problems give rise to nonlinearly separable datasets of high dimensions and involve more complex features. In such cases, it is more difficult to specify a feature map manually, and it is desirable to have a model that can learn its own representation directly from the data, which can lead to more accurate classifications.</p><p>A multilayer neural network learns complex patterns from a dataset by automatically extracting both the feature representation and the decision boundary. The main idea is to arrange many neurons together to form a layer, with each neuron extracting different features from the input. Further, by stacking multiple layers, the network learns a sequence of nonlinear transformations. For instance, the first layer may capture simple patterns, the next layer may build more complex features from them, further deeper layers may combine these features into highly abstract representations, and finally, the last layer can apply a simple linear classifier to separate the data. In this way, multilayer neural networks overcome the main limitation of single-neuron models and SVMs by learning both the feature representation and the decision boundary simultaneously, and also directly from a dataset.</p><p>A multilayer neural network can be viewed as a function that maps an input vector to an output vector. In other words, it implements a mathematical transformation from the input space to the output space. From this perspective, a neural network can be viewed as a universal function approximator, which can approximate an unknown function underlying a given dataset. When the output vector represents real values, the network can be used for regression or function approximation tasks. When the output vector represents class scores or probabilities, the network naturally serves as a classifier.</p><p>In this chapter, we introduce fully connected feedforward artificial neural networks (also called the <b>Multilayer Perceptrons</b> (MLPs)) as a natural extension of single-neuron models. In <a href="HTMLMultilayerPerceptrons.html#fully.connected.feedforward.networks.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>, we begin with a mathematical definition of MLPs and then discuss the dimensions of weight matrices and bias vectors. We also list some commonly used nonlinear activation functions in <a href="HTMLMultilayerPerceptrons.html#activation.function.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>. Using simple illustrations, we demonstrate how activations shape the network’s output and decision boundaries. </p><p><h2 id="fully-connected-feedforward-networks">Fully Connected Feedforward Networks</h2>
+</p><p>An artificial neural network (ANN) is a system consisting of layers of connected neurons that defines a parametric function mapping input vectors to output vectors. The parameters of an ANN are learnt from a dataset through a training process that enables the network to approximate the underlying relationship between the inputs and the outputs.</p><p>An ANN is typically organized into three components, namely,
+<ol class="latex-enumerate">
+<li>an <b>input layer</b> that receives the input vectors;
+</li><li>a set of <b>hidden layers</b> that perform transformations through affine maps and activation functions; and
+</li><li>an <b>output layer</b> that produces the final prediction or classification.
+</li></ol>
+A <b>shallow network</b> refers to a neural network with at most one hidden layer between the input and output. A neural network with two or more hidden layers is considered a <b>deep network</b>.</p><p>The multilayered structure of a deep neural network is illustrated in the following figure.</p><p><div class="figure">
+
+<div  id="multilayered.structure.fig">
+<img src="Figures/ANN.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Schematic of an ANN with three hidden (brown) layers. The leftmost (green) layer is the input layer, that receives the input vector, and the rightmost (blue) layer corresponds to the output vector.</div>
+
+
+</div></p><p><h3 id="definition-and-network-dimensions">Definition and Network Dimensions</h3></p><p>Having set the structure of ANNs intuitively, we now turn our attention to give the mathematical definition of a fully connected ANN.</p><p><div class="definition" id="artificial.neural.network.def">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Artificial Neural Network (ANN)</b>]
+</p><p>For a given <span class="math">\(L\in \mathbb{N}\)</span> and a set of <b>network dimensions</b> <span class="math">\(n_0,n_1, n_2, \ldots, n_L\in \mathbb{N}\)</span>, a fully connected <b>artificial neural network</b> of <b>depth</b> <span class="math">\(L\)</span> and <b>width</b> <span class="math">\(\hat{n}=\max(n_1, n_2, \ldots, n_{L-1})\)</span>, is a parametric function <span class="math">\({\mathscr{F}_{L,\hat{n}}}: \mathbb{R}^{n_0} \rightarrow \mathbb{R}^{n_L}\)</span> defined as 
+</p><div class="math">\[
+{\mathscr{F}_{L,\hat{n}}}(\boldsymbol{x}; \boldsymbol{\Theta}) =\mathfrak{h}^{(L)} \big( \mathfrak{h}^{(L-1)}\big(  \cdots \mathfrak{h}^{(2)} \big(\mathfrak{h}^{(1)} (\boldsymbol{x};\overline{W}^{(1)}); \overline{W}^{(2)} \big)\cdots; \overline{W}^{(L-1)}\big); \overline{W}^{(L)} \big),
+\]</div><p>
+for all input vectors <span class="math">\(\boldsymbol{x}\in \mathbb{R}^{n_0}\)</span>. </p><p>Here, for each layer <span class="math">\(l=1,2,\ldots,L\)</span>, the <b>layer function</b> <span class="math">\( \mathfrak{h}^{(l)}: \mathbb{R}^{n_{l-1}} \rightarrow \mathbb{R}^{n_{l}}\)</span> is the vector-valued neuron function of the <span class="math">\(l^{\rm th}\)</span> layer
+</p><div class="math">\[
+\mathfrak{h}^{(l)} (\boldsymbol{x}^{(l-1)};\overline{W}^{(l)})
+ = \big( 
+ \text{𝕗}_1^{(l)} (\overline{\boldsymbol{x}}^{(l-1)};\overline{\boldsymbol{w}}_1^{(l)}), 
+ 		\ldots, 
+			\text{𝕗}_{n_l}^{(l)} (\overline{\boldsymbol{x}}^{(l-1)};\overline{\boldsymbol{w}}_{n_l}^{(l)}) \big)^\top,
+\]</div><p>
+with each <span class="math">\(\text{𝕗}_{k}^{(l)}: \{-1\}\times \mathbb{R}^{n_{l-1}} \rightarrow \mathbb{R}\)</span> being the neuron function defined in
+<a href="HTMLIntroductionNeurons.html#artificial.neuron.def" class="internal-link">Definition  «Click Here»</a>, and
+</p><div class="math">\[
+\overline{W}^{(l)} = \left[\overline{\boldsymbol{w}}_{1}^{(l)}~ \overline{\boldsymbol{w}}_2^{(l)}~\cdots~\overline{\boldsymbol{w}}_{n_l}^{(l)}\right]^\top,
+\]</div><p> 
+ being the <span class="math">\(n_{l} \times (n_{l-1}+1)\)</span> augmented weight matrix,
+ and <span class="math">\(\boldsymbol{\Theta}\)</span> denotes the collection of trainable parameters of the network as
+</p><div class="math">\[
+\boldsymbol{\Theta} = \big(\overline{W}^{(1)}, \overline{W}^{(2)}, \ldots, \overline{W}^{(L)}\big).
+\]</div><p>
+The layer corresponding to <span class="math">\(l=0\)</span> is the <b>input layer</b>, and the layer with <span class="math">\(l=L\)</span> is the <b>output layer</b>, whereas the layers for <span class="math">\(l=1,2,\ldots, L-1\)</span> are the <b>hidden layers</b> with <b>layer width </b> <span class="math">\(n_l\)</span>.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+<li>Neurons in the hidden and output layers are often referred to as <b>units</b> or <b>nodes</b>.
+</li><li>The input vectors are augmented only at the neuron level while computing the neuron functions. Whereas, the layer functions take the raw input vectors as arguments and produce outputs without bias augmentation.
+</li><li>The <b>width</b> of the <span class="math">\(l^{\rm th}\)</span> hidden layer is <span class="math">\(n_l\)</span>.
+</div></p><p><div class="remark" id="ANN.Function.eq">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+In a simple notation, we may write
+</p><div class="math" >\begin{eqnarray} 
+{\mathscr{F}_{L,\hat{n}}} = \mathfrak{h}^{(L)} \circ \mathfrak{h}^{(L-1)} \circ \ldots \circ \mathfrak{h}^{(2)} \circ \mathfrak{h}^{(1)},
+\end{eqnarray}<div style="text-align:right;">(4.1)</div></div><p>
+which is a mapping <span class="math">\(\mathbb{R}^{n_0} \ni \boldsymbol{x} \mapsto \boldsymbol{y}\in \mathbb{R}^{n_L}\)</span> obtained by passing the input vector <span class="math">\(\boldsymbol{x}\)</span> successively through the hidden layers, starting from layer <span class="math">\(l=1\)</span> up to layer <span class="math">\(l=L-1\)</span>, and finally through the output layer <span class="math">\(l=L\)</span> to obtain the output vector <span class="math">\(\boldsymbol{y}\)</span>. Such a network is also called a <b>feedforward neural network</b>.  A fully connected (or densely connected) feedforward neural network defined above is often referred to as a <b>multilayer perceptron</b> (MLP).
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+In the
+<a href="HTMLPerceptrons.html" class="internal-link">Chapter  «Click Here»</a> on Perceptron,
+we defined a perceptron as a single neuron with the Heaviside (or bipolar) activation function. In contrast, in the context of neural networks, a multilayer perceptron may involve any of the commonly used activation functions in its neuron functions, and is not restricted to the Heaviside (or bipolar) choice.
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Find the network dimensions, width, and depth of the MLP shown in the above <a href="HTMLMultilayerPerceptrons.html#multilayered.structure.fig">Figure &laquo;Click Here&raquo; </a>. Also, find the total number of parameters (weights and bias) involved in the network.
+</div></p><p>Training or learning an artificial neural network means obtaining a collection of trainable parameters <span class="math">\(\boldsymbol{\Theta}\)</span> by optimizing a suitable cost function over the given training dataset. Recall the learning process as briefed in 
+<a href="HTMLIntroductionNeurons.html#learning.model.subs" class="internal-link">Subsection  «Click Here»</a>
+ (in the context of supervised learning).  </p><p><h3 id="shallow-networks">Shallow Networks</h3></p><p>From <a href="HTMLMultilayerPerceptrons.html#artificial.neural.network.def">Definition &laquo;Click Here&raquo; </a>, we see that an ANN is defined as a composition of layers, where each layer applies an affine transformation followed by a nonlinear activation function. In this subsection, we construct an explicit form of a shallow network with one hidden layer, that is, <span class="math">\(L=2\)</span>.</p><p>Let the network dimensions be <span class="math">\(n_0, n_1, n_2\in \mathbb{N}\)</span>. From <a href="HTMLMultilayerPerceptrons.html#artificial.neural.network.def">Definition &laquo;Click Here&raquo; </a>, a shallow network with width <span class="math">\(\hat{n}=n_1\)</span> is a function <span class="math">\({\mathscr{F}_{2,\hat{n}}}:\mathbb{R}^{n_0}\rightarrow \mathbb{R}^{n_2}\)</span> given by
+</p><div class="math" id="single.layer.nn.eq">\begin{eqnarray}
+{\mathscr{F}_{2,\hat{n}}} (\boldsymbol{x};\boldsymbol{\Theta}) = \mathfrak{h}^{(2)}\big(\mathfrak{h}^{(1)} (\boldsymbol{x};\overline{W}^{(1)});\overline{W}^{(2)}\big),~\boldsymbol{x}\in \mathbb{R}^{n_0}.
+\end{eqnarray}<div style="text-align:right;">(4.2)</div></div><p>
+The augmented weight matrices are given by
+</p><div class="math" id="augmented.weight.matrix.eq">\begin{eqnarray}
+\overline{W}^{(l)} = \left(\begin{array}{llllcl}
+					b^{(l)}_1&amp;w^{(l)}_{11}&amp;w^{(l)}_{12}&amp;\cdots&amp;w^{(l)}_{1n_{l-1}}\\
+					b^{(l)}_2&amp;w^{(l)}_{21}&amp;w^{(l)}_{22}&amp;\cdots&amp;w^{(l)}_{2n_{l-1}}\\
+					     \ldots &amp;                       &amp;     \cdots       &amp;\cdots&amp;\cdots\\
+					     \ldots &amp;                       &amp;     \cdots       &amp;\cdots&amp;\cdots\\
+					     \ldots &amp;                       &amp;     \cdots       &amp;\cdots&amp;\cdots\\
+					b^{(l)}_{n_{l}}&amp;w^{(l)}_{n_{l}1}&amp;w^{(l)}_{n_{l}2}&amp;\cdots&amp;w^{(l)}_{n_{l}n_{l-1}}\\
+					\end{array}\right), 
+\end{eqnarray}<div style="text-align:right;">(4.3)</div></div><p>
+for <span class="math">\(l=1,2\)</span>.  We also write 
+</p><div class="math" id="split.augmented.weight.matrix.eq">\begin{eqnarray}
+\overline{W}^{(l)} = [\boldsymbol{b}^{(l)}~W^{(l)}], ~ \text{where}~
+\boldsymbol{b}^{(l)}= \left(\begin{array}{l}
+				b^{(l)}_1\\b^{(l)}_2\\ \cdot\\ \cdot \\ \cdot \\ b^{(l)}_{n_1}
+				\end{array}\right), ~
+{W}^{(l)} = \left(\begin{array}{lllcl}
+					w^{(l)}_{11}&amp;w^{(l)}_{12}&amp;\cdots&amp;w^{(l)}_{1n_{l-1}}\\
+					w^{(l)}_{21}&amp;w^{(l)}_{22}&amp;\cdots&amp;w^{(l)}_{2n_{l-1}}\\
+					     \ldots &amp;                      \cdots       &amp;\cdots&amp;\cdots\\
+					     \ldots &amp;                       \cdots       &amp;\cdots&amp;\cdots\\
+					     \ldots &amp;                       \cdots       &amp;\cdots&amp;\cdots\\
+					w^{(l)}_{n_{l}1}&amp;w^{(l)}_{n_{l}2}&amp;\cdots&amp;w^{(l)}_{n_{l}n_{l-1}}\\
+					\end{array}\right).
+\end{eqnarray}<div style="text-align:right;">(4.4)</div></div><p>
+From  
+<a href="HTMLIntroductionNeurons.html#artificial.neuron.def" class="internal-link">Definition  «Click Here»</a>, the <span class="math">\(k^{\rm th}\)</span> neuron of the <span class="math">\(l^{\rm th}\)</span> layer is given by 
+</p><div class="math">\[
+\text{𝕗}^{(l)}_k (\overline{\boldsymbol{x}}^{(l-1)};\overline{\boldsymbol{w}}^{(l)}_k) = \mathscr{A}^{(l)}\big(\text{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{\boldsymbol{w}}^{(l)}_k) \big),
+~l=1,2,~k=1,2,\ldots, n_{l},
+\]</div><p>
+where <span class="math">\(\overline{\boldsymbol{w}}^{(l)}_k = (b^{(l)}_k, w^{(l)}_{k1}, w^{(l)}_{k2}, \ldots, w^{(l)}_{kn_{l-1}})^\top\)</span> and <span class="math">\(\overline{\boldsymbol{x}}^{(l-1)} = (-1, \boldsymbol{x}^{(l-1)})^\top\)</span> are the augmented weight and input (column) vectors, respectively, <span class="math">\(\text{𝕒}:\{-1\}\times \mathbb{R}^{n_{l-1}}\rightarrow \mathbb{R}\)</span> is the affine function given by
+</p><div class="math">\[
+\text{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{\boldsymbol{w}}^{(l)}_k) = \big\langle \overline{\boldsymbol{w}}^{(l)}_k, \overline{\boldsymbol{x}}^{(l-1)} \big\rangle,
+\]</div><p> 
+ and <span class="math">\(\mathscr{A}^{(l)}: \mathbb{R} \rightarrow \mathbb{R}\)</span> is the nonlinear activation function used in the <span class="math">\(l^{\rm th}\)</span> layer. </p><p> For <span class="math">\(l=1\)</span>, <span class="math">\(\boldsymbol{x}^{(0)} = \boldsymbol{x}\in \mathbb{R}^{n_0}\)</span> is the input vector, and for <span class="math">\(l=2\)</span>, <span class="math">\(\boldsymbol{x}^{(1)}\in \mathbb{R}^{n_1}\)</span> is the output of the first layer given by
+</p><div class="math">\[
+\boldsymbol{x}^{(1)} = \mathfrak{h}^{(1)} (\boldsymbol{x}^{(0)};\overline{W}^{(1)}),
+\]</div><p>
+which is often referred to as the <b>activation</b> of that layer.  Finally, at the output, we have
+</p><div class="math">\[
+\boldsymbol{y} = \mathfrak{h}^{(2)} (\boldsymbol{x}^{(1)};\overline{W}^{(2)}).
+\]</div><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+It is important to note that at each layer, the input is taken without augmentation. Whereas, the augmentation is done only within the affine function, where we take the inner product (which is just a dot product in a finite-dimensional vector space) of the augmented input and weight vectors.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+Although it is mathematically possible to assign different activation functions to different neurons within the same layer, such a network complicates both the learning process and the mathematical analysis. A common practice is to use the same activation function for all neurons in a hidden layer, and a different one for the output layer, if required. This distinction is often essential, as different tasks need different forms of the output. For instance, function approximation (regression) often uses a linear activation, binary classification may use thresholding functions like Heaviside or bipolar (historically), or their smoother versions like sigmoid or tanh (to be introduced in the next subsection), and multi-class classification requires the softmax activation.
+</div></p><p>For notational convenience, we introduce the vector notation for the affine transformation and the activation function.</p><p><div class="remark" id="vector.form.activation">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Vector form of an activation</b>]
+</p><p>We define the affine function of the <span class="math">\(l^{\rm th}\)</span> layer as the vector-valued function <span class="math">\(\underline{𝕒}:\{-1\}\times \mathbb{R}^{n_{l-1}} \rightarrow \mathbb{R}^{n_l}\)</span> given by
+</p><div class="math" >\begin{eqnarray}
+\underline{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{W}^{(l)}) &amp;=&amp; \overline{W}^{(l)}\overline{\boldsymbol{x}}^{(l-1)}\\
+&amp;=&amp; W^{(l)}\boldsymbol{x}^{(l-1)} - \boldsymbol{b}^{(l)},
+\end{eqnarray}<div style="text-align:right;">(4.5)</div></div><p>
+where <span class="math">\(\boldsymbol{x}^{(l-1)}\in \mathbb{R}^{n_{l-1}}\)</span> is the activation of the <span class="math">\((l-1)^{\rm st}\)</span> layer, <span class="math">\(\boldsymbol{b}^{(l)}\in \mathbb{R}^{n_l}\)</span> is the bias vector, and <span class="math">\(W^{(l)}\)</span> is the <span class="math">\(n_l\times n_{l-1}\)</span> weight matrix of the <span class="math">\(l^{\rm th}\)</span> layer.</p><p>For a given activation function <span class="math">\(\mathscr{A}^{(l)}: \mathbb{R}\rightarrow \mathbb{R}\)</span>, we define the coordinatewise activation <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}:\mathbb{R}^{n_l}\rightarrow \mathbb{R}^{n_l}\)</span> as
+</p><div class="math">\[
+\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}(\boldsymbol{x}) = \big(\mathscr{A}^{(l)}(x_1), \mathscr{A}^{(l)}(x_2), \ldots, \mathscr{A}^{(l)}(x_{n_l})\big)^\top, ~\boldsymbol{x}\in \mathbb{R}^{n_l},
+\]</div><p>
+where <span class="math">\(\boldsymbol{x}=(x_1,x_2,\ldots, x_{n_l})^\top.\)</span></p><p>Thus, the activation of the <span class="math">\(l^{\rm th}\)</span> layer is the vector <span class="math">\(\boldsymbol{x}^{(l)}\in \mathbb{R}^{n_l}\)</span> given by
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{x}^{(l)}
+&amp;=&amp; \mathfrak{h}^{(l)} (\boldsymbol{x}^{(l-1)};\overline{W}^{(l)})\\
+&amp;=&amp; \underset{\overline{~~~~}}{\mathscr{A}}^{(l)}\big( \underline{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{W}^{(l)})\big).
+\end{eqnarray}<div style="text-align:right;">(4.6)</div></div><p>
+</div></p><p><div class="figure">
+
+<div  id="single.layer.nn.fig">
+<img src="Figures/ANNSLrealvector.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Schematic of single layer neural networks. (a) A real-valued neural network; (b) A vector-valued network.</div>
+
+</div></p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+Illustrations of single-layer neural networks, with scalar-valued and vector-valued outputs, are depicted in <a href="HTMLMultilayerPerceptrons.html#single.layer.nn.fig">Figure &laquo;Click Here&raquo; </a>(a) and <a href="HTMLMultilayerPerceptrons.html#single.layer.nn.fig">Figure &laquo;Click Here&raquo; </a>(b), respectively.</p><p>Let us write the explicit form of the ANN shown in <a href="HTMLMultilayerPerceptrons.html#single.layer.nn.fig">Figure &laquo;Click Here&raquo; </a>(a).  The input layer has two features, <i>i.e.,</i> <span class="math">\(n_0=2\)</span>. There are two layers with the hidden layer having <span class="math">\(n_1=3\)</span> neurons.  Thus, the depth of the network is 2 and the width is 3. Therefore, the ANN is the function <span class="math">\({\mathscr{F}_{2,3}}:\mathbb{R}^2\rightarrow \mathbb{R}\)</span> with the trainable parameter 
+</p><div class="math">\[
+\boldsymbol{\Theta} = \big( \overline{W}^{(1)}, \overline{W}^{(2)} \big),
+\]</div><p>
+where 
+</p><div class="math">\[
+\overline{W}^{(1)} = 
+	\left(\begin{array}{lll}
+		b^{(1)}_1 &amp; w^{(1)}_{11}&amp; w^{(1)}_{12}\\
+		b^{(1)}_2 &amp; w^{(1)}_{21}&amp; w^{(1)}_{22}\\
+		b^{(1)}_3 &amp; w^{(1)}_{31}&amp; w^{(1)}_{32}
+		\end{array}\right),~~
+\overline{W}^{(2)} = 
+	\left(\begin{array}{llll}
+		b^{(2)}_1 &amp; w^{(2)}_{11}&amp; w^{(2)}_{12}&amp; w^{(2)}_{13}
+		\end{array}\right).
+\]</div><p>
+The affine function of the first layer is
+</p><div class="math">\[
+\underline{𝕒}(\overline{\boldsymbol{x}}^{(0)};\overline{W}^{(1)}) 
+= W^{(1)}\boldsymbol{x}^{(0)} - \boldsymbol{b}^{(1)},
+\]</div><p>
+Using the notations in <a href="#split.augmented.weight.matrix.eq">(4.4)</a>, we obtain
+</p><div class="math" >\begin{eqnarray}
+\underline{𝕒}(\overline{\boldsymbol{x}}^{(0)};\overline{W}^{(1)}) &amp;=&amp;
+\left(\begin{array}{ll}
+		 w^{(1)}_{11}&amp; w^{(1)}_{12}\\
+		 w^{(1)}_{21}&amp; w^{(1)}_{22}\\
+		 w^{(1)}_{31}&amp; w^{(1)}_{32}
+		\end{array}\right) 
+		\left(\begin{array}{l}
+		x^{(0)}_1 \\
+		x^{(0)}_2 
+		\end{array}\right)
+		- \left(\begin{array}{l}
+		b^{(1)}_1 \\
+		b^{(1)}_2 \\
+		b^{(1)}_3 
+		\end{array}\right)\\
+&amp;=&amp; \left(\begin{array}{l}
+		w^{(1)}_{11}x^{(0)}_1 +  w^{(1)}_{12}x^{(0)}_2- b^{(1)}_1 \\
+		w^{(1)}_{21}x^{(0)}_1 +  w^{(1)}_{22}x^{(0)}_2- b^{(1)}_2 \\
+		w^{(1)}_{31}x^{(0)}_1 +  w^{(1)}_{32}x^{(0)}_2- b^{(1)}_3 
+		\end{array}\right).
+\end{eqnarray}<div style="text-align:right;">(4.7)</div></div><p>
+The activation <span class="math">\(\boldsymbol{x}^{(1)}\)</span> of the hidden layer is now obtained by applying the activation function <span class="math">\(\mathscr{A}^{(1)}\)</span> of the first hidden layer on the above vector coordinatewise to get
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{x}^{(1)} 
+&amp;=&amp; \underset{\overline{~~~~}}{\mathscr{A}}^{(1)}\left(W^{(1)}\boldsymbol{x}^{(0)} - \boldsymbol{b}^{(1)}\right)\\
+&amp;=&amp;\left(\begin{array}{c}
+		\mathscr{A}^{(1)}\big( w^{(1)}_{11}x^{(0)}_1 +  w^{(1)}_{12}x^{(0)}_2- b^{(1)}_1 \big)\\
+		\mathscr{A}^{(1)}\big( w^{(1)}_{21}x^{(0)}_1 +  w^{(1)}_{22}x^{(0)}_2- b^{(1)}_2 \big)\\
+		\mathscr{A}^{(1)}\big( w^{(1)}_{31}x^{(0)}_1 +  w^{(1)}_{32}x^{(0)}_2- b^{(1)}_3 \big)
+		\end{array}\right).
+\end{eqnarray}<div style="text-align:right;">(4.8)</div></div><p>
+Taking <span class="math">\(\boldsymbol{x}^{(1)}\)</span> as the input, the output is then computed at the output layer as
+</p><div class="math">\[
+y = \mathscr{A}^{(2)} \big(
+			w^{(2)}_{11} x^{(1)}_{1} + w^{(2)}_{12} x^{(1)}_{2} + w^{(2)}_{13} x^{(1)}_{3} - b^{(2)}_1
+			\big).
+\]</div><p>
+Observe that the right hand side of the above expression is the ANN <span class="math">\({\mathscr{F}_{2,3}}(\cdot\,;\boldsymbol{\Theta})\)</span> of the network depicted in <a href="HTMLMultilayerPerceptrons.html#single.layer.nn.fig">Figure &laquo;Click Here&raquo; </a>(a) given by <a href="#single.layer.nn.eq">(4.2)</a>, and its explicit expression is given by
+\begin{multline*}
+{\mathscr{F}_{2,3}}(\boldsymbol{x}^{(0)};\boldsymbol{\Theta}) =
+  \mathscr{A}^{(2)}\Big(
+  	w^{(2)}_{11}\mathscr{A}^{(1)}\big( w^{(1)}_{11}x^{(0)}_1 +  w^{(1)}_{12}x^{(0)}_2- b^{(1)}_1 \big)\\
+  	+ w^{(2)}_{12}\mathscr{A}^{(1)}\big( w^{(1)}_{21}x^{(0)}_1 +  w^{(1)}_{22}x^{(0)}_2- b^{(1)}_2 \big)\\
+	+  w^{(2)}_{13} \mathscr{A}^{(1)}\big( w^{(1)}_{31}x^{(0)}_1 +  w^{(1)}_{32}x^{(0)}_2- b^{(1)}_3 \big) - b^{(2)}_1
+	\Big),
+\end{multline*}
+for every input vector <span class="math">\( \boldsymbol{x}^{(0)}\in \mathbb{R}^{2}\)</span>. The network has 13 trainable parameters given by
+</p><div class="math">\[
+\boldsymbol{\Theta} =  \left( \left(\begin{array}{lll}
+		b^{(1)}_1&amp; w^{(1)}_{11}&amp; w^{(1)}_{12}\\
+		b^{(1)}_2&amp; w^{(1)}_{21}&amp; w^{(1)}_{22}\\
+		b^{(1)}_3&amp; w^{(1)}_{31}&amp; w^{(1)}_{32}
+		\end{array}\right) , ~~ 
+		\left(\begin{array}{llll}
+		b^{(2)}_1&amp; w^{(2)}_{11}&amp; w^{(2)}_{12}&amp; w^{(2)}_{13}
+		\end{array}\right)\right).
+\]</div><p>
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Derive the explicit expression for the ANN <span class="math">\({\mathscr{F}_{2,3}}(\overline{\boldsymbol{x}}^{(0)};\boldsymbol{\Theta})\)</span> of the network depicted in <a href="HTMLMultilayerPerceptrons.html#single.layer.nn.fig">Figure &laquo;Click Here&raquo; </a>(b) and give all the trainable parameters of this network.
+</div></p><p><h3 id="batch-forward-propagation">Batch Forward Propagation</h3>
+</p><p>The shallow network computations described in the previous subsection can be generalized to neural networks of arbitrary depth. </p><p>For fixed parameters <span class="math">\(\boldsymbol{\Theta}\)</span>, the network function <span class="math">\({\mathscr{F}_{L,\hat{n}}}:\mathbb{R}^{n_0}\rightarrow \mathbb{R}^{n_L}\)</span> is well-defined. For every input vector <span class="math">\(\boldsymbol{x}\in\mathbb{R}^{n_0}\)</span>, the final output <span class="math">\(\boldsymbol{y}={\mathscr{F}_{L,\hat{n}}}(\boldsymbol{x}; \boldsymbol{\Theta})\)</span> is evaluated recursively by taking the output of the <span class="math">\((l-1)^{\rm st}\)</span> layer as the input to the <span class="math">\(l^{\rm th}\)</span>  layer, and computing
+</p><div class="math">\[
+\boldsymbol{x}^{(l)} = \mathfrak{h}^{(l)} \big( \boldsymbol{x}^{(l-1)};\overline{W}^{(l)} \big),~l = 1,2,\ldots, L,
+\]</div><p>
+where <span class="math">\(\boldsymbol{x}^{(l)}\)</span> is called the <b>activation</b> of the <span class="math">\(l^{\rm th}\)</span> layer.  This recursive evaluation procedure is referred to as the <b>forward propagation</b> of the activations.</p><p><h4 id="batch-propagation">Batch Propagation</h4></p><p>Given a dataset 
+</p><div class="math">\[
+\mathcal{D} = \big\{(\boldsymbol{x}_k, \boldsymbol{y_k}) \mid k=1,2,\ldots, N\big\}\subset \mathbb{R}^{n_0}\times \mathbb{R}^{n_L},
+\]</div><p>
+arrange the input vectors in the <span class="math">\(n_0\times N\)</span> matrix form as
+</p><div class="math">\[
+{A}^{(0)}:= [ \boldsymbol{x}_1~\boldsymbol{x}_2~\cdots~\boldsymbol{x}_N]
+= \left(\begin{array}{lllcl}
+					x^{(0)}_{11}&amp;x^{(0)}_{12}&amp;\cdots&amp;x^{(0)}_{1N}\\
+					x^{(0)}_{21}&amp;x^{(0)}_{22}&amp;\cdots&amp;x^{(0)}_{2N}\\
+					     \ldots &amp;\cdots    &amp;\cdots        &amp;     \cdots \\
+					     \ldots &amp;\cdots    &amp;\cdots              &amp;     \cdots \\
+					x^{(0)}_{n_01}&amp;x^{(0)}_{n_02}&amp;\cdots&amp;x^{(0)}_{n_0N}\\
+					\end{array}\right),
+\]</div><p>
+where each column corresponds to one sample.</p><p>To gain computational efficiency, it is preferable to perform forward propagation on the entire dataset in matrix form, rather than evaluating the ANN separately for each input vector. </p><p>Then the affine function takes the form
+</p><div class="math">\[
+\underline{𝕒}(\overline{A}^{(0)}; \overline{W}^{(1)}) = \overline{W}^{(1)}\overline{A}^{(0)},
+\]</div><p>
+where <span class="math">\(\overline{A}^{(0)}\)</span> is the augmented input matrix and the right hand side is a <span class="math">\(n_1\times N\)</span> matrix.</p><p>Apply the activation function <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(1)}\)</span> to get the activation matrix of the first layer as
+</p><div class="math">\[
+A^{(1)}
+=\underset{\overline{~~~~}}{\mathscr{A}}^{(1)}\big(\overline{W}^{(1)}\overline{A}^{(0)}\big).
+\]</div><p>
+Taking the activation <span class="math">\(A^{(1)}\)</span> of the first layer as the input to the second layer, the activation of the second layer is computed using the formula
+</p><div class="math">\[
+A^{(2)}
+=\underset{\overline{~~~~}}{\mathscr{A}}^{(2)}\big(\overline{W}^{(2)}\overline{A}^{(1)}\big).
+\]</div><p>
+Proceed recursively as
+</p><div class="math">\[
+A^{(l)} = \underset{\overline{~~~~}}{\mathscr{A}}^{(l)}\big(\overline{W}^{(l)}\overline{A}^{(l-1)}\big), \quad l=1,2,\ldots,L.
+\]</div><p>In general, we have the following algorithm:</p><p><div class="algorithm">
+<div class="heading-container">
+<b class="heading">Algorithm:</b>
+</div>
+[<b>Batch Forward Propagation</b>]</p><p><b>Input:</b> 
+
+</li><li>Given the trained parameters 
+</p><div class="math">\[
+\boldsymbol{\Theta} = \big( \overline{W}^{(1)}, \overline{W}^{(2)}, \cdots, \overline{W}^{(L)} \big)
+\]</div><p></li><li>Given the dataset in the form of a <span class="math">\(n_0\times N\)</span> matrix 
+<span class="math">\(
+A^{(0)}.
+\)</span>
+</p><p><b>Processing:</b></p><p>For each layer <span class="math">\(l=1,2,\ldots, L\)</span>, perform the following computation:
+
+</li><li>Augment the activation <span class="math">\(A^{(l-1)}\)</span> matrix to obtain <span class="math">\(\overline{A}^{(l-1)}\)</span>.
+</li><li>Perform the matrix multiplication
+</p><div class="math">\[
+Z^{(l)} = \overline{W}^{(l)}\,\overline{A}^{(l-1)}
+\]</div><p>
+</li><li>Apply the activation function to each element of the matrix <span class="math">\(Z^{(l)}\)</span> as follows:</p><p> <span style="margin-left: 2em;">For <span class="math">\(i=1,2,\ldots, n_l\)</span></span></p><p> <span style="margin-left: 4em;">For <span class="math">\(j=1, 2, \ldots, N\)</span></span></p><p> <span style="margin-left: 8em;"> <span class="math">\(A^{(l)}_{ij} = \mathscr{A}^{(l)}(Z^{(l)}_{ij}).\)</span></span></p><p><b>Output:</b> <span class="math">\(Y = A^{(L)},\)</span> which is a <span class="math">\(n_L\times N\)</span> matrix
+</div></p><p>A visualization of the above algorithm is shown in <a href="HTMLMultilayerPerceptrons.html#Forward.Propagation.fig">Figure &laquo;Click Here&raquo; </a></p><p><div class="figure">
+
+<div  id="Forward.Propagation.fig">
+<img src="Figures/Ch03ForwardPropogation.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Visualization of batch forward propagation in a feedforward neural network, showing how the input passes through hidden layers to generate the final output.</div>
+
+</div></p><p><div class="remark" id="ANN.representation.rem">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+
+An artificial neural network can also be uniquely identified by the tuple 
+</p><div class="math">\[
+\big( \boldsymbol{\Theta}, \underset{\overline{~~~~}}{\mathscr{A}} \big) := \Big((\overline{W}^{(1)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(1)}_{n_1}), (\overline{W}^{(2)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(2)}_{n_2}),\ldots, (\overline{W}^{(L)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(L)}_{n_L})\Big),
+\]</div><p>
+where <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}_{n_l}\)</span> denotes the activation function of the <span class="math">\(l^{\rm th}\)</span> layer with the indication of the width of the layer as the suffix.
+</div></p><p><div class="code">
+<div class="heading-container">
+<b class="heading">Code:</b>
+</div>
+<span class="math">\(~\)</span>
+<ol class="latex-enumerate">
+</li><li>Understand the following python code implementing the above forward propagation algorithm:</p><p>
+<a href="https://colab.research.google.com/drive/1aSYMIfEiMuU7jaIMRhQ9KUHPgQ8TqNUV?usp=sharing">
+BatchForwardPropagationDirectImplementation
+</a>
+</p><p></li><li>Understand the following python code that implements forward propagation using TensorFlow-Keras:</p><p>
+<a href="https://colab.research.google.com/drive/1VGBq4by1CM1g8prTiHXdt3aVoVl1Lss4?usp=sharing">
+BatchForwardPropagationTensorFlow-Keras
+</a>
+</p><p></li><li>In the TensorFlow-Keras implementation of a feedforward neural network, the weights, biases, and batch input <span class="math">\(A^{(0)}\)</span> are handled differently rather than the augmented matrix formats we used in the theoretical formulation.
+<ol class="latex-enumerate">
+</li><li>Describe how Keras stores the weight matrices and bias vectors for each layer, and compare this with the augmented weight matrix format <span class="math">\(W^{(l)}\)</span> we used in theory.</p><p></li><li>Explain the difference between the batch input format of <span class="math">\(A^{(0)}\)</span> in Keras 
+(<i>i.e.,</i> NumPy/TensorFlow arrays) and the format we used in the theoretical framework (column-wise arrangement of samples) as well as in the first code above.
+</li></ol>
+<li>Understand the following python code that implements forward propagation using PyTorch </p><p>
+<a href="https://colab.research.google.com/drive/1YB21nW5dO0KfVoUF7CyBhJhPa4Kr0UJp?usp=sharing">
+BatchForwardPropagationPyTorch
+</a>
+</p><p></li><li>Explain the weight matrix and biases formats of PyTorch and do a similar comparison between PyTorch format and our theoretical formulation as asked in Question 3 above.
+</li></ol>
+</div></p><p><h2 id="activation-functions">Activation Functions</h2>
+</p><p>The learning efficiency and the model performance of an ANN depend crucially on the choice of an activation function.  In this subsection, we introduce a few commonly used activation functions.  For clarity of exposition, we illustrate them using single neurons and shallow networks.</p><p><h3 id="step-functions">Step Functions</h3></p><p>Let us start our discussion with a class of activation functions that we are already familiar from our discussions in the previous chapters.</p><p><h4 id="heaviside-function">Heaviside function</h4></p><p>Unit step function of the Heaviside function is called the <b>threshold activation function</b>, given by
+</p><div class="math" id="heaviside.function.activation.eq">\begin{eqnarray}
+\mathscr{H}(x) = \left\{\begin{array}{lc}
+		0,&amp;\text{if}~x<0\\
+		1,&amp;\text{if}~x\ge 0
+	\end{array}\right.
+\end{eqnarray}<div style="text-align:right;">(4.9)</div></div><p>
+In terms of distributional derivatives, the derivative of the Heaviside function is given by <span class="math">\(\mathscr{H}'(x) = \delta(x)\)</span>, where <span class="math">\(\delta\)</span> denotes the Dirac's measure.</p><p><h4 id="bipolar-function">Bipolar Function</h4></p><p>The bipolar function is called the <b>bipolar activation function</b> and is given by
+</p><div class="math" id="bipolar.function.activation.eq">\begin{eqnarray}
+\mathscr{B}(x) = \left\{\begin{array}{rc}
+		-1,&amp;\text{if}~x<0\\
+		1,&amp;\text{if}~x\ge 0
+	\end{array}\right.
+\end{eqnarray}<div style="text-align:right;">(4.10)</div></div><p>
+It is easy to see that <span class="math">\(\mathscr{B}(x) = 2\mathscr{H}(x) - 1\)</span>.  Therefore, the distributional derivative of <span class="math">\(\mathscr{B}\)</span> is given by <span class="math">\(\mathscr{B}'(x) = 2\delta(x)\)</span>.</p><p>The threshold and bipolar activation functions are used at the output layer of problems involving binary classification, which we studied in the context of perceptrons in the <a href="HTMLPerceptrons.html" class="internal-link">Chapter  «Click Here»</a>.</p><p><h3 id="sigmoid-functions:-logistic-regression">Sigmoid Functions: Logistic Regression</h3></p><p>A <b>sigmoid function</b> is a continuously differentiable function <span class="math">\(\mathscr{S}:\mathbb{R} \rightarrow (0,1)\)</span>, such that <span class="math">\(\mathscr{S}'>0\)</span> (strictly increasing) and <span class="math">\(\mathscr{S}(s)\rightarrow 0\)</span> as <span class="math">\(s\rightarrow -\infty\)</span> and <span class="math">\(\mathscr{S}(s)\rightarrow 1\)</span> as <span class="math">\(s\rightarrow +\infty\)</span>.</p><p>A commonly used sigmoid function is the <b>logistic function</b> with parameter <span class="math">\(k>0\)</span> and is defined as
+</p><div class="math" id="sigmoid.function.activation.eq">\begin{eqnarray}
+\mathscr{S}_k(s) = \frac{1}{1+e^{-ks}}, ~ s\in \mathbb{R}.
+\end{eqnarray}<div style="text-align:right;">(4.11)</div></div><p>
+The graphs of the sigmoid function for various values of <span class="math">\(k\)</span> are depicted in the following figure. From the figure, we observe that <span class="math">\(\mathscr{S}_k\rightarrow \mathscr{H}\)</span> pointwise as <span class="math">\(k\rightarrow \infty\)</span> on <span class="math">\(\mathbb{R}\backslash \{0\}\)</span>.</p><p><div class="figure">
+
+
+<img src="Figures/Ch03Sigmoidc.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Graphs of the logistic sigmoid function for various values of <span class="math">\(k\)</span>, illustrating convergence to the Heaviside step function as <span class="math">\(k \to \infty\)</span>.</div>
+
+
+</div></p><p>Since we use gradient-based optimization methods (such as gradient descent method) for learning a neural network, smooth activation functions like the logistic function are preferred over the Heaviside function, which is non-differentiable and constant almost everywhere. Moreover, the logistic function maps <span class="math">\(x \mapsto y \in (0,1)\)</span> and hence its output can be interpreted as a probability. This makes it particularly useful in probabilistic models such as logistic regression.</p><p><div class="example" id="logistic.regression.ex">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>Logistic Regression</b>]
+</p><p>Consider a dataset 
+</p><div class="math">\[
+\mathcal{D} = \big(\mathcal{C}^-\times \{0\}\big) \cup \big(\mathcal{C}^+\times \{1\}\big).
+\]</div><p>If <span class="math">\(\mathcal{D}\)</span> is linearly separable, then a perceptron can learn a separating hyperplane with weight <span class="math">\(\boldsymbol{w}\)</span> and bias <span class="math">\(b\)</span>, and classify inputs by the rule  
+</p><div class="math">\[
+\hat{y} = \begin{cases}
+1, &amp; \langle \boldsymbol{w}, \boldsymbol{x}\rangle - b > 0, \\
+0, &amp; \text{otherwise}.
+\end{cases}
+\]</div><p>
+This is a <b>hard classification rule</b> that outputs only <span class="math">\(0\)</span> or <span class="math">\(1\)</span>.  </p><p>Instead of making a hard decision, we may ask the following question: </p><p>
+What is the probability that an input  <span class="math">\(\boldsymbol{x}\)</span> belongs to <span class="math">\(\mathcal{C}^+\)</span>? 
+</p><p>Using Bayes’ theorem, the posterior probability for the class <span class="math">\(\mathcal{C}^+\)</span> can be written as
+</p><div class="math">\[
+\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}) = 
+\frac{p(\boldsymbol{x} \mid \mathcal{C}^+) \mathbb{P}(\mathcal{C}^+)}
+{p(\boldsymbol{x} \mid \mathcal{C}^+) \mathbb{P}(\mathcal{C}^+) + p(\boldsymbol{x} \mid \mathcal{C}^-) \mathbb{P}(\mathcal{C}^-)},
+\]</div><p>
+where <span class="math">\(\mathbb{P}\)</span> denotes a probability measure, and <span class="math">\(p\)</span> is the probability mass (or density) function associated with <span class="math">\(\mathbb{P}\)</span>.</p><p>Taking the ratio of posteriors, we get
+</p><div class="math">\[
+\frac{\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})}{\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x})} 
+= \frac{p(\boldsymbol{x} \mid \mathcal{C}^+) \mathbb{P}(\mathcal{C}^+)}{p(\boldsymbol{x} \mid \mathcal{C}^-) \mathbb{P}(\mathcal{C}^-)},
+\]</div><p>
+which is referred to as the <b>odds</b>.  The logarithm of the odds is called the <b>logit</b> or <b>log-odds</b>, and from the above expression, we see that the log-odds can be written as
+</p><div class="math">\[
+\log \frac{\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})}{\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x})} 
+= \log \Lambda(\boldsymbol{x}) + \log\left( \frac{\mathbb{P}(\mathcal{C}^+)}{\mathbb{P}(\mathcal{C}^-)}\right),
+\]</div><p>
+where
+</p><div class="math">\[
+\Lambda(\boldsymbol{x}) = \frac{p(\boldsymbol{x} \mid \mathcal{C}^+)}{p(\boldsymbol{x} \mid \mathcal{C}^-)}
+\]</div><p> 
+is the <b>likelihood ratio</b>.</p><p>Assume that the log-likelihood ratio is linear in <span class="math">\(\boldsymbol{x}\)</span>, that is, there is a weight vector <span class="math">\(\boldsymbol{w}\)</span> such that
+</p><div class="math">\[
+\log \Lambda(\boldsymbol{x}) = \langle \boldsymbol{w}, \boldsymbol{x} \rangle,
+\]</div><p>
+for all input vectors <span class="math">\(\boldsymbol{x}\)</span>. Then the log-odds can be written as  
+</p><div class="math">\[
+\log \frac{\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})}{\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x})} 
+= \langle \boldsymbol{w}, \boldsymbol{x} \rangle - b,
+\]</div><p>
+where <span class="math">\(b = - \log\left( \tfrac{\mathbb{P}(\mathcal{C}^+)}{\mathbb{P}(\mathcal{C}^-)}\right)\)</span> is treated as the bias.</p><p>Noting that <span class="math">\(\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x}) = 1 - \mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})\)</span> and solving the above equation for <span class="math">\(\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})\)</span>, we obtain  
+</p><div class="math">\[
+\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}) 
+= \mathscr{S}_1\big(\langle \boldsymbol{w}, \boldsymbol{x} \rangle - b\big).
+\]</div><p>
+The interpretation of the above expression is as follows:  </p><p>Given an input vector <span class="math">\(\boldsymbol{x}\)</span>, the probability that it belongs to the class <span class="math">\(\mathcal{C}^+\)</span> is equal to the value of the logistic function <span class="math">\(\mathscr{S}_1\)</span> at the point <span class="math">\(s = \langle \boldsymbol{w}, \boldsymbol{x} \rangle - b\)</span>. </p><p>Thus, estimating a weight vector <span class="math">\(\boldsymbol{w}\)</span> and a bias <span class="math">\(b\)</span> allows us to assign probabilities for each of the two classes  <span class="math">\(\mathcal{C}^+\)</span> and <span class="math">\(\mathcal{C}^-\)</span>.  At the inference stage, by applying a suitable decision rule (for instance, thresholding at <span class="math">\(0.5\)</span>),  we obtain a binary (hard) classification.  In the context of statistical learning, such a probabilistic classification model is called <b>logistic regression</b>.
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show that <span class="math">\(\mathscr{S}_1^{-1}\)</span> is the logit or log-odd function.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Neuron Viewpoint of Logistic Regression</b>]</p><p>Logistic regression can be viewed as a single artificial neuron with the neuron function as
+</p><div class="math">\[
+\text{𝕗}^{(1)}(\overline{\boldsymbol{x}}^{(0)};\overline{\boldsymbol{w}}^{(1)}) = \mathscr{S}_1 \big( \text{𝕒}(\overline{\boldsymbol{x}}^{(0)};\overline{\boldsymbol{w}}^{(1)}) \big),
+\]</div><p>
+for any given input vector <span class="math">\(\overline{\boldsymbol{x}}^{(0)}\in \mathbb{R}^{n_0}\)</span>. Thus, logistic regression can be trained as an artificial neuron to approximate the posterior probability of the positive class of a given dataset, so that the output is
+</p><div class="math">\[
+\hat{p} = \mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}).
+\]</div><p>
+Hard classification is then obtained during inference by applying a decision rule
+</p><div class="math">\[
+\hat{y} = \begin{cases}
+1, &amp; \text{if} ~ \hat{p} \ge \hat{p}^*, \\
+0, &amp; \text{otherwise},
+\end{cases}
+\]</div><p>
+where <span class="math">\(\hat{p}^*\in (0,1)\)</span> is chosen based on applications. For instance, <span class="math">\(\hat{p}^*=0.5\)</span> is a default choice.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Logistic regression finds the best linear boundary in a probabilistic sense that provides a measure of confidence. Hard classification is obtained only at the inference stage by applying a decision rule (e.g., thresholding).  Because of this probabilistic formulation, logistic regression can also be applied to datasets that are not linearly separable.
+</div></p><p>Recall from the
+<a href="HTMLIntroductionNeurons.html#learning.model.subs" class="internal-link">Subsection  «Click Here»</a> on Supervised Learning
+ that to learn parameters <span class="math">\((b, \boldsymbol{w})\)</span> of a model, we have to choose a suitable cost function.  There is a natural choice of the cost function to train logistic regression, which we discuss in the following remark.  </p><p><div class="remark" id="cross-entropy.loss.function.rem">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Cross-entropy Cost Function</b>]
+</p><p>A natural training principle for logistic regression is to maximize the likelihood that the model assigns to the observed labels, given the predicted probabilities.  Let us make this idea more precise:</p><p>For a single training example <span class="math">\((\boldsymbol{x}_i,y_i)\)</span>, the model predicts a probability <span class="math">\(\hat{p}_i = P(\mathcal{C}^+ \mid \boldsymbol{x}_i)\)</span>.  
+The likelihood of observing the true label <span class="math">\(y_i \in \{0,1\}\)</span> under this prediction is
+</p><div class="math">\[
+L_i = \hat{p}_i^{\,y_i}\,(1-\hat{p}_i)^{\,1-y_i}.
+\]</div><p>
+For an entire training dataset <span class="math">\(\mathcal{D}_\text{train} = \big\{(\boldsymbol{x}_i,y_i) \mid i=1,2,\ldots, N_\text{train}\big\}\)</span> having independent samples (examples) from the underlying joint distribution, the joint likelihood is the product
+</p><div class="math">\[
+L(b, \boldsymbol{w}) = \prod_{i=1}^{N_\text{train}} \hat{p}_i^{y_i} (1 - \hat{p}_i)^{1-y_i}.
+\]</div><p>
+Rather than maximizing this product directly, it is more convenient to work with the 
+<b>log-likelihood</b> 
+</p><div class="math">\[
+\log L(b, \boldsymbol{w})
+= \sum_{i=1}^{N_\text{train}} \Big[ y_i \log \hat{p}_i + (1-y_i)\log(1-\hat{p}_i) \Big].
+\]</div><p>
+Thus, the training objective for logistic regression is to maximize the log-likelihood.  
+Equivalently, minimizing the negative log-likelihood yields the <b>cross-entropy cost function</b>, given by
+</p><div class="math" >\begin{eqnarray}
+\mathcal{L}(b, \boldsymbol{w}) = - \frac{1}{N_\text{train}}\sum_{i=1}^{N_\text{train}} \Big[ y_i \log \hat{p}_i + (1-y_i)\log(1-\hat{p}_i) \Big].
+\end{eqnarray}<div style="text-align:right;">(4.12)</div></div><p>
+The cost function <span class="math">\(\mathcal{L}(\boldsymbol{w}, b)\)</span> is smooth and convex, 
+but it has no closed-form solution. 
+The most suitable optimization algorithm is gradient descent
+(or its variants, such as stochastic gradient descent), which we will discuss in a separate section later.
+</div></p><p><h3 id="hyperbolic-tangent-function">Hyperbolic Tangent Function</h3></p><p>The <b>hyperbolic tangent function</b>, also called the <b>bipolar sigmoid function</b>, is a map <span class="math">\(\mathscr{T}:\mathbb{R}\rightarrow (-1,1)\)</span> defined as
+</p><div class="math">\[
+\mathscr{T}_k(x) = \tanh(kx),~x\in \mathbb{R}, k>0.
+\]</div><p>
+This function can also be defined as
+</p><div class="math">\[
+\mathscr{T}_k(x) = \frac{e^{kx}-e^{-kx}}{e^{kx}+e^{-kx}},~x\in \mathbb{R}, k>0.
+\]</div><p><div class="figure">
+
+
+<img src="Figures/Ch03Tanh.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Graphs of the hyperbolic tangent function for various values of <span class="math">\(k\)</span>, illustrating convergence to the bipolar step function as <span class="math">\(k \to \infty\)</span>.</div>
+
+
+</div></p><p>The graphs of the hyperbolic tangent function for various values of <span class="math">\(k\)</span> are depicted in the above figure. From the figure, we observe that <span class="math">\(\mathscr{T}_k\rightarrow \mathscr{B}\)</span> pointwise as <span class="math">\(k\rightarrow \infty\)</span> on <span class="math">\(\mathbb{R}\backslash \{0\}\)</span>.</p><p>The hyperbolic tangent function is preferred over the bipolar function while learning an ANN using gradient-based optimization methods (such as gradient descent method).</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show that <span class="math">\(\mathscr{T}_1 (x)=2\mathscr{S}_2(x)-1\)</span>.
+</div></p><p>The above problem shows that the tanh function is the logistic sigmoid stretched vertically (range doubled) and shifted downward by 1. Hence, the tanh activation function can be viewed as a particular affine transformation of the logistic sigmoid.</p><p><h3 id="bumped-type-functions">Bumped-type Functions</h3></p><p>Bump functions are those which graphically resembles a bell-shaped curve,  attains a maximum at some point, and decays rapidly to zero as <span class="math">\(x\rightarrow \pm \infty\)</span>.</p><p>For instance, the <b>Gaussian bump</b> <span class="math">\(\mathscr{G}_{\lambda,c}:\mathbb{R} \rightarrow (0,1]\)</span>, for fixed values of <span class="math">\(\lambda>0\)</span> and <span class="math">\(c\in \mathbb{R}\)</span>, is defined as
+</p><div class="math">\[
+\mathscr{G}_{\lambda, c}(x) = e^{-\lambda(x-c)^2},~ x\in \mathbb{R}.
+\]</div><p>
+Another example of a bump function is the <b>Laplace bump</b> <span class="math">\(\mathscr{L}_{\lambda,c}: \mathbb{R} \rightarrow (0,1]\)</span>, for fixed values of <span class="math">\(\lambda>0\)</span> and <span class="math">\(c\in \mathbb{R}\)</span> and is defined as
+</p><div class="math">\[
+\mathscr{L}_{\lambda,c}(x) = e^{-\lambda|x-c|},~x\in \mathbb{R},
+\]</div><p>
+which is not smooth. The graph of the Gaussian and Laplace bumps with <span class="math">\(\lambda=1\)</span> and <span class="math">\(c=0\)</span> are depicted in the following figure.</p><p><div class="figure">
+
+
+<img src="Figures/Ch03Bumps.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Graphs of the Gaussian and Laplace bumps with <span class="math">\(\lambda=1\)</span> and <span class="math">\(c=0\)</span>.</div>
+
+
+</div></p><p><h3 id="hockey-stick-functions">Hockey-stick Functions</h3></p><p>Any function whose graph resembles a hockey stick, <i>i.e.,</i> an increasing L-shaped curve is a <b>hockey-stick</b> function.</p><p><h4 id="leaky-rectified-linear-unit">Leaky Rectified Linear Unit</h4></p><p>We are already familiar with the rectified linear unit from the first chapter (see the
+<a href="HTMLIntroductionNeurons.html#AN.example" class="internal-link">Example «Click Here»</a>
+).  We now define a general form of this function, called the <b>leaky rectified linear unit</b> with parameter <span class="math">\(\alpha\in [0, 1)\)</span> as the function <span class="math">\(\mathscr{R}_\alpha :\mathbb{R} \rightarrow \mathbb{R}\)</span> defined as
+</p><div class="math">\[
+\mathscr{R}_\alpha(x) = \left\{\begin{array}{cc}
+						\alpha x, &amp; {if}~x<0,\\
+						x, &amp; {if}~x\ge 0.
+						\end{array}\right.
+\]</div><p>
+In particular, if we take <span class="math">\(\alpha=0\)</span>, we see that <span class="math">\(\mathscr{R}_0 = \texttt{ReLU}\)</span> (see <a href="HTMLIntroductionNeurons.html#AN.example" class="internal-link">Example «Click Here»</a>), which is the rectified linear unit defined as
+</p><div class="math">\[
+\mathscr{R}_0 (x) = \max\{0,x\},~x\in \mathbb{R}.
+\]</div><p>
+Many modern network models use <span class="math">\(\texttt{ReLU}\)</span> as the activation function. This is mainly because the learning rate of a network involving <span class="math">\(\texttt{ReLU}\)</span> is several times faster than networks with other sigmoid activation functions.</p><p>Instead of choosing <span class="math">\(\alpha\in [0,1)\)</span>, if we treate <span class="math">\(\alpha>0\)</span> as a trainable parameter, then the activation function <span class="math">\(\mathscr{R}_\alpha\)</span> is called the <b>parametric rectified linear unit</b>.</p><p><h4 id="sigmoid-linear-units">Sigmoid Linear Units</h4></p><p><b>Sigmoid linear units</b> (also called <b>swish</b>) is a smooth function <span class="math">\(\texttt{SLU}:\mathbb{R}\rightarrow \mathbb{R}\)</span> defined as
+</p><div class="math">\[
+\texttt{SLU}_k(x) = x\mathscr{S}_k(x),
+\]</div><p>
+for a fixed parameter <span class="math">\(k>0\)</span>.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show that <span class="math">\(\texttt{SLU}_k(x) \rightarrow \texttt{ReLU}\)</span>(x) as <span class="math">\(k\rightarrow \infty\)</span>, for all <span class="math">\(x\in \mathbb{R}\backslash \{0\}\)</span>.
+</div></p><p><h4 id="softplus-function">Softplus Function</h4></p><p>Another smooth version of the <span class="math">\(\texttt{ReLU}\)</span> function is the <b>softplus function</b> defined as
+</p><div class="math">\[
+\texttt{sp}(x) = \text{ln}(1+e^x).
+\]</div><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show the following properties:
+<ol class="latex-enumerate">
+<li><span class="math">\(\texttt{sp}(x) - \texttt{sp}(-x) = x.\)</span>
+</li><li><span class="math">\(\texttt{sp}'(x) = \mathscr{S}_1(x).\)</span>
+</li></ol>
+</div></p><p>Graphs of hockey-stick functions are depicted in the following figure.</p><p><div class="figure">
+
+
+<img src="Figures/Ch03ReLU.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">Graph of hockey-stick activation functions.</div>
+
+
+</div></p><p><h3 id="multi-class-classification">Multi-class Classification</h3></p><p>Multi-class classification refers to assigning exactly one class to each input out of a set of more than two possible classes.</p><p>In a multi-class classification, the outputs (targets/labels) are often categories (discrete class names), such as identifying whether a photograph depicts a cat, or a dog, or a cow.  In this case, the output is <span class="math">\(y \in \{\text{`cat'}, \text{`dog'}, \text{`cow'}\}.\)</span></p><p>Since neural networks cannot handle symbolic categories directly, the target must be represented numerically.  A canonical way of interpreting an <span class="math">\(n\)</span>-class classification numerically is to use <b>one-hot</b> vector encoding, where each class is represented by an <span class="math">\(n\)</span>-dimensional vector <span class="math">\(\boldsymbol{e}_i=(0,0,\ldots,1,0,\ldots, 0)\)</span>, for <span class="math">\(i=1,2,\ldots, n\)</span>, with <span class="math">\(1\)</span> appearing at the <span class="math">\(i^{\rm th}\)</span> coordinate.</p><p>For instance, the above example is a 3-class classification, which can be encoded by the three dimensional one-hot mapping as
+</p><div class="math" >\begin{eqnarray}
+\text{`cat'} &amp;\mapsto&amp; (1,0,0)\\
+\text{`dog'} &amp;\mapsto&amp; (0,1,0)\\
+\text{`cow'} &amp;\mapsto&amp; (0,0,1)
+\end{eqnarray}<div style="text-align:right;">(4.13)</div></div><p>
+One-hot encoding is the canonical way to represent categorical targets in multi-class classification.</p><p><h4 id="softmax-function">Softmax Function</h4></p><p>In a multi-class classification problem with <span class="math">\(n\)</span> classes, a neural network produces a pre-activation vector of real numbers at the output layer as
+</p><div class="math">\[
+\boldsymbol{z}=(z_1, z_2, \ldots, z_n)^\top,
+\]</div><p>
+whose entries are called the <b>logits</b> of the <span class="math">\(n\)</span> classes.</p><p>To interpret these logits as probabilities of each class, we apply the <b>softmax function</b> as the activation function at the output layer to get the output as <span class="math">\(\boldsymbol{y} = (y_1, y_2, \ldots, y_n)^\top\)</span>, where
+</p><div class="math">\[
+y_i = \frac{e^{z_i}}{\displaystyle{\sum_{j=1}^n} e^{z_j}}, \text{ for } i=1,2,\ldots, n.
+\]</div><p>
+Thus, softmax is a function <span class="math">\(\texttt{sm}: \mathbb{R}^n \rightarrow \mathbb{R}^n\)</span> defined by
+</p><div class="math">\[
+\texttt{sm}(\boldsymbol{z}) = \left(
+					\frac{e^{z_1}}{\displaystyle{\sum_{i=1}^n} e^{z_i}}, 
+					\frac{e^{z_2}}{\displaystyle{\sum_{i=1}^n} e^{z_i}}, 
+					\ldots,
+					\frac{e^{z_n}}{\displaystyle{\sum_{i=1}^n} e^{z_i}}
+					\right),~\boldsymbol{z}\in \mathbb{R}^n.
+\]</div><p>
+The softmax plays the role of the logistic sigmoid in the multi-class setting in order to make the output vector <span class="math">\(\boldsymbol{y}\)</span> a valid probability distribution over the <span class="math">\(n\)</span> classes.</p><p>In the following example, we show that in the case of binary classification, the softmax reduces to the logistic sigmoid.</p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+For logits <span class="math">\(\boldsymbol{z}=(z_1,z_2)\)</span>, the softmax gives
+</p><div class="math">\[
+y_1 = \frac{e^{z_1}}{e^{z_1}+e^{z_2}}, 
+\qquad 
+y_2 = \frac{e^{z_2}}{e^{z_1}+e^{z_2}}.
+\]</div><p>
+We can rewrite
+</p><div class="math">\[
+y_1 = \frac{1}{1+e^{z_2-z_1}}
+= \mathscr{S}_1(z_1-z_2),~
+\text{and}~
+y_2 = 1-y_1.
+\]</div><p>
+Thus, binary logistic regression is a special case of the softmax with two classes.
+</div></p><p>In general, for a given <span class="math">\(k>0\)</span>, we define the softmax as
+</p><div class="math">\[
+\texttt{sm}_k(\boldsymbol{z}) = \left(
+					\frac{e^{kz_1}}{\displaystyle{\sum_{i=1}^n} e^{kz_i}}, 
+					\frac{e^{kz_2}}{\displaystyle{\sum_{i=1}^n} e^{kz_i}}, 
+					\ldots,
+					\frac{e^{kz_n}}{\displaystyle{\sum_{i=1}^n} e^{kz_i}}
+					\right),~\boldsymbol{z}\in \mathbb{R}^n.
+\]</div><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show that <span class="math">\(\texttt{sm}_k(\boldsymbol{z}) \rightarrow \boldsymbol{e}_j\)</span> as <span class="math">\(k\rightarrow \infty\)</span>, where <span class="math">\(j\in\{1,2,\ldots, n\}\)</span> is such that <span class="math">\(z_j = \max\{z_1, . . . , z_n\}\)</span>.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+For more details on activation functions refer to Section 2.1 (page 21) in the following book:</p><p>Calin, Ovidiu, <i>Deep Learning Architectures: A Mathematical Approach</i>, Springer,	2020.</p><p><a href="https://link.springer.com/book/10.1007/978-3-030-36721-3" style="color: #008080; font-family: monospace;">
+  Click here to see the details of the book
+</a>
+</div></p>
+    </div>
+ 
+ <footer>
+  © S. Baskar, Department of Mathematics, IIT Bombay. 2025 — Updated: 30-Sep-2025
+</footer>
+
+<style>
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f8f8f8;
+  color: #888;
+  font-size: 0.75em;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 1px solid #ddd;
+  z-index: 10;               /* low z-index */
+  pointer-events: none;      /* allows clicks to pass through */
+}
+
+/* Small screen adjustments */
+@media (max-width: 600px) {
+  footer {
+    font-size: 0.68em;
+    padding: 4px 0;
+  }
+}
+</style>
+ 
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

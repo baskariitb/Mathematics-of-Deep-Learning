@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Architectures</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML ">
+    </script>
+    <style>
+        body, p, li, div {
+        color: black !important;
+        line-height: 1.6;
+        }
+        ol.latex-enumerate, ol.latex-enumerate li {
+            line-height: 1.6 !important;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        /* Updated TOC styles */
+        #toc-panel {
+            font-size: 0.9em;
+        }
+        .toc-chapter, 
+        .toc-section, 
+        .toc-subsection {
+            color: black !important;
+        }
+        .toc-chapter a,
+        .toc-section a,
+        .toc-subsection a {
+            color: black !important;
+            text-decoration: none;
+        }
+        .toc-chapter.current {
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+        #toc-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #1a73e8;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #toc-panel {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            transition: left 0.3s ease-out;
+            will-change: transform;
+        }
+        #toc-panel.open {
+            left: 0;
+        }
+        #close-toc {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #content {
+            padding: 20px;
+            padding-top: 60px;
+            max-width: 100%;
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+        .toc-chapter {
+            margin-bottom: 10px;
+            border-left: 3px solid #94714B;
+            padding-left: 10px;
+        }
+        .toc-chapter.current {
+            background-color: #F0EAE4;
+        }
+        .chapter-link {
+            font-weight: bold;
+            color: #1a73e8;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .toc-sections {
+            margin-left: 15px;
+            display: none;
+        }
+        .toc-sections.expanded {
+            display: block;
+        }
+        .toc-section {
+           font-weight: bold;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .toc-subsection {
+            padding: 1.5px 0;
+            margin-left: 25px;
+            font-size: 0.95em;
+        }
+        .toc-subsubsection {
+            padding: 3px 0;
+            margin-left: 40px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        :target {
+            scroll-margin-top: 80px;
+            animation: highlight 1.5s ease;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(26, 115, 232, 0.1); }
+            100% { background-color: transparent; }
+        }
+        @media (max-width: 768px) {
+            #toc-panel {
+                width: 85%;
+                left: -90%;
+            }
+            #toc-panel.open {
+                left: 0;
+                box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            }
+            #content {
+                transition: transform 0.3s ease-out;
+            }
+            #toc-panel.open ~ #content {
+                transform: translateX(85%);
+            }
+        }
+        .note {
+  background-color: color-mix(in srgb, var(--primary) 7%, white);
+border: 5px solid var(--primary);
+  padding: 5px;
+  margin: 10px;
+}
+.problem {
+  background-color: color-mix(in srgb, var(--primary) 18%, white);
+border: 1px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.example {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 10px;
+  margin: 10px;
+}
+.remark {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 20px;
+  margin: 10px;
+}
+.definition {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px double var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.lemma {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.theorem {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.proofs {
+  background-color: var(--environmentBackground);
+border: 5px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.project {
+  background-color: var(--environmentBackground);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.hint {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.code {
+  background-color: color-mix(in srgb, var(--primary) 13%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.algorithm {
+  background-color: color-mix(in srgb, var(--primary) 5%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+    </style>
+</head>
+
+
+<body>
+    <button id="toc-button">☰ Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">×</button>
+       
+       <!-- Small Main Page Button -->
+<div style="text-align:right; margin-bottom: 10px;">
+  <a href="index.html" 
+     style="
+       background: var(--toc-primary, #94714B);
+       color: white;
+       padding: 4px 10px;
+       border-radius: 16px;
+       font-size: 0.75em;
+       font-weight: 900;
+       text-decoration: none;
+       display: inline-block;
+       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+     ">
+    Main Page
+  </a>
+</div>
+       
+        <div class="full-toc">
+
+                <div class="toc-chapter ">
+            <a href="HTMLIntroductionNeurons.html" class="chapter-link">
+                CH 1: Introduction to Neurons
+            </a>
+             <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLIntroductionNeurons.html#introduction.neurons.ch">
+                        Introduction to Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#motivating.example.sec">
+                        Motivating Example
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#water-source-sink-control-problem">
+                        Water Source-Sink Control Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#electric.circuit.ssec">
+                        Electric Circuit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#linear.regression.subs">
+                        Linear Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#artificial.neurons.sec">
+                        Artificial Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#mathematical.formulation.subs">
+                        Mathematical Formulation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#comparison-with-biological-neurons">
+                        Comparison with Biological Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#learning.model.subs">
+                        Supervised Learning: An Overview
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLPerceptrons.html" class="chapter-link">
+                CH 2: Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLPerceptrons.html#perceptrons.ch">
+                        Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#perceptrons.sec">
+                        Neuron Model
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#boolean-functions">
+                        Boolean Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#illustrative-datasets">
+                        Illustrative Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#separability-and-algorithm">
+                        Separability and Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#linear-separability">
+                        Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#perceptron.convergence.theorem.subs">
+                        Perceptron Convergence Theorem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#beyond-linear-separability">
+                        Beyond Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#feature-space-mapping">
+                        Feature Space Mapping
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSupportVectorMachine.html" class="chapter-link">
+                CH 3: Support Vector Machine
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSupportVectorMachine.html#support-vector-machine">
+                        Support Vector Machine
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#linearly-separable-dataset">
+                        Linearly Separable Dataset
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#hard-and-soft-margins">
+                        Hard and Soft Margins
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#loss-function-form">
+                        Loss-function form
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#subgradient-descent-algorithm">
+                        Subgradient Descent Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#dual-optimazation-problem">
+                        Dual Optimazation Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#nonlinearly-separable-datasets">
+                        Nonlinearly Separable Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-method-implicit-feature-mapping">
+                        Kernel Method: Implicit Feature Mapping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-trick">
+                        Kernel Trick
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLMultilayerPerceptrons.html" class="chapter-link">
+                CH 4: Multilayer Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLMultilayerPerceptrons.html#multilayer.perceptrons.ch">
+                        Multilayer Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#fully-connected-feedforward-networks">
+                        Fully Connected Feedforward Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#definition-and-network-dimensions">
+                        Definition and Network Dimensions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#shallow-networks">
+                        Shallow Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-forward-propagation">
+                        Batch Forward Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-propagation">
+                        Batch Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#activation-functions">
+                        Activation Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#step-functions">
+                        Step Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#heaviside-function">
+                        Heaviside function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bipolar-function">
+                        Bipolar Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-functions-logistic-regression">
+                        Sigmoid Functions: Logistic Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hyperbolic-tangent-function">
+                        Hyperbolic Tangent Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bumped-type-functions">
+                        Bumped-type Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hockey-stick-functions">
+                        Hockey-stick Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#leaky-rectified-linear-unit">
+                        Leaky Rectified Linear Unit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-linear-units">
+                        Sigmoid Linear Units
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softplus-function">
+                        Softplus Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#multi-class-classification">
+                        Multi-class Classification
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softmax-function">
+                        Softmax Function
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLTrainingNeuralNetwork.html" class="chapter-link">
+                CH 5: Training Neural Networks
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLTrainingNeuralNetwork.html#learning.mechanism.ch">
+                        Training Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#cost.functions.sec">
+                        Cost Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mean-square-error">
+                        Mean Square Error
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#cross-entropy">
+                        Cross-Entropy
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#kullback-leibler-divergence">
+                        Kullback-Leibler divergence
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#backpropagation.sec">
+                        Backpropagation Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#chain-rule-and-gradient-computation">
+                        Chain Rule and Gradient Computation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#gradient-for-a-neuron">
+                        Gradient for a Neuron
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#shallow-network">
+                        Shallow Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#deep-network">
+                        Deep Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#weight-updates-using-gradient-descent">
+                        Weight Updates Using Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#batch-gradient-descent-method">
+                        Batch Gradient Descent Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#stochastic-gradient-descent-sgd">
+                        Stochastic Gradient Descent (SGD)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mini-batch-gradient-descent">
+                        Mini-batch Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#momentum-method">
+                        Momentum Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-step-size-methods">
+                        Adaptive Step Size Methods
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adagrad">
+                        AdaGrad.
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#root-mean-square-propagation-rmsprop">
+                        Root Mean Square Propagation (RMSProp)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-moments-adam">
+                        Adaptive Moments (Adam).
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#regularization-and-generalization">
+                        Regularization and Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#underfitting-and-overfitting">
+                        Underfitting and Overfitting
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#parameter-based-regularization">
+                        Parameter-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#process-based-regularization">
+                        Process-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#early-stopping">
+                        Early Stopping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#dropout">
+                        Dropout
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#generalization">
+                        Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#bias-variance-tradeoff">
+                        Bias-Variance Tradeoff
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLExpressivityoverFunctionSpaces.html" class="chapter-link">
+                CH 6: Expressivity Over Function Spaces
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#expressivity.over.function.spaces.ch">
+                        Expressivity over Function Spaces
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#universal.approximation.sec">
+                        Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#continuous-function-approximations">
+                        Continuous Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#feature-mapping-perspective">
+                        Feature Mapping Perspective
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#connection-to-kernel-machines">
+                        Connection to kernel machines
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#learning-dynamics-and-the-neural-tangent-kernel">
+                        Learning dynamics and the Neural Tangent Kernel
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#pinns.sec">
+                        Physics Informed Neural Networks for ODEs
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#trial-solution">
+                        Trial Solution
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#residual-and-training-loss">
+                        Residual and Training Loss
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#research-perspectives">
+                        Research Perspectives
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter current">
+            <a href="HTMLSpecialArchitectures.html" class="chapter-link">
+                CH 7: Special Architectures
+            </a>
+            <div class="toc-sections expanded">
+
+                <div class="toc-item ">
+                    <a href="HTMLSpecialArchitectures.html#advanced.architectures.ch">
+                        Special Architectures
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#convolution.neural.network.sec">
+                        Convolution Neural Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#networks-of-one-dimensional-signals">
+                        Networks of One-Dimensional Signals
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#one-dimensional-convolutional-layer">
+                        One-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#two-dimensional-convolutional-layer">
+                        Two-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#convolution-operator">
+                        Convolution Operator
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#2d-convolution-layer">
+                        2D Convolution Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#recurrent-neural-networks">
+                        Recurrent Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#transformers">
+                        Transformers
+                    </a>
+                </div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <p>
+<h1 id="advanced.architectures.ch">Special Architectures</h1></p><p>So far, we have studied multi-layer perceptrons (MLPs), which are fully connected (dense) feedforward neural networks.  We have also seen that these networks perform well for a verity of pattern recognition problems that can be viewed as function approximation tasks that are consistent with their property as universal approximators. We also extended our study to some recent topics, exploring their training dynamics through the Neural Tangent Kernel (NTK), and their role in scientific computing through Physics-Informed Nerual Networks (PINNs). </p><p>In this chapter, we focus on some special architectures that are designed for specific types of data or applications, like convolution neural networks (CNNs), which are particularly suitable for image recognition, and recurrent neural networks (RNNs) suitable for language and sequence modelling.  We conclude the chapter with a discussion on a recent development called <b>Transformers</b>, which works through attention-based architecture that has revolutionized sequence modelling. Transformers provide a unified framework for learning from text, images, and beyond.</p><p><h2 id="convolution.neural.network.sec">Convolution Neural Network</h2></p><p>The dense structure of MLPs treat each input neuron independently and ignore spatial structure of the input data. For example, in image data split into pixels, nearby pixels are highly correlated and the certain local features like edges or corners can appear at different locations in the image. This also leads to a very large number of parameters which are still poorly scalable for high-resolution images. Convolution Neural Networks (CNNs) overcome these limitations by incorporating local spatial structure of data through <b>local connectivity</b> and <b>weight sharing</b>.</p><p>In local connectivity, each neuron is connected only to a small spatial region (patch) of the input in order to capture local patterns.  Through weight sharing, the same set of weights, referred to as a filter or kernel,  is used across different spatial locations. This enables translation invariance, which helps in reducing the number of parameters.  Pooling layers are often added to reduce spacial dimensions and to retain the most important features.  In this section, we briefly outline CNNs. </p><p><h3 id="networks-of-one-dimensional-signals">Networks of One-Dimensional Signals</h3></p><p>In many applications, such as time-series analysis, speech recognition, or any sequence-based data, 
+the input is naturally one-dimensional. 
+For such data, <b>one-dimensional convolutional neural networks</b> (1D CNNs) provide an efficient architecture that captures local dependencies along the temporal or sequential axis.</p><p>Let <span class="math">\(f, g : \mathbb{R} \to \mathbb{R}\)</span>. 
+The <b>continuous one-dimensional convolution</b> of <span class="math">\(f\)</span> and <span class="math">\(w\)</span>, denoted by <span class="math">\((f * g)\)</span>, is defined as
+</p><div class="math" >\begin{eqnarray}
+(f * g)(x) = \int_{\mathbb{R}} f(\xi)\, g(x - \xi)\, d\xi,
+\end{eqnarray}<div style="text-align:right;">(7.1)</div></div><p>
+whenever the integral exists.</p><p>Analogously, in the discrete case where the signals are sequences, say, <span class="math">\(f,g:\mathbb{Z}\rightarrow \mathbb{R}\)</span> given by
+</p><div class="math">\[
+f = \{f_i\}_{i \in \mathbb{Z}}, 
+\qquad 
+g = \{g_i\}_{i \in \mathbb{Z}},
+\]</div><p>
+the <b>discrete convolution</b> is defined by
+</p><div class="math">\[
+(f * g)_i = \sum_{j \in \mathbb{Z}} f_j \, g_{i - j} .
+\]</div><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Finitely Supported Signals</b>]</p><p>In practice, we have signals of finite length.  In this case, we extend the signal by zero, which we refer to as signal with <b>finite support</b>.  For instance, if we have 
+</p><div class="math">\[
+\boldsymbol{g}=[g_0, g_1, \ldots, g_{N-1}],
+\]</div><p> for some <span class="math">\(N>0\)</span>, then it should be understood as extending it to zero on either side and considering the signal of infinite length <span class="math">\(g=[\ldots, 0, \boldsymbol{g}, 0, \ldots]\)</span>.
+</div></p><p>In CNNs, it is customary to use the <b>cross-correlation</b> operation (instead of strict convolution), given by
+</p><div class="math">\[
+(\boldsymbol{w} * \boldsymbol{g})_i = \sum_{j = 0}^{r-1}  w_j\, g_{i + j}, ~~
+i = 0, 1, \ldots, N - r.
+\]</div><p>
+where <span class="math">\(\boldsymbol{w} = [w_0, w_1, \ldots, w_{r-1}]\)</span> is the <b>kernel</b> or <b>filter</b> of size <span class="math">\(r\)</span> and <span class="math">\(\boldsymbol{g}=[g_0, g_1, \ldots, g_{N-1}]\)</span> is finite input signal with <span class="math">\(0 < r \le N\)</span>. </p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>Moving Average as a Convolution Operation</b>]</p><p>Let 
+<span class="math">\(
+\boldsymbol{x} = [x_1,\, x_2,\, \ldots,\, x_N]
+\)</span>
+be a discrete-time signal (or sequence).  
+A <b>moving average</b> with window size <span class="math">\(r\)</span> computes each output value as the average of <span class="math">\(r\)</span> consecutive inputs, given by
+</p><div class="math">\[
+y_i = \frac{1}{r}\sum_{j=0}^{r-1} x_{i+j},
+\quad i = 1, 2, \ldots, N - r + 1.
+\]</div><p>This can be viewed as a <b>cross-correlation</b> (or convolution without kernel flipping) between the input <span class="math">\(\boldsymbol{x}\)</span> and the kernel
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{w} = \frac{1}{r}[1,\, 1,\, \ldots,\, 1],
+\end{eqnarray}<div style="text-align:right;">(7.2)</div></div><p>
+that is,
+</p><div class="math" >\begin{eqnarray}
+y_i = \sum_{j=0}^{r-1} w_j\, x_{i+j}.
+\end{eqnarray}<div style="text-align:right;">(7.3)</div></div><p>
+Thus, the moving average is a special case of convolution where all kernel weights are equal and sum to one.</p><p>The moving average smooths the signal by reducing local fluctuations and it acts as a <b>low-pass filter</b>, retaining slow variations in <span class="math">\(\boldsymbol{x}\)</span> and attenuating rapid changes.
+</div></p><p>The one-dimensional moving average filter discussed above can be viewed as a <b>low-pass filter</b>, since it smooths rapid variations in the input signal.
+In two dimensions, the same idea extends naturally to image processing, where a smoothing kernel corresponds to <b>blurring</b> an image. </p><p>In contrast, <b>edge detection</b> in images corresponds to emphasizing changes (differences) in the signal, i.e., high-frequency components.
+In one dimension, this can be seen directly through convolution with a <b>difference kernel</b> or <b>high-pass filter</b>.</p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>One-Dimensional Edge Detection</b>]</p><p>Consider a one-dimensional input signal
+<span class="math">\(
+\boldsymbol{x} = [x_1,\, x_2,\, \ldots,\, x_N]
+\)</span>
+and a <b>difference kernel</b> (or <b>edge detection kernel</b>)
+</p><div class="math">\[
+\boldsymbol{w} = [-1, 1]
+\]</div><p>
+The convolution (or, in CNNs, the cross-correlation) of <span class="math">\(\boldsymbol{x}\)</span> and <span class="math">\(\boldsymbol{w}\)</span> produces the output
+</p><div class="math">\[
+y_i = (-1)\,x_i + (1)\,x_{i+1} = x_{i+1} - x_i, 
+\qquad i = 1, 2, \ldots, 5.
+\]</div><p>
+Hence,
+</p><div class="math">\[
+\boldsymbol{y} = [x_2 - x_1,\, x_3 - x_2,\, x_4 - x_3,\, x_5 - x_4,\, x_6 - x_5].
+\]</div><p>
+This output measures the <b>change</b> (or discrete gradient) between successive input values.
+Regions where <span class="math">\(\boldsymbol{x}\)</span> is approximately constant produce small responses, while sharp transitions yield large responses.  Hence, this corresponding to <b>edges</b> in one-dimensional data.</p><p>In two dimensions, similar difference kernels (e.g., Sobel or Prewitt filters) are used to detect edges in images.
+</div></p><p><h4 id="one-dimensional-convolutional-layer">One-Dimensional Convolutional Layer</h4></p><p>Let the input to a 1D convolutional layer be a sequence (or signal)
+</p><div class="math">\[
+\boldsymbol{x} = [x_1, x_2, \ldots, x_N] \in \mathbb{R}^N.
+\]</div><p>
+ and let the convolutional kernel (or filter) be
+</p><div class="math">\[
+\boldsymbol{w} = [w_1, w_2, \ldots, w_r] \in \mathbb{R}^r,
+\]</div><p>
+where the integer <span class="math">\(1\le r\le N\)</span> is called the <b>kernel size</b> or <b>receptive field length</b>. </p><p><div class="definition">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Convolutional Layer</b>]</p><p>For a given integer <span class="math">\(s \ge 1\)</span>,
+a <b>convolutional layer</b> with activation function <span class="math">\(\mathscr{A}\)</span>, convolution kernel <span class="math">\(\boldsymbol{w}\)</span> and bias <span class="math">\(b\)</span> produces the output
+</p><div class="math" >\begin{eqnarray}
+a_i = \mathscr{A}\!\Bigg(\sum_{j=1}^{r} w_j\, x_{(i-1)s + j} - b\Bigg),
+\quad i = 1, 2, \ldots, n_{\text{out}},
+\end{eqnarray}<div style="text-align:right;">(7.4)</div></div><p>
+where
+</p><div class="math" >\begin{eqnarray}
+n_{\text{out}} = \Big\lfloor \frac{N - r}{s} \Big\rfloor + 1.
+\end{eqnarray}<div style="text-align:right;">(7.5)</div></div><p>
+The number <span class="math">\(s\)</span> is called the <b>stride</b>, which specifies the step size with which the kernel moves along the input.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+The bias term is written with a negative sign for consistency with our earlier definition of affine neurons. This convention is immaterial in practice, since <span class="math">\(b\)</span> is a learnable parameter and its sign can be absorbed into its value.
+</div></p><p>The convolution layer replaces the affine transformation <span class="math">\(\boldsymbol{w}\cdot\boldsymbol{x} - b\)</span> of a neuron in an MLP by the local convolution operation <span class="math">\(\boldsymbol{w} * \boldsymbol{x} - b\)</span>. Unlike an MLP layer, a convolution layer is not organized neuron-wise, since each output activation (feature map entry) depends only on a local receptive field of the input rather than the entire input vector. Nevertheless, the convolution operation can be equivalently expressed as a matrix-vector multiplication,  where the kernel <span class="math">\(\boldsymbol{w}\)</span> is expanded into a structured (sparse Toeplitz) matrix.  Thus, a convolutional layer can be viewed as a special kind of fully connected layer.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+[<b>Convolution Layer as a Fully Connected Layer</b>]</p><p>Show that a one-dimensional convolutional layer can be expressed as a fully connected (dense) layer  with a specially structured weight (sparse Toeplitz) matrix.
+</div></p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>Convolutional Layer with Stride <span class="math">\(s=1\)</span></b>]</p><p>Consider an input sequence
+</p><div class="math">\[
+\boldsymbol{x} = [x_1,\, x_2,\, x_3,\, x_4,\, x_5,\, x_6],
+\]</div><p>
+and a kernel (filter)
+</p><div class="math">\[
+\boldsymbol{w} = [w_1,\, w_2],
+\]</div><p>
+with kernel size <span class="math">\(r = 2\)</span>, stride <span class="math">\(s = 1\)</span>, and bias <span class="math">\(b\)</span>.</p><p>According to the convolutional layer definition,
+</p><div class="math" >\begin{eqnarray}
+a_i = \mathscr{A}\!\Bigg(\sum_{j=1}^{r} w_j\, x_{(i-1)s + j} - b\Bigg), 
+\quad i = 1, 2, \ldots, n_{\text{out}},
+\end{eqnarray}<div style="text-align:right;">(7.6)</div></div><p>
+where 
+</p><div class="math" >\begin{eqnarray}
+n_{\text{out}} = \Big\lfloor \frac{N - r}{s} \Big\rfloor + 1
+= \Big\lfloor \frac{6 - 2}{1} \Big\rfloor + 1 = 5.
+\end{eqnarray}<div style="text-align:right;">(7.7)</div></div><p>Thus, the layer output activations are
+</p><div class="math" >\begin{eqnarray}
+\begin{aligned}
+a_1 &amp;= \mathscr{A}(w_1 x_1 + w_2 x_2 - b),\\
+a_2 &amp;= \mathscr{A}(w_1 x_2 + w_2 x_3 - b),\\
+a_3 &amp;= \mathscr{A}(w_1 x_3 + w_2 x_4 - b),\\
+a_4 &amp;= \mathscr{A}(w_1 x_4 + w_2 x_5 - b),\\
+a_5 &amp;= \mathscr{A}(w_1 x_5 + w_2 x_6 - b).
+\end{aligned}
+\end{eqnarray}<div style="text-align:right;">(7.8)</div></div><p>
+Hence, the output feature map (activation vector) of the convolution layer is
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{a} = [a_1,\, a_2,\, a_3,\, a_4,\, a_5].
+\end{eqnarray}<div style="text-align:right;">(7.9)</div></div><p>
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Consider an input vector <span class="math">\(\boldsymbol{x} = [x_1, x_2, x_3, x_4, x_5, x_6]\)</span>, a kernel (filter)
+<span class="math">\(\boldsymbol{w} = [w_1, w_2]\)</span>, and a bias term <span class="math">\(b\)</span>.
+Using the convolutional layer with stride <span class="math">\(s = 2\)</span> and activation function <span class="math">\(\mathscr{A}\)</span>,
+compute the output activations.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Padding</b>] </p><p>The number of zeros added to both ends of the input sequence before performing convolution is called <b>padding</b>.
+Padding ensures that edge elements receive equal treatment and can preserve the original input length. 
+If we pad with <span class="math">\(p\)</span> zeros on each side, the effective input length becomes <span class="math">\(N + 2p\)</span>.</p><p>Given an input of length <span class="math">\(N\)</span>, a kernel of size <span class="math">\(r\)</span>, a stride <span class="math">\(s\)</span>, and padding <span class="math">\(p\)</span>, 
+the convolutional layer is given by
+</p><div class="math" >\begin{eqnarray}
+a_i = \mathscr{A}\!\Bigg(\sum_{j=1}^{r} w_j\, x_{(i-1)s + j - p} - b\Bigg),
+\quad i = 1, 2, \ldots, n_{\text{out}},
+\end{eqnarray}<div style="text-align:right;">(7.10)</div></div><p>
+where
+</p><div class="math" >\begin{eqnarray}
+n_{\text{out}} = \Bigg\lfloor \frac{N + 2p - r}{s} \Bigg\rfloor + 1.
+\end{eqnarray}<div style="text-align:right;">(7.11)</div></div><p>
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Consider an input vector <span class="math">\(\boldsymbol{x} = [x_1, x_2, x_3, x_4, x_5, x_6]\)</span>, 
+a kernel <span class="math">\(\boldsymbol{w} = [w_1, w_2]\)</span>, and a bias term <span class="math">\(b\)</span>.
+Using the convolutional layer with stride <span class="math">\(s = 1\)</span>, 
+activation function <span class="math">\(\mathscr{A}\)</span>, and padding of one zero on each side 
+(<em>i.e.</em>, <span class="math">\(p=1\)</span>), compute the output activations.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Pooling Layer</b>]</p><p>After a convolutional layer produces its output (called the <b>feature map</b>), it is often followed by a <b>pooling layer</b>. 
+Given an input feature map
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{z} = [z_1, z_2, \ldots, z_N],
+\end{eqnarray}<div style="text-align:right;">(7.12)</div></div><p>
+a <b>max-pooling</b> layer with pooling window of size <span class="math">\(p\)</span> and stride <span class="math">\(s_p\)</span> produces the output
+</p><div class="math" >\begin{eqnarray}
+z_i^{(\text{pool})} = \max_{j \in \mathcal{N}(i)} z_j, \quad i = 1, 2, \ldots, n_{\text{pool}},
+\end{eqnarray}<div style="text-align:right;">(7.13)</div></div><p>
+where <span class="math">\(\mathcal{N}(i)\)</span> denotes a small neighborhood of indices around <span class="math">\(i\)</span>, typically
+</p><div class="math" >\begin{eqnarray}
+\mathcal{N}(i) = \{(i-1)s_p + 1, (i-1)s_p + 2, \ldots, (i-1)s_p + p\},
+\end{eqnarray}<div style="text-align:right;">(7.14)</div></div><p>
+and
+</p><div class="math" >\begin{eqnarray}
+n_{\text{pool}} = \Big\lfloor \frac{N - p}{s_p} \Big\rfloor + 1.
+\end{eqnarray}<div style="text-align:right;">(7.15)</div></div><p>
+If the maximum operation is replaced by the average, we obtain the <b>average pooling</b> layer. Similarly, if the maximum operation is replaced by the minimum operation, then we obtain the <b>min-pooling</b> layer.</p><p>Here, <span class="math">\(\boldsymbol{z}\)</span> denotes the output feature map obtained from the preceding convolutional layer.  
+The pooling operation acts on <span class="math">\(\boldsymbol{z}\)</span> to produce a lower-dimensional representation 
+<span class="math">\(\boldsymbol{z}^{(\text{pool})}\)</span>, which can be fed to the next convolutional or fully connected layer.
+Schematically, we have
+<img src="Figures/Ch06CNNSequence.png" class="standalone-figure">
+  Thus, pooling serves two main purposes, namely,
+
+    <li>It reduces the spatial resolution (or length) of the feature map, thereby decreasing the number of learnable parameters and computational cost.
+    </li><li>It increases <b>translational invariance</b>, meaning that small shifts or distortions in the input do not significantly change the pooled output.
+</div></p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>1D Max Pooling</b>]</p><p>Let the convolution output be
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{z} = [z_1, z_2, z_3, z_4, z_5, z_6],
+\end{eqnarray}<div style="text-align:right;">(7.16)</div></div><p>
+and consider max pooling with pooling size <span class="math">\(p=2\)</span> and stride <span class="math">\(s_p=2\)</span>.  
+Then,
+</p><div class="math" >\begin{eqnarray}
+\begin{aligned}
+z^{(\text{pool})}_1 &amp;= \max(z_1, z_2),\\
+z^{(\text{pool})}_2 &amp;= \max(z_3, z_4),\\
+z^{(\text{pool})}_3 &amp;= \max(z_5, z_6).
+\end{aligned}
+\end{eqnarray}<div style="text-align:right;">(7.17)</div></div><p>
+Hence, the pooled output is
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{z}^{(\text{pool})} = [z^{(\text{pool})}_1,\, z^{(\text{pool})}_2,\, z^{(\text{pool})}_3],
+\end{eqnarray}<div style="text-align:right;">(7.18)</div></div><p>
+which has reduced length compared to the original feature map.
+</div></p><p>Let us now illustrate translational invariance through pooling.</p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+Consider the convolutional output
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{z} = [2,\, 5,\, 3,\, 4].
+\end{eqnarray}<div style="text-align:right;">(7.19)</div></div><p>
+Applying max pooling with window size <span class="math">\(2\)</span> and stride <span class="math">\(2\)</span> gives
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{z}^{(\text{pool})} = [\max(2,5),\, \max(3,4)] = [5,\, 4].
+\end{eqnarray}<div style="text-align:right;">(7.20)</div></div><p>
+If the input is slightly shifted, producing
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{z}' = [1,\, 5,\, 4,\, 3],
+\end{eqnarray}<div style="text-align:right;">(7.21)</div></div><p>
+then the pooled output remains
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{z}^{\prime(\text{pool})} = [\max(1,5),\, \max(4,3)] = [5,\, 4].
+\end{eqnarray}<div style="text-align:right;">(7.22)</div></div><p>
+Hence, pooling increases <b>translational invariance</b>, meaning that small shifts
+in the input signal do not significantly affect the pooled output.
+</div></p><p><h3 id="two-dimensional-convolutional-layer">Two-Dimensional Convolutional Layer</h3></p><p>We now extend the one-dimensional convolutional layer to the two-dimensional case,
+which is the core operation in convolutional neural networks (CNNs) for image processing.</p><p><h4 id="convolution-operator">Convolution Operator</h4></p><p>In this subsection, we briefly recall the basic definitions concerning convolution. We first start with convolution of two functions from <span class="math">\(\mathbb{R}^2\)</span> to <span class="math">\(\mathbb{R}\)</span>.</p><p><div class="definition">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Convolution of Functions</b>]</p><p>Let <span class="math">\(f, g : \mathbb{R}^2 \to \mathbb{R}\)</span>. The <b>convolution</b> of <span class="math">\(f\)</span> and <span class="math">\(g\)</span>, denoted by <span class="math">\((f * g)\)</span>, is defined by
+</p><div class="math">\[
+(f * g)(x, y)
+= \int_{\mathbb{R}^2} f(\xi, \eta)\, g(x - \xi,\, y - \eta)\, d\xi\, d\eta,
+\]</div><p>
+whenever the integral exists.
+</div></p><p>The continuous definition of the convolution operator can be restricted to the discrete case, leading to the definition of convolution between two matrices.</p><p><div class="definition">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Convolution of Matrices</b>]</p><p>Let <span class="math">\(A = [a_{i,j}] \in \mathbb{R}^{m \times n}\)</span> and <span class="math">\(K = [k_{p,q}] \in \mathbb{R}^{r \times s}\)</span>. 
+The <b>discrete convolution</b> of <span class="math">\(A\)</span> and <span class="math">\(K\)</span>, denoted by <span class="math">\((K * A)\)</span>, is defined by
+</p><div class="math">\[
+(K * A)_{i,j}
+= \sum_{p=0}^{r-1} \sum_{q=0}^{s-1} 
+k_{p,q}\, a_{\,i - p,\, j - q},
+\]</div><p>
+where <span class="math">\(a_{i - p,\, j - q} = 0\)</span> whenever the indices fall outside the range of <span class="math">\(A\)</span>.
+</div></p><p>CNNs typically use the <b>cross-correlation</b> operation given by
+</p><div class="math">\[
+(K * A)_{i,j}
+= \sum_{p=0}^{r-1} \sum_{q=0}^{s-1} 
+k_{p,q}\, a_{\,i + p,\, j + q}.
+\]</div><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Often in machine learning context, the above definition itself is referred to as convolutions and we also follow the same here.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+The matrix <span class="math">\(A\)</span> can be viewed as an infinite matrix 
+</p><div class="math">\[
+A = [a_{i,j}]_{i,j=-\infty}^\infty
+\]</div><p>
+with compact support, which means that there exists an integer <span class="math">\(r \ge 1\)</span> and <span class="math">\(c \ge 1\)</span> such that <span class="math">\(a_{i,j}=0\)</span> for all <span class="math">\(|i| \ge r\)</span> and <span class="math">\(|j| \ge c\)</span>. In this case, we say that <span class="math">\(W\)</span> has an <span class="math">\(r\times c\)</span> support.
+</div></p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>Moving average</b>]</p><p>Given a two dimensional discrete signal <span class="math">\(A\)</span>, the <span class="math">\(2\times 2\)</span> supported kernel that produces a simple moving average is given by
+</p><div class="math">\[
+W = \left[\begin{array}{cccccc}
+	\tfrac{1}{4}&amp;\tfrac{1}{4}\\
+	\tfrac{1}{4}&amp;\tfrac{1}{4}\\
+	\end{array}\right],
+\]</div><p>
+where <span class="math">\(w_{0,0}=w_{0,1}=w_{1,0}=w_{1,1}=1/4\)</span>, say, and the matrix is extended by zeros in all four directions.  Then the cross-correlation leads to the simple moving average
+</p><div class="math">\[
+(W * A)_{i,j} = \sum_{p=0}^{r-1} \sum_{q=0}^{s-1} 
+w_{p,q}\, a_{\,i + p,\, j + q} = \frac{1}{4}\big(a_{i,j} + a_{i+1,j} + a_{i,j+1} + a_{i+1,j+1} \big).
+\]</div><p>
+This operation replaces each pixel value by the average of its four neighboring pixels, thereby producing a <b>blurred</b> or <b>smoothed</b> version of the image.</p><p>Averaging replaces each pixel by the mean of its local neighborhood, which suppresses rapid spatial variations (high-frequency components) while preserving slowly varying content (low-frequency components). Consequently, sharp transitions (edges) and noise are attenuated, yielding a <b>blurred</b> (smoothed) image. This relates it to the concept of a <b>low-pass filter</b>.
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+[<b>Blurring Effect of a Mean Filter</b>]</p><p>Consider a <span class="math">\(3\times3\)</span> <b>mean filter</b> (or <b>box filter</b>) kernel
+</p><div class="math">\[
+W = \frac{1}{9}
+\begin{bmatrix}
+1 &amp; 1 &amp; 1\\
+1 &amp; 1 &amp; 1\\
+1 &amp; 1 &amp; 1
+\end{bmatrix}.
+\]</div><p>
+Show that the operation produces a blurred image (equivalently, show that the kernel <span class="math">\(W\)</span> is a low-pass filter.
+</div></p><p><div class="hint">
+<div class="heading-container">
+<b class="heading">Hint:</b>
+</div>
+</li><li>Write down the expression for <span class="math">\((W * X)_{i,j}\)</span>, where <span class="math">\(X = [x_{p,q}]\)</span> is a two-dimensional input signal (or image) and show that each output pixel <span class="math">\(a_{i,j}\)</span> is the average of the <span class="math">\(3\times3\)</span> neighborhood of <span class="math">\(\mathbf{X}\)</span> centered at <span class="math">\((i,j)\)</span>.
+</li><li>Explain why this operation produces a <b>blurred image</b> by giving an argument similar to the one given in the above example.
+</div></p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>Gaussian Blurring</b>]</p><p>A smoother and more natural way to blur an image is to use a <b>Gaussian blur kernel</b>,
+whose entries are proportional to a discrete approximation of a two-dimensional Gaussian function.  
+A commonly used <span class="math">\(3\times3\)</span> Gaussian blur kernel is
+</p><div class="math">\[
+W_{\text{G}} = \frac{1}{16}
+\begin{bmatrix}
+1 &amp; 2 &amp; 1\\
+2 &amp; 4 &amp; 2\\
+1 &amp; 2 &amp; 1
+\end{bmatrix}.
+\]</div><p>
+Convolving an image <span class="math">\(X\)</span> with <span class="math">\(W_{\text{G}}\)</span> produces the output
+</p><div class="math">\[
+(W_{\text{G}} * X)_{i,j}
+= \frac{1}{16}
+\sum_{p=-1}^{1}\sum_{q=-1}^{1}
+c_{p,q}\, x_{i+p,\,j+q},
+\]</div><p>
+where <span class="math">\(c_{p,q}\)</span> are the corresponding integer weights shown above.</p><p>
+The weights are largest at the center and decrease symmetrically outward,
+so this filter performs a <b>weighted average</b> that preserves overall image brightness
+while reducing noise and small-scale variations.  
+Unlike the simple mean filter, the Gaussian kernel avoids sharp artifacts and
+produces a more visually natural <b>blurred</b> image.
+</div></p><p>The mean filter smooths (blurs) an image by averaging nearby pixels, whereas
+an <b>edge detection</b> filter highlights regions of sharp intensity change as illustrated in the following example. </p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>Edge Detection via Convolution</b>]</p><p>A simple <b>vertical edge detection kernel</b> is
+</p><div class="math">\[
+W_v =
+\begin{bmatrix}
+-1 &amp; 0 &amp; 1\\
+-1 &amp; 0 &amp; 1\\
+-1 &amp; 0 &amp; 1
+\end{bmatrix},
+\]</div><p>
+and a corresponding <b>horizontal edge detection kernel</b> is
+</p><div class="math">\[
+W_h =
+\begin{bmatrix}
+-1 &amp; -1 &amp; -1\\
+0 &amp; 0 &amp; 0\\
+1 &amp; 1 &amp; 1
+\end{bmatrix}.
+\]</div><p>
+For an input image <span class="math">\(X = [x_{i,j}]\)</span>, the feature maps are computed as
+</p><div class="math">\[
+A_v = W_v * X,
+\qquad
+A_h = W_h * X.
+\]</div><p>
+Each of these responds strongly where there is a horizontal or vertical edge, respectively.</p><p>The matrices <span class="math">\(W_v\)</span> and <span class="math">\(W_h\)</span> are called <b>Sobel filters</b> (or sometimes <b>Prewitt filters</b>, depending on scaling).</p><p>
+The overall edge magnitude can be approximated by combining both directions:
+</p><div class="math">\[
+A_{\text{edge}} = \sqrt{A_x^2 + A_y^2}.
+\]</div><p>
+</div></p><p><h4 id="2d-convolution-layer">2D Convolution Layer</h4></p><p>Let us restrict to grayscale images, where the input and the kernel are two-dimensional arrays (matrices).</p><p>Let the input to the layer be a two-dimensional array
+</p><div class="math">\[
+X = [x_{i,j}]_{i=1,j=1}^{n_{0}^{(h)},n_{0}^{(w)}} \in \mathbb{R}^{n_{0}^{(h)}\times n_{0}^{(w)}},
+\]</div><p>
+where <span class="math">\(n_{0}^{(h)}\)</span> and <span class="math">\(n_{0}^{(w)}\)</span> denote the <b>height</b> and <b>width</b> of the input.</p><p>Let the convolutional kernel (or filter) be
+</p><div class="math">\[
+W = [w_{p,q}]_{p=1,q=1}^{r^{(h)}_1, r^{(h)}_1} \in \mathbb{R}^{r^{(h)}_1\times r^{(h)}_1},
+\]</div><p>
+where <span class="math">\(r^{(h)}_1\)</span> and <span class="math">\(r^{(h)}_1\)</span> denote the kernel height and width, respectively.
+Let <span class="math">\(b \in \mathbb{R}\)</span> be the bias term and <span class="math">\(\mathscr{A}\)</span> be a nonlinear activation function.</p><p><div class="definition">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Two-Dimensional Convolutional Layer</b>]</p><p>For given stride values <span class="math">\(s_h, s_w \ge 1\)</span> in the vertical and horizontal directions, respectively,
+the <b>convolutional layer</b> produces the output
+</p><div class="math">\[
+a_{i,j} = \mathscr{A}\!\Bigg(
+\sum_{p=1}^{r^{(h)}_1}\sum_{q=1}^{r^{(w)}_1}
+w_{p,q}\, x_{(i-1)s_h + p,\,(j-1)s_w + q} - b
+\Bigg),
+\quad
+i=1,2,\ldots,n_{\text{out}}^{(h)}, \;
+j=1,2,\ldots,n_{\text{out}}^{(w)},
+\]</div><p>
+where
+</p><div class="math">\[
+n_{\text{out}}^{(h)} = 
+\Big\lfloor \frac{n_{0}^{(h)} - r^{(h)}_1}{s_h} \Big\rfloor + 1,
+\qquad
+n_{\text{out}}^{(w)} =
+\Big\lfloor \frac{n_{0}^{(w)} - r^{(w)}_1}{s_w} \Big\rfloor + 1,
+\]</div><p>
+are the output dimensions. The pair <span class="math">\((s_h, s_w)\)</span> is called the <b>stride</b>.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Padding</b>]</p><p>If zero-padding of size <span class="math">\(p_h\)</span> and <span class="math">\(p_w\)</span> is applied to the height and width directions,
+the effective input dimensions become
+</p><div class="math">\[
+H' = n_{0}^{(h)} + 2p_h, \qquad W' = n_{0}^{(w)} + 2p_w,
+\]</div><p>
+and the output dimensions are given by
+</p><div class="math">\[
+n_{\text{out}}^{(h)} = 
+\Big\lfloor \frac{H' - r^{(h)}_1}{s_h} \Big\rfloor + 1,
+\qquad
+n_{\text{out}}^{(w)} =
+\Big\lfloor \frac{W' - r^{(w)}_1}{s_w} \Big\rfloor + 1.
+\]</div><p>
+</div></p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>2D Convolution with <span class="math">\(3\times3\)</span> Kernel and Stride <span class="math">\((1,1)\)</span></b>]</p><p>Consider the input image and the kernel, respectively,
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{X} =
+\begin{bmatrix}
+x_{1,1} &amp; x_{1,2} &amp; x_{1,3} &amp; x_{1,4} \\
+x_{2,1} &amp; x_{2,2} &amp; x_{2,3} &amp; x_{2,4} \\
+x_{3,1} &amp; x_{3,2} &amp; x_{3,3} &amp; x_{3,4} \\
+x_{4,1} &amp; x_{4,2} &amp; x_{4,3} &amp; x_{4,4}
+\end{bmatrix},
+\qquad
+\boldsymbol{W} =
+\begin{bmatrix}
+w_{1,1} &amp; w_{1,2} &amp; w_{1,3} \\
+w_{2,1} &amp; w_{2,2} &amp; w_{2,3} \\
+w_{3,1} &amp; w_{3,2} &amp; w_{3,3}
+\end{bmatrix}.
+\end{eqnarray}<div style="text-align:right;">(7.23)</div></div><p>
+The output activation at <span class="math">\((i,j)\)</span> is
+</p><div class="math" >\begin{eqnarray}
+a_{i,j} = \mathscr{A}\!\Big(
+\sum_{p=1}^{3}\sum_{q=1}^{3}
+w_{p,q}\, x_{i+p-1,\,j+q-1} - b
+\Big),
+\end{eqnarray}<div style="text-align:right;">(7.24)</div></div><p>
+for <span class="math">\(i,j=1,2\)</span>.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Pooling in Two Dimensions</b>]</p><p>A two-dimensional <b>max-pooling layer</b> with window size <span class="math">\((r^{(h)}_1, r^{(w)}_1)\)</span> and stride <span class="math">\((s_h, s_w)\)</span>
+acts on the feature map <span class="math">\(A = [a_{i,j}]\)</span> as
+</p><div class="math">\[
+a^{(\text{pool})}_{i,j}
+= \max_{(p,q)\in\mathcal{N}_{i,j}} a_{p,q},
+\]</div><p>
+where <span class="math">\(\mathcal{N}_{i,j}\)</span> denotes the set of indices covered by the pooling window
+centered around <span class="math">\((i,j)\)</span>.
+This reduces the spatial resolution while improving translational invariance.</p><p>Similarly, <b>min-pooling layer</b> and <b>average-pooling layer</b> can also be defined.
+</div></p><p><h2 id="recurrent-neural-networks">Recurrent Neural Networks</h2></p><p><span style="color: red; font-weight: bold; font-size: 24px;">
+Refer to Chapter 17 (page 543) in the following book:</p><p>Calin, Ovidiu, <i>Deep Learning Architectures: A Mathematical Approach</i>, Springer,	2020.</p><p><a href="https://link.springer.com/book/10.1007/978-3-030-36721-3" style="color: #008080; font-family: monospace;">
+  Click here to see the details of the book
+</a>
+</span></p><p><h2 id="transformers">Transformers</h2></p><p><span style="color: red; font-weight: bold; font-size: 24px;">
+Refer to the following book, Chapter 12 on page 357:</p><p><p>Bishop, Christopher M. and Bishop, Hugh,  <i>Deep Learning: Foundations and Concepts</i>, Springer,	2024.</p><p><a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" style="color: #008080; font-family: monospace;">
+  Click here to see the details of the book
+</a>
+</span>
+</p>
+    </div>
+
+<footer>
+  © S. Baskar, Department of Mathematics, IIT Bombay. 2025 — Updated: 08-Nov-2025
+</footer>
+
+<style>
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f8f8f8;
+  color: #888;
+  font-size: 0.75em;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 1px solid #ddd;
+  z-index: 10;               /* low z-index */
+  pointer-events: none;      /* allows clicks to pass through */
+}
+
+/* Small screen adjustments */
+@media (max-width: 600px) {
+  footer {
+    font-size: 0.68em;
+    padding: 4px 0;
+  }
+}
+</style>
+
+
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

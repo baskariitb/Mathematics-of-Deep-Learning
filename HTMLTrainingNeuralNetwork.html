@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Neural Networks</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML ">
+    </script>
+    <style>
+        body, p, li, div {
+        color: black !important;
+        line-height: 1.6;
+        }
+        ol.latex-enumerate, ol.latex-enumerate li {
+            line-height: 1.6 !important;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        /* Updated TOC styles */
+        #toc-panel {
+            font-size: 0.9em;
+        }
+        .toc-chapter, 
+        .toc-section, 
+        .toc-subsection {
+            color: black !important;
+        }
+        .toc-chapter a,
+        .toc-section a,
+        .toc-subsection a {
+            color: black !important;
+            text-decoration: none;
+        }
+        .toc-chapter.current {
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+        #toc-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #1a73e8;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #toc-panel {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            transition: left 0.3s ease-out;
+            will-change: transform;
+        }
+        #toc-panel.open {
+            left: 0;
+        }
+        #close-toc {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #content {
+            padding: 20px;
+            padding-top: 60px;
+            max-width: 100%;
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+        .toc-chapter {
+            margin-bottom: 10px;
+            border-left: 3px solid #94714B;
+            padding-left: 10px;
+        }
+        .toc-chapter.current {
+            background-color: #F0EAE4;
+        }
+        .chapter-link {
+            font-weight: bold;
+            color: #1a73e8;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .toc-sections {
+            margin-left: 15px;
+            display: none;
+        }
+        .toc-sections.expanded {
+            display: block;
+        }
+        .toc-section {
+           font-weight: bold;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .toc-subsection {
+            padding: 1.5px 0;
+            margin-left: 25px;
+            font-size: 0.95em;
+        }
+        .toc-subsubsection {
+            padding: 3px 0;
+            margin-left: 40px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        :target {
+            scroll-margin-top: 80px;
+            animation: highlight 1.5s ease;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(26, 115, 232, 0.1); }
+            100% { background-color: transparent; }
+        }
+        @media (max-width: 768px) {
+            #toc-panel {
+                width: 85%;
+                left: -90%;
+            }
+            #toc-panel.open {
+                left: 0;
+                box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            }
+            #content {
+                transition: transform 0.3s ease-out;
+            }
+            #toc-panel.open ~ #content {
+                transform: translateX(85%);
+            }
+        }
+        .note {
+  background-color: color-mix(in srgb, var(--primary) 7%, white);
+border: 5px solid var(--primary);
+  padding: 5px;
+  margin: 10px;
+}
+.problem {
+  background-color: color-mix(in srgb, var(--primary) 18%, white);
+border: 1px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.example {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 10px;
+  margin: 10px;
+}
+.remark {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 20px;
+  margin: 10px;
+}
+.definition {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px double var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.lemma {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.theorem {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.proofs {
+  background-color: var(--environmentBackground);
+border: 5px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.project {
+  background-color: var(--environmentBackground);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.hint {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.code {
+  background-color: color-mix(in srgb, var(--primary) 13%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.algorithm {
+  background-color: color-mix(in srgb, var(--primary) 5%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+    </style>
+</head>
+
+
+<body>
+    <button id="toc-button">☰ Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">×</button>
+       
+       <!-- Small Main Page Button -->
+<div style="text-align:right; margin-bottom: 10px;">
+  <a href="index.html" 
+     style="
+       background: var(--toc-primary, #94714B);
+       color: white;
+       padding: 4px 10px;
+       border-radius: 16px;
+       font-size: 0.75em;
+       font-weight: 900;
+       text-decoration: none;
+       display: inline-block;
+       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+     ">
+    Main Page
+  </a>
+</div>
+       
+        <div class="full-toc">
+
+                <div class="toc-chapter ">
+            <a href="HTMLIntroductionNeurons.html" class="chapter-link">
+                CH 1: Introduction to Neurons
+            </a>
+             <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLIntroductionNeurons.html#introduction.neurons.ch">
+                        Introduction to Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#motivating.example.sec">
+                        Motivating Example
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#water-source-sink-control-problem">
+                        Water Source-Sink Control Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#electric.circuit.ssec">
+                        Electric Circuit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#linear.regression.subs">
+                        Linear Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#artificial.neurons.sec">
+                        Artificial Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#mathematical.formulation.subs">
+                        Mathematical Formulation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#comparison-with-biological-neurons">
+                        Comparison with Biological Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#learning.model.subs">
+                        Supervised Learning: An Overview
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLPerceptrons.html" class="chapter-link">
+                CH 2: Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLPerceptrons.html#perceptrons.ch">
+                        Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#perceptrons.sec">
+                        Neuron Model
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#boolean-functions">
+                        Boolean Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#illustrative-datasets">
+                        Illustrative Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#separability-and-algorithm">
+                        Separability and Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#linear-separability">
+                        Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#perceptron.convergence.theorem.subs">
+                        Perceptron Convergence Theorem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#beyond-linear-separability">
+                        Beyond Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#feature-space-mapping">
+                        Feature Space Mapping
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSupportVectorMachine.html" class="chapter-link">
+                CH 3: Support Vector Machine
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSupportVectorMachine.html#support-vector-machine">
+                        Support Vector Machine
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#linearly-separable-dataset">
+                        Linearly Separable Dataset
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#hard-and-soft-margins">
+                        Hard and Soft Margins
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#loss-function-form">
+                        Loss-function form
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#subgradient-descent-algorithm">
+                        Subgradient Descent Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#dual-optimazation-problem">
+                        Dual Optimazation Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#nonlinearly-separable-datasets">
+                        Nonlinearly Separable Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-method-implicit-feature-mapping">
+                        Kernel Method: Implicit Feature Mapping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-trick">
+                        Kernel Trick
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLMultilayerPerceptrons.html" class="chapter-link">
+                CH 4: Multilayer Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLMultilayerPerceptrons.html#multilayer.perceptrons.ch">
+                        Multilayer Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#fully-connected-feedforward-networks">
+                        Fully Connected Feedforward Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#definition-and-network-dimensions">
+                        Definition and Network Dimensions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#shallow-networks">
+                        Shallow Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-forward-propagation">
+                        Batch Forward Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-propagation">
+                        Batch Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#activation-functions">
+                        Activation Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#step-functions">
+                        Step Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#heaviside-function">
+                        Heaviside function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bipolar-function">
+                        Bipolar Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-functions-logistic-regression">
+                        Sigmoid Functions: Logistic Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hyperbolic-tangent-function">
+                        Hyperbolic Tangent Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bumped-type-functions">
+                        Bumped-type Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hockey-stick-functions">
+                        Hockey-stick Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#leaky-rectified-linear-unit">
+                        Leaky Rectified Linear Unit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-linear-units">
+                        Sigmoid Linear Units
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softplus-function">
+                        Softplus Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#multi-class-classification">
+                        Multi-class Classification
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softmax-function">
+                        Softmax Function
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter current">
+            <a href="HTMLTrainingNeuralNetwork.html" class="chapter-link">
+                CH 5: Training Neural Networks
+            </a>
+            <div class="toc-sections expanded">
+
+                <div class="toc-item ">
+                    <a href="HTMLTrainingNeuralNetwork.html#learning.mechanism.ch">
+                        Training Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#cost.functions.sec">
+                        Cost Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mean-square-error">
+                        Mean Square Error
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#cross-entropy">
+                        Cross-Entropy
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#kullback-leibler-divergence">
+                        Kullback-Leibler divergence
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#backpropagation.sec">
+                        Backpropagation Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#chain-rule-and-gradient-computation">
+                        Chain Rule and Gradient Computation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#gradient-for-a-neuron">
+                        Gradient for a Neuron
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#shallow-network">
+                        Shallow Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#deep-network">
+                        Deep Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#weight-updates-using-gradient-descent">
+                        Weight Updates Using Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#batch-gradient-descent-method">
+                        Batch Gradient Descent Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#stochastic-gradient-descent-sgd">
+                        Stochastic Gradient Descent (SGD)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mini-batch-gradient-descent">
+                        Mini-batch Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#momentum-method">
+                        Momentum Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-step-size-methods">
+                        Adaptive Step Size Methods
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adagrad">
+                        AdaGrad.
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#root-mean-square-propagation-rmsprop">
+                        Root Mean Square Propagation (RMSProp)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-moments-adam">
+                        Adaptive Moments (Adam).
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#regularization-and-generalization">
+                        Regularization and Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#underfitting-and-overfitting">
+                        Underfitting and Overfitting
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#parameter-based-regularization">
+                        Parameter-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#process-based-regularization">
+                        Process-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#early-stopping">
+                        Early Stopping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#dropout">
+                        Dropout
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#generalization">
+                        Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#bias-variance-tradeoff">
+                        Bias-Variance Tradeoff
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLExpressivityoverFunctionSpaces.html" class="chapter-link">
+                CH 6: Expressivity Over Function Spaces
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#expressivity.over.function.spaces.ch">
+                        Expressivity over Function Spaces
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#universal.approximation.sec">
+                        Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#continuous-function-approximations">
+                        Continuous Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#feature-mapping-perspective">
+                        Feature Mapping Perspective
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#connection-to-kernel-machines">
+                        Connection to kernel machines
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#learning-dynamics-and-the-neural-tangent-kernel">
+                        Learning dynamics and the Neural Tangent Kernel
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#pinns.sec">
+                        Physics Informed Neural Networks for ODEs
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#trial-solution">
+                        Trial Solution
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#residual-and-training-loss">
+                        Residual and Training Loss
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#research-perspectives">
+                        Research Perspectives
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSpecialArchitectures.html" class="chapter-link">
+                CH 7: Special Architectures
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSpecialArchitectures.html#advanced.architectures.ch">
+                        Special Architectures
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#convolution.neural.network.sec">
+                        Convolution Neural Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#networks-of-one-dimensional-signals">
+                        Networks of One-Dimensional Signals
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#one-dimensional-convolutional-layer">
+                        One-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#two-dimensional-convolutional-layer">
+                        Two-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#convolution-operator">
+                        Convolution Operator
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#2d-convolution-layer">
+                        2D Convolution Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#recurrent-neural-networks">
+                        Recurrent Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#transformers">
+                        Transformers
+                    </a>
+                </div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <p>
+<h1 id="learning.mechanism.ch">Training Neural Networks</h1></p><p>An artificial neural network (ANN) consists of several parameters, which can be broadly categorized into two types, namely, trainable (or learnable) parameters and hyperparameters. Training a neural network is the process of determining appropriate values of the trainable parameters (weights and biases) such that the ANN function (see the <a href="HTMLMultilayerPerceptrons.html#artificial.neural.network.def" class="internal-link">Definition«Click Here»</a>) approximates the required input-output mapping. Often, such mappings are implicitly represented in a training data and the trainable parameters of the network are iteratively updated to minimize the error between the predicted outputs and the true outputs. The error is quantified by an appropriately chosen <b>loss function</b>, and when averaged over the entire dataset, it is referred to as a <b>cost function</b>.</p><p>The minimization of a cost function depends on the knowledge of how the changes in the network parameters affect the cost.  This requires the computation of the gradient of the cost function with respect to the parameters. The backpropagation algorithm can be used to efficiently compute these gradients by propagating errors backward through the network, starting from the output layer to the first hidden layer. Once gradients are available, the parameters are updated using optimization algorithms. The most basic method is the gradient descent method, where parameters are iteratively updated in the direction opposite to the gradient in order to reduce the cost. We also have some important variants of this method, such as the stochastic gradient descent (SGD) method and the SGD method with momentum (SGDM) to improve training efficiency and stability.</p><p>In <a href="HTMLTrainingNeuralNetwork.html#cost.functions.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>, we list some commonly used cost functions.  The backpropagation algorithm and the gradient descent methods are then discussed in <a href="HTMLTrainingNeuralNetwork.html#backpropagation.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>.</p><p><h2 id="cost.functions.sec">Cost Functions</h2></p><p>The choice of cost function is fundamental to the training of neural networks. Since the optimization methods that we consider rely on the computation of gradients of the cost function, it is generally preferable to use sufficiently smooth cost functions. Among the most widely used cost functions are the <b>mean square error</b> (MSE) and the <b>cross-entropy function</b> (see 
+<a href="HTMLMultilayerPerceptrons.html#cross-entropy.loss.function.rem" class="internal-link">Remark«Click Here»</a>). In this section, we define these cost functions along with a few other commonly used alternatives.</p><p>Before defining the cost functions, we first fix the notations.</p><p>For given input and output dimensions <span class="math">\(n_0, n_L\in \mathbb{N}\)</span>, we consider a dataset 
+</p><div class="math">\[
+\mathcal{D} := \Big\{(\boldsymbol{x}_k, \boldsymbol{y_k})\in \mathbb{R}^{n_0}\times \mathbb{R}^{n_L} ~\big|~ k=1,2,\ldots, N\Big\}.
+\]</div><p>
+For a given depth <span class="math">\(L\in \mathbb{N}\)</span>, and the network dimensions <span class="math">\(n_0, n_1, \ldots, n_L\in \mathbb{N}\)</span> with the width <span class="math">\(\hat{n}=\max\{n_1, \ldots, n_{L-1}\}\)</span>, the predicted output of the ANN 
+</p><div class="math">\[
+\big( \boldsymbol{\Theta}, \underset{\overline{~~~~}}{\mathscr{A}} \big) := \Big((\overline{W}^{(1)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(1)}_{n_1}), (\overline{W}^{(2)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(2)}_{n_2}),\ldots, (\overline{W}^{(L)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(L)}_{n_L})\Big),
+\]</div><p>
+for an input <span class="math">\(\boldsymbol{x}_k\)</span> is denoted by 
+</p><div class="math">\[
+\tilde{\boldsymbol{y}}_k={\mathscr{F}_{L,\hat{n}}}(\boldsymbol{x}_k; \boldsymbol{\Theta}),~k=1,2,\ldots, N,
+\]</div><p>
+where <span class="math">\({\mathscr{F}_{L,\hat{n}}}\)</span> is given in the 
+<a href="HTMLMultilayerPerceptrons.html#artificial.neural.network.def" class="internal-link">Definition«Click Here»</a>.</p><p>The aim is to consider an appropriate cost function <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span> and look for the trainable parameters <span class="math">\(\boldsymbol{\Theta}^*\)</span> such that
+</p><div class="math">\[
+\boldsymbol{\Theta}^* = \displaystyle{\text{argmin}_{{\boldsymbol{\Theta}}}} ~ \mathcal{C}(\boldsymbol{\Theta}).
+\]</div><p>
+In the following subsections, we define some of the commonly used cost functions.</p><p><h3 id="mean-square-error">Mean Square Error</h3></p><p>The <b>mean square error</b> (MSE) function is defined as
+</p><div class="math">\[
+\mathcal{C}_{\tiny \texttt{MSE}}(\boldsymbol{\Theta}) = \mathbb{E}_{(X,Y)}[\|Y - \tilde{Y}\|^2],
+\]</div><p>
+where <span class="math">\((X,Y)\)</span> are random variables representing the input and output, <span class="math">\( \tilde{Y}={\mathscr{F}_{L,\hat{n}}}(X; \boldsymbol{\Theta})\)</span> is the ANN predictor of <span class="math">\(Y\)</span> corresponding to the input <span class="math">\(X\)</span>, and <span class="math">\(\mathbb{E}\)</span> denotes expectation with respect to the underlying data distribution.</p><p>Often the true probability distribution of the data is unknown and therefore, the empirical mean square error is considered as an approximation, which is given by 
+</p><div class="math">\[
+\tilde{\mathcal{C}_{\tiny \texttt{MSE}}}(\boldsymbol{\Theta}) = \frac{1}{N}\sum_{k=1}^N \|\boldsymbol{y}_k - \tilde{\boldsymbol{y}}_k\|^2.
+\]</div><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+At the population level, the MSE requires the assumption that both 
+<span class="math">\(Y\)</span> and <span class="math">\(\tilde{Y}\)</span> have finite second moments, so that the expectation 
+<span class="math">\(\mathbb{E}\!\left[\|Y - \tilde{Y}\|^2\right]\)</span> is finite. 
+In the empirical setting, however, the MSE is always well-defined 
+because it is just an average of finitely many squared errors.
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+<span class="math">\(~\)</span>
+<ol class="latex-enumerate">
+<li>Show that any feed-forward neural network <span class="math">\({\mathscr{F}_{L,\hat{n}}}:\mathbb{R}^{n_0}\rightarrow \mathbb{R}^{n_L}\)</span> with continuous activation functions is a Borel measurable function.</p><p></li><li>For given <span class="math">\(L,n_0, n_1,\ldots, n_L\in \mathbb{N}\)</span>, let <span class="math">\(\mathbb{T}\)</span> be the admissible space of all trainable parameters <span class="math">\(\boldsymbol{\Theta}\)</span> that defines an ANN <span class="math">\({\mathscr{F}_{L,\hat{n}}}:\mathbb{R}^{n_0}\rightarrow \mathbb{R}^{n_L}\)</span> with a given set of layer wise activation functions <span class="math">\(\underline{\mathscr{A}}\)</span>.  For a given dataset <span class="math">\(\mathcal{D}=\{(X,Y)\}\)</span> (need not be finite), with <span class="math">\((X,Y)\)</span> being random variables, let
+</p><div class="math">\[
+\mathbb{H}_{L,\hat{n},\underline{\mathscr{A}}} := \{{\mathscr{F}_{L,\hat{n}}}~\mid~\text{with dataset } \mathcal{D}, \text{ activation functions }\underline{\mathscr{A}}, \text{ and } \boldsymbol{\Theta}\in \mathbb{T}\}.
+\]</div><p>
+If <span class="math">\(\mathbb{E}(Y|X)\in \mathbb{H}_{L,\hat{n},\underline{\mathscr{A}}}\)</span>, then show that
+</p><div class="math">\[
+{\mathscr{F}_{L,\hat{n}}}(X;\boldsymbol{\Theta}^*) = \mathbb{E}(Y|X),
+\]</div><p>
+where
+</p><div class="math">\[
+\boldsymbol{\Theta}^* = \displaystyle{\text{argmin}_{{\boldsymbol{\Theta}}}} ~ \mathcal{C}_{\tiny \texttt{MSE}}(\boldsymbol{\Theta}).
+\]</div><p>
+</li></ol>
+</div></p><p><h3 id="cross-entropy">Cross-Entropy</h3></p><p>Recall that while discussing a suitable cost function for learning the logistic regression model (see 
+<a href="HTMLMultilayerPerceptrons.html#cross-entropy.loss.function.rem" class="internal-link">Remark«Click Here»</a>), we derived it from the negative log-likelihood. We then observed that minimizing the negative log-likelihood is equivalent to minimizing cross-entropy.  This choice is natural because the true labels <span class="math">\(y\)</span> come from some unknown distribution <span class="math">\(p(y|x)\)</span>, whereas the model predicts <span class="math">\(\hat{p}(y|x; \boldsymbol{\Theta})\)</span>. Since, we want our model distribution <span class="math">\(\hat{p}\)</span> to be as close as possible to the true distribution <span class="math">\(p\)</span>, cross-entropy is the preferred cost function for logistic regression.  In this subsection, we formally define cross-entropy as a cost function in the general setting.</p><p><div class="definition">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Cross-Entropy and Entropy</b>]</p><p>Let <span class="math">\(p\)</span> and <span class="math">\(q\)</span> be two densities on the same space <span class="math">\(\mathcal{X}\)</span> and let <span class="math">\(\mathbb{E}_p\)</span> be the expectation with respect to <span class="math">\(p\)</span>. The <b>cross-entropy</b> of <span class="math">\(p\)</span> with respect to <span class="math">\(q\)</span> is denoted by <span class="math">\(\mathfrak{C}(p,q)\)</span> and is defined as
+</p><div class="math">\[
+\mathfrak{C}(p,q) = \mathbb{E}_p(-\log q).
+\]</div><p>
+In particular, if <span class="math">\(p=q\)</span>, we call <span class="math">\(\mathfrak{C}(p,p) =: \mathfrak{S}(p)\)</span>, the entropy of <span class="math">\(p\)</span>.
+</div></p><p>Entropy is a concept in information theory which measures the uncertainty of a random variable <span class="math">\(X\)</span>. It quantifies the average amount of information we gain while observing the outcome of <span class="math">\(X\)</span>. When <span class="math">\(X\)</span> is more predictable, the entropy is low and it takes the value zero if <span class="math">\(X\)</span> is deterministic.  On the other hand, if <span class="math">\(X\)</span> is uniformly distributed over many possible outcomes, then entropy is high, which is an indication that the random variable carries more information.  Let us illustrate it by an example.</p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+Consider two six-faced dies with outcomes <span class="math">\(\{1,2,3,4,5,6\}\)</span>, where Die-1 is fair and Die-2 is biased as follows:</p><p>
+<li>[<b>Die-1:</b>] 
+<span class="math">\(\mathbb{P}(X=k) = \frac{1}{6},~k=1,2,\ldots,6.\)</span>
+</li><li>[<b>Die-2:</b>] 
+<span class="math">\(\mathbb{P}(X=1) = 0.9, \mathbb{P}(X=k) = 0.02,~k=2,\ldots,6.\)</span>
+</p><p>As any outcome in <b>Die-1</b> is equally likely, it is hard to guess which face will appear in a roll, which means there is high randomness in this experiment.  Thus, we expect a higher entropy value.  In <b>Die-2</b>, one may be more confident that face 1 will appear, as it has a very high probability, while the other faces are negligible.  Thus, there is less randomness in <b>Die-2</b> leading to a smaller entropy.  Let us compute the entropy value for these two dies.</p><p>Let <span class="math">\(p_1\)</span> be the probability mass function of <b>Die-1</b>. Then the entropy of <span class="math">\(p_1\)</span> is 
+</p><div class="math" >\begin{eqnarray}
+\mathfrak{S}(p_1) &amp;=&amp; -\sum_{k=1}^6 p_1(k) \text{ln}(p_1(k))\\ 
+&amp;=&amp; -\sum_{k=1}^6 \frac{1}{6} \text{ln}\left(\frac{1}{6}\right)\\
+&amp;=&amp; \text{ln} 6 \approx 1.79176 \text{ nats}.
+\end{eqnarray}<div style="text-align:right;">(5.1)</div></div><p>
+Let <span class="math">\(p_2\)</span> be the probability mass function of <b>Die-2</b>. Then the entropy of <span class="math">\(p_2\)</span> is 
+</p><div class="math" >\begin{eqnarray}
+\mathfrak{S}(p_2) &amp;=&amp; -\sum_{k=1}^6 p_2(k) \text{ln}(p_2(k))\\ 
+&amp;=&amp; -\left(0.9\,\text{ln}(0.9) + \sum_{k=2}^6 0.02\, \text{ln}\left(0.02\right)\right)\\
+&amp;\approx&amp; 0.48603 \text{ nats}.
+\end{eqnarray}<div style="text-align:right;">(5.2)</div></div><p>
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Find the entropy of a normally distributed random variable with mean <span class="math">\(\mu\)</span> and variance <span class="math">\(\sigma^2\)</span>.
+</div></p><p>While entropy <span class="math">\(\mathfrak{S}(p)\)</span> measures the inherent uncertainty of the true distribution <span class="math">\(p\)</span>, cross-entropy measures the average penalty incurred when using <span class="math">\(\hat{p}\)</span> to model outcomes actually drawn from <span class="math">\(p\)</span>.  Minimizing cross-entropy is therefore equivalent to making <span class="math">\(\hat{p}\)</span> as close as possible to the true distribution <span class="math">\(p\)</span>.</p><p>Cross-entropy can be used as a cost function in classification problems, where the empirical average over the training dataset gives the <b>empirical cross-entropy cost function</b>
+</p><div class="math">\[
+\mathcal{C}_{\tiny \texttt{CE}}(\boldsymbol{\Theta}) = - \frac{1}{N} \sum_{i=1}^N \log \hat{p}(y_i \mid \boldsymbol{x}_i; \mathbf{\Theta}),
+\]</div><p>
+where <span class="math">\(\hat{p}(y_i \mid x_i; \mathbf{\Theta})\)</span> denotes the probability that the model assigns to the correct class label <span class="math">\(y_i\)</span>, given the input <span class="math">\(\boldsymbol{x}_i\)</span>, and <span class="math">\(\boldsymbol{\Theta}\)</span> denotes the trainable parameters.</p><p><h3 id="kullback-leibler-divergence">Kullback-Leibler divergence</h3></p><p>Assume that there is a true distribution <span class="math">\(p(x)\)</span> that we do not know exactly and we have a model <span class="math">\(q(x)\)</span> to approximate <span class="math">\(p(x)\)</span>.  </p><p>As per information theory, the optimal number of nats (or bits) required to encode a single value <span class="math">\(x\)</span> drawn from a distribution <span class="math">\(p(x)\)</span> is related to its self-information given by <span class="math">\(-\text{ln}\, p(x)\)</span>. Hence, the expected number of nats per sample if we encode using the true distribution <span class="math">\(p(x)\)</span> is given by the entropy.</p><p>On the other hand, if we use <span class="math">\(q(x)\)</span> to encode the data, the expected number of nats becomes the cross-entropy between <span class="math">\(p\)</span> and <span class="math">\(q\)</span>.</p><p>The extra cost incurred because of using <span class="math">\(q\)</span> instead of <span class="math">\(p\)</span> is the <b>Kullback-Leibler divergence</b> defined as
+</p><div class="math">\[
+\mathcal{C}_{\texttt{KL}}(p\|q) = \mathfrak{C}(p,q) - \mathfrak{S}(p).
+\]</div><p>
+This can be rewritten as
+</p><div class="math">\[
+\mathcal{C}_{\texttt{KL}}(p\|q) = -\int\limits_{\mathbb{R}} p(x) \text{ln}\, \frac{q(x)}{p(x)} dx.
+\]</div><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+<span class="math">\(~\)</span>
+<ol class="latex-enumerate">
+</li><li>Show that <span class="math">\(\mathcal{C}_{\texttt{KL}}(p\|q)\ge 0\)</span>. 
+</li><li>Is <span class="math">\(\mathcal{C}_{\texttt{KL}}(p\|q)\)</span> symmetric? Justify your answer.
+</li><li>Does the following triangle inequality hold? Justify your answer.
+</p><div class="math">\[
+\mathcal{C}_{\texttt{KL}}(p\|q) \le \mathcal{C}_{\texttt{KL}}(p\|r) + \mathcal{C}_{\texttt{KL}}(r\|q).
+\]</div><p>
+</li></ol>
+</div></p><p>KL divergence measures the difference between two probability distributions. It can be used as a cost function in neural networks, particularly in situations where the network output represents a probability distribution, because minimizing KL encourages the predicted distribution to match the target distribution.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+For a classification problem with one-hot targets, show that minimizing KL divergence between the true labels and predicted probabilities is equivalent to minimizing the categorical cross-entropy loss <span class="math">\( -\ln q_k\)</span>.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+For more details on cost functions, see Chapter 3 of the following book:</p><p>Calin, Ovidiu, <i>Deep Learning Architectures: A Mathematical Approach</i>, Springer,	2020.</p><p><a href="https://link.springer.com/book/10.1007/978-3-030-36721-3" style="color: #008080; font-family: monospace;">
+  Click here to see the details of the book
+</a>
+</div></p><p><h2 id="backpropagation.sec">Backpropagation Algorithm</h2></p><p>Training a neural network amounts to minimize a cost function <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span>, defined over the space of all trainable parameters <span class="math">\(\boldsymbol{\Theta}\)</span>. In order to proceed towards the minimum faster, we need to obtain the direction in parameter space along which <span class="math">\(\mathcal{C}\)</span> decreases most rapidly. This direction is given by the gradient of <span class="math">\(\mathcal{C}\)</span> with respect to the weights and biases.  The <b>backpropagation</b> algorithm provides us with an efficient way of computing these gradients using the chain rule.</p><p><h3 id="chain-rule-and-gradient-computation">Chain Rule and Gradient Computation</h3></p><p>The gradient of a cost function <span class="math">\(\mathcal{C}\)</span> with respect to bias and weight <span class="math">\((b, \boldsymbol{w})\)</span> is given by
+</p><div class="math">\[
+\nabla \mathcal{C} = \left(\frac{\partial \mathcal{C}}{\partial b}, \nabla_{\mathbf{w}} \mathcal{C} \right)
+=\left(\frac{\partial \mathcal{C}}{\partial b},~\left(\frac{\partial \mathcal{C}}{\partial w_1}, \frac{\partial \mathcal{C}}{\partial w_2}, \ldots, \frac{\partial \mathcal{C}}{\partial w_n}\right)~\right).
+\]</div><p><h4 id="gradient-for-a-neuron">Gradient for a Neuron</h4></p><p>Let us first consider a single neuron with neuron function <span class="math">\(\text{𝕗}\)</span>. Then the output is given by <span class="math">\(\tilde{y} = \text{𝕗}(\boldsymbol{x};\overline{\boldsymbol{w}}) = \mathscr{A}\circ \text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}})\)</span>. Since <span class="math">\(\mathcal{C}\)</span> measures the proximity between the true label <span class="math">\(y\)</span> and the model predicted value <span class="math">\(\tilde{y}\)</span>, it depends on the weights and bias only through the affine function <span class="math">\(\text{𝕒}\)</span>. Therefore, we have
+</p><div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b} = \frac{\partial \mathcal{C}}{\partial \text{𝕒}} \frac{\partial \text{𝕒}}{\partial b} = \delta (-1)
+~\text{and}~
+\frac{\partial \mathcal{C}}{\partial w_k} = \frac{\partial \mathcal{C}}{\partial \text{𝕒}} \frac{\partial \text{𝕒}}{\partial w_k} = \delta x_k,~k=1,2,\ldots, n,
+\]</div><p>
+where
+</p><div class="math">\[
+\delta = \frac{\partial \mathcal{C}}{\partial \text{𝕒}} = \mathcal{C}'(\tilde{y}) \mathscr{A}'(\text{𝕒}).
+\]</div><p><h4 id="shallow-network">Shallow Network</h4></p><p>We now discuss the gradient of the cost function associated with a single hidden layer neural network.  Since the cost function depends on the trainable parameters only through the model predicted out vector <span class="math">\(\hat{y}=\boldsymbol{x}^{(2)}\)</span> (here we considered <span class="math">\(L=2\)</span>), we have to start the gradient calculation from the output layer and progress towards the first hidden layer by applying the chain rule backwards through the layers to obtain all the required derivatives.  This procedure is known as <b>backpropagation</b>.</p><p><b>Layer <span class="math">\(l=2\)</span></b>:</p><p>Following the gradient calculation at the neuron level given above, the <span class="math">\(i^{\rm th}\)</span> neuron, for <span class="math">\(i=1,2,\ldots, n_2\)</span>, of the output layer <span class="math">\(l=2\)</span> is given by
+</p><div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b^{(2)}_i} = -\delta^{(2)}_i,~
+\frac{\partial \mathcal{C}}{\partial w^{(2)}_{ij}} = \delta^{(2)}_i x^{(1)}_j,
+~~j=1,2,\ldots,n_1,
+\]</div><p>
+where
+</p><div class="math">\[
+\delta^{(2)}_i = \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(2)}_i}
+~~\text{with}~~ \text{𝕒}^{(2)}_i = \langle \overline{\boldsymbol{w}}^{(2)}_{i}, \overline{\boldsymbol{x}}^{(1)}\rangle.
+\]</div><p>
+<b>Layer <span class="math">\(l=1\)</span></b>:</p><p>Now for the <span class="math">\(i^{\rm th}\)</span> neuron, for <span class="math">\(i=1,2,\ldots, n_1\)</span>, of the layer <span class="math">\(l=1\)</span>, we have
+</p><div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b^{(1)}_i} = -\delta^{(1)}_i,~
+\frac{\partial \mathcal{C}}{\partial w^{(1)}_{ij}} = \delta^{(1)}_i x^{(0)}_j
+~~j=1,2,\ldots,n_0,
+\]</div><p>
+where
+</p><div class="math">\[
+\delta^{(1)}_i = \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(1)}_i}
+~~\text{with}~~ \text{𝕒}^{(1)}_i = \langle \overline{\boldsymbol{w}}^{(1)}_{i}, \overline{\boldsymbol{x}}^{(0)}\rangle
+\]</div><p>
+Observe that to obtain the gradient of <span class="math">\(\mathcal{C}\)</span>, we only need to calculate <span class="math">\(\delta\)</span>'s, which are given layer wise.</p><p><b>Delta Calculation:</b></p><p>We still have to get the formulae for <span class="math">\(\delta\)</span>'s that involve the derivatives of the activation functions (just like how we obtained for a neuron above). We obtain this by noting that <span class="math">\(\text{𝕒}^{(1)}_i\)</span> affects <span class="math">\(\mathcal{C}\)</span> through <span class="math">\(\text{𝕒}^{(2)}\)</span>. Therefore, we write
+</p><div class="math" >\begin{eqnarray}
+\delta^{(1)}_i 
+&amp;=&amp; \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(1)}_i}\\
+&amp;=&amp; \sum_{j=1}^{n_2}\frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(2)}_j}\frac{\partial \text{𝕒}^{(2)}_j}{\partial \text{𝕒}^{(1)}_i}\\
+&amp;=&amp;\sum_{j=1}^{n_2}\delta^{(2)}_j \frac{\partial }{\partial \text{𝕒}^{(1)}_i} \langle \overline{\boldsymbol{w}}^{(2)}_{j}, \overline{\boldsymbol{x}}^{(1)}\rangle\\
+&amp;=&amp;\sum_{j=1}^{n_2} \delta^{(2)}_j \frac{\partial }{\partial \text{𝕒}^{(1)}_i} \left(\sum_{k=1}^{n_1}w^{(2)}_{jk} \mathscr{A}^{(1)}(\text{𝕒}^{(1)}_k)-b^{(2)}_{j}\right)\\
+&amp;=&amp;\sum_{j=1}^{n_2} \delta^{(2)}_j w^{(2)}_{ji}\mathscr{A}^{(1)'}(\text{𝕒}^{(1)}_i)\\
+&amp;=&amp;\mathscr{A}^{(1)'}(\text{𝕒}^{(1)}_i)\sum_{j=1}^{n_2} \delta^{(2)}_j w^{(2)}_{ji}.
+\end{eqnarray}<div style="text-align:right;">(5.3)</div></div><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Consider an ANN with <span class="math">\(L=2\)</span> with the logistic activation function and the binary cross-entrpy cost function
+</p><div class="math">\[
+\mathcal{C}(\boldsymbol{y}, \tilde{\boldsymbol{y}}) = -\sum_{k=1}^{n_L} y_k \text{ln} \tilde{y}_k - \sum_{k=1}^{n_L} (1-y_k) \text{ln} (1-\tilde{y}_k).
+\]</div><p>
+Find the expression for <span class="math">\(\delta_i^{(1)}\)</span>.
+</div></p><p><h4 id="deep-network">Deep Network</h4></p><p>In the previous subsections, we have discussed how chain rule is used in the backpropagation process to calculation the gradients of the cost function <span class="math">\(\mathcal{C}\)</span> with respect to the trainable parameters.  In this subsection, we discuss the <b>backpropagation algorithm</b> to compute the gradients of a given cost function <span class="math">\(\mathcal{C}\)</span> in all layers of a general feed-forward network of depth <span class="math">\(L\)</span>.</p><p><div class="algorithm">
+<div class="heading-container">
+<b class="heading">Algorithm:</b>
+</div>
+[<b>Backpropagation Algorithm</b>]</p><p><b>Input:</b> 
+
+<li>Choose an input vector <span class="math">\(\boldsymbol{x}\)</span> and its corresponding true label vector <span class="math">\(\boldsymbol{y}\)</span>.
+</li><li>Choose values for the trainable parameters in <span class="math">\(\boldsymbol{\Theta}\)</span>. 
+</p><p><b>Processing:</b>
+<ol class="latex-enumerate">
+</li></li><li>[<b>Step 1:</b>]  Perform the forward propagation to obtain the activations as follows:</p><p><b>Forward propagation:</b> For <span class="math">\(l=1,2,\ldots, L\)</span>, compute
+</p><div class="math">\[
+x^{(l)}_j = \mathscr{A}^{(l)}\left(
+					\sum_{k=1}^{n_{l-1}} w_{jk}^{(l)} x_{k}^{(l-1)} - b_{j}^{(l)}\right),~j=1,2,\ldots, n_l,
+\]</div><p>
+and take the model predicted output as <span class="math">\(\tilde{\boldsymbol{y}} = \boldsymbol{x}^{(L)}\)</span>.</p><p></li></li><li>[<b>Step 2:</b>]  Calculate the <span class="math">\(\delta\)</span>'s at the output layer <span class="math">\(L\)</span> using the following formula:
+</p><div class="math" >\begin{eqnarray}
+\delta^{(L)}_j &amp;=&amp; \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(L)}_j}(\boldsymbol{y}, \tilde{\boldsymbol{y}})\\
+&amp;=&amp; \frac{\partial \mathcal{C}}{\partial x^{(L)}_j}(\boldsymbol{y}, \tilde{\boldsymbol{y}})\,\mathscr{A}^{(L)'}(\text{𝕒}^{(L)}_j),~~j=1,2,\ldots, n_L,
+\end{eqnarray}<div style="text-align:right;">(5.4)</div></div><p>
+where <span class="math">\(\text{𝕒}^{(L)}_j=\langle \overline{\boldsymbol{w}}_j, \overline{\boldsymbol{x}}^{(L-1)}_j\rangle.\)</span></p><p></li></li><li>[<b>Step 3:</b>]  Next perform the backpropagation for calculating deltas in each hidden layers using the following formula:</p><p><b>Backpropagation for deltas:</b> For <span class="math">\(l=L-1,L-2,\ldots, 1\)</span>, compute
+</p><div class="math" >\begin{eqnarray}
+\delta^{(l)}_i &amp;=&amp; \mathscr{A}^{(l)'}(\text{𝕒}^{(l)}_i)\sum_{j=1}^{n_2} \delta^{(l+1)}_j w^{(l+1)}_{ji},~~i=1,2,\ldots, n_l.
+\end{eqnarray}<div style="text-align:right;">(5.5)</div></div><p>
+</li></li><li>[<b>Step 4:</b>] Compute the components of the gradient of <span class="math">\(\mathcal{C}\)</span> as follows:</p><p>For <span class="math">\(l=L,L-1,\ldots, 1\)</span>,
+</p><div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b^{(l)}_i} = -\delta^{(l)}_i,~
+\frac{\partial \mathcal{C}}{\partial w^{(l)}_{ij}} = \delta^{(l)}_i x^{(l-1)}_j,
+~~i=1,2,\ldots,n_{l},~ j=1,2,\ldots,n_{l-1},
+\]</div><p>
+<b>Output:</b> All the gradient components
+</p><div class="math">\[
+\nabla_{\boldsymbol{\Theta}} \mathcal{C}
+=\Big(
+	\big(\nabla_{\mathbf{b}^{(l)}} \mathcal{C}, \nabla_{W^{(l)}}\mathcal{C}\big)
+	\Big)_{l=1}^L.
+\]</div><p>
+</li></ol>
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+PyTorch and TensorFlow use reverse-mode automatic differentiation, which is an efficient way of implementing the backpropagation.  We omit the details in this course. Interested readers can refer to the following book, section 8.2 on page 244 for the details on this approach:</p><p><p>Bishop, Christopher M. and Bishop, Hugh,  <i>Deep Learning: Foundations and Concepts</i>, Springer,	2024.</p><p><a href="https://link.springer.com/book/10.1007/978-3-031-45468-4">
+  Click here to see the details of the book
+</a>
+</div></p><p><h2 id="weight-updates-using-gradient-descent">Weight Updates Using Gradient Descent</h2></p><p>Consider a loss function <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span>. The aim is to obtain a <span class="math">\(\boldsymbol{\Theta}^*\)</span> 
+such that
+</p><div class="math">\[
+\boldsymbol{\Theta}^* = \text{argmin}_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}).
+\]</div><p>
+In simple cases (like linear regression), we can obtain <span class="math">\(\boldsymbol{\Theta}^*\)</span> analytically. But in deep learning, <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span> is nonlinear and has a large number of parameters. Hence, we need an efficient method to obtain (at least approximately) <span class="math">\(\boldsymbol{\Theta}^*\)</span>. </p><p>To iteratively minimize the cost function, we need to know in which direction to move <span class="math">\(\boldsymbol{\Theta}\)</span> to decrease the cost most efficiently.  This direction is determined by the gradient <span class="math">\(\nabla_{\boldsymbol{\Theta}}\mathcal{C}\)</span>.
+To see this, let us consider a simple case of <span class="math">\(\boldsymbol{\Theta}=(w_1, w_2, \ldots, w_n)\in \mathbb{R}^n\)</span>.  </p><p><h3 id="batch-gradient-descent-method">Batch Gradient Descent Method</h3></p><p>Let us start with an arbitrarily chosen vector <span class="math">\(\boldsymbol{w}_0\in \mathbb{R}^n\)</span>. We want to move to a new vector 
+</p><div class="math">\[
+\boldsymbol{w}_1 = \boldsymbol{w}_0 + \eta \boldsymbol{v},
+\]</div><p> 
+for a small step size <span class="math">\(\eta>0\)</span>, where the direction <span class="math">\(\boldsymbol{v}\)</span> is chosen such that <span class="math">\(\mathcal{C}(\boldsymbol{w}_1) < \mathcal{C}(\boldsymbol{w}_0)\)</span>. </p><p>Using the first-order Taylor expansion, we have
+</p><div class="math" >\begin{eqnarray}
+\mathcal{C}(\boldsymbol{w}_1) = \mathcal{C}(\boldsymbol{w}_0) + \eta \, \langle \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0), \boldsymbol{v} \rangle + O(\eta^2).
+\end{eqnarray}<div style="text-align:right;">(5.6)</div></div><p>
+Neglecting higher-order terms of <span class="math">\(O(\eta^2)\)</span>, the change in the cost function is approximately
+</p><div class="math">\[
+\mathcal{C}(\boldsymbol{w}_1) - \mathcal{C}(\boldsymbol{w}_0) \approx  \eta \, \langle \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0), \boldsymbol{v} \rangle.
+\]</div><p>
+To achieve a rapid decrease, we need to choose the direction vector <span class="math">\(\boldsymbol{v}\)</span> such that <span class="math">\(\mathcal{C}(\boldsymbol{w}_1) - \mathcal{C}(\boldsymbol{w}_0)\)</span> gives the largest decrease in the linear approximation (neglecting <span class="math">\(O(\eta^2)\)</span> terms).</p><p>Using the Cauchy-Schwarz inequality, we get
+</p><div class="math">\[
+\langle \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0), \boldsymbol{v} \rangle \ge -\| \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0)\| \, \|\boldsymbol{v}\|,
+\]</div><p>
+and equality occurs when
+</p><div class="math">\[
+\boldsymbol{v} = -\nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0).
+\]</div><p>
+Thus, the direction of <b>steepest descent</b> is the negative gradient, and the update rule becomes
+</p><div class="math">\[
+\boldsymbol{w}_1 = \boldsymbol{w}_0 - \eta \, \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0).
+\]</div><p>
+In general, we may not reach the optimal vector <span class="math">\(\boldsymbol{w}^*\)</span> in a single step. So, we need to apply the update rule repeatedly in order to move step by step in the direction of the negative gradient, until the cost function stops decreasing significantly.
+This leads to the general iterative <b>gradient descent method</b> (GDM), given by
+</p><div class="math" id="batchGD.eq">\begin{eqnarray}
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_{k} - \eta \, \nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}_{k}), 
+\quad k = 0,1,2,\dots,
+\end{eqnarray}<div style="text-align:right;">(5.7)</div></div><p>
+where <span class="math">\(\eta > 0\)</span> is the <b>learning rate</b> and <span class="math">\(\boldsymbol{\Theta}_{0}\)</span> is an initial guess.</p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Gradient System</b>]</p><p>Again, for the sake of simplicity, let us consider <span class="math">\(\boldsymbol{\Theta} = \boldsymbol{w} \in \mathbb{R}^n\)</span>, an <span class="math">\(n\)</span>-dimensional vector. 
+The gradient descent iteration <a href="#batchGD.eq">(5.7)</a> can be written as 
+</p><div class="math">\[
+\frac{\boldsymbol{w}_{k+1} - \boldsymbol{w}_{k}}{\eta} = - \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_{k}), 
+\quad k = 0,1,2,\dots
+\]</div><p>
+with step size <span class="math">\(\eta>0\)</span>.</p><p>Interpreting <span class="math">\(t_k=k\eta\)</span> as a discrete time, the above scheme is the explicit (forward) Euler discretization of the system of ordinary differential equations
+</p><div class="math">\[
+\dot{\boldsymbol{w}} = - \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}).
+\]</div><p>
+Such a system is called a <b>gradient system</b>.  Thus, the gradient descent update rule can be viewed as an approximation  of the gradient system or the <b>gradient flow</b>.</p><p>Further, assume that <span class="math">\(\mathcal{C}\in C^2(\mathbb{R}^n)\)</span> and the Hessian <span class="math">\(\nabla_{\boldsymbol{w}}^2 \mathcal{C}\)</span> is bounded (the gradient <span class="math">\(\nabla_{\boldsymbol{w}}\mathcal{C}\)</span> is Lipschitz) in a neighborhood of a nondegenerate local minimum <span class="math">\(\boldsymbol{w}^*\)</span> (strict minimum). Then, by choosing <span class="math">\(\boldsymbol{w}_0\)</span> in this neighborhood, the piecewise linearly interpolated trajectory computed using the above Euler scheme converges (uniformly on any compact time interval) to the  solution of the above gradient system as <span class="math">\(\eta \rightarrow 0\)</span>.</p><p>As a consequence, a minimizer of a <span class="math">\(C^2\)</span> cost function can be viewed as an equilibrium point of the above gradient system in the parameter space. It is known that strict (nondegenerate) minima of <span class="math">\(\mathcal{C}\)</span> are asymptotically stable equilibrium points of the above gradient system.</p><p>
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Consider the gradient flow
+</p><div class="math">\[
+\dot{\boldsymbol{w}}(t) \;=\; -\,\nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}(t)), 
+\qquad \boldsymbol{w}(0)=\boldsymbol{w}_0,
+\]</div><p>
+associated with a cost function <span class="math">\(\mathcal{C}:\mathbb{R}^n \to \mathbb{R}\)</span>. Show that the cost function is non-increasing along the trajectories of this gradient system, i.e.
+</p><div class="math">\[
+\frac{d}{dt}\,\mathcal{C}(\boldsymbol{w}(t)) \;\leq\; 0, \qquad t\ge0.
+\]</div><p>
+</div></p><p><div class="algorithm">
+<div class="heading-container">
+<b class="heading">Algorithm:</b>
+</div>
+[<b>Gradient Descent Method</b>]</p><p><b>Input:</b> 
+<ol class="latex-enumerate">
+<li>Initial guess <span class="math">\(\boldsymbol{\Theta}_0 \in \mathbb{R}^n\)</span>;
+</li><li>Learning rate (step size) <span class="math">\(\eta>0\)</span>;
+</li><li>Maximum iterations <span class="math">\(K\)</span>.
+</li></ol>
+<b>Processing:</b></p><p>For <span class="math">\(k = 0,1,2,\dots,K-1\)</span></p><p>
+    </li><li>[<b>Step 1:</b>] 
+    	Compute the gradient 
+<span class="math">\(\boldsymbol{g}_k = \nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}_k)\)</span></p><p>(using the backpropagation algorithm for the neural network).
+    </li></li><li>[<b>Step 2:</b>]  Update the parameter:
+</p><div class="math">\[
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_k - \eta \, \boldsymbol{g}_k.
+\]</div><p><b>Output:</b> Approximate minimizer <span class="math">\(\boldsymbol{\Theta}_K\)</span>.</p><p>
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+The gradient descent method is also called as the <b>steepest descent method</b>.  Since the cost function includes the loss function evaluated at all the examples of a dataset, the method in the above algorithm is also called the <b>batch gradient descent method</b> or <b>batch steepest descent method</b>.
+</div></p><p><h3 id="stochastic-gradient-descent-(sgd)">Stochastic Gradient Descent (SGD)</h3></p><p>Recall that the cost function is defined as
+</p><div class="math">\[
+\mathcal{C}(\boldsymbol{\Theta}) = \frac{1}{N}\sum_{i=1}^N \ell(\boldsymbol{x}_i,\boldsymbol{y}_i; \boldsymbol{\Theta}),
+\]</div><p>
+where <span class="math">\(\ell\)</span> denotes the loss corresponding to a single sample of the dataset <span class="math">\(\mathcal{D}\)</span>. The gradient is therefore given by
+</p><div class="math">\[
+\nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta})
+= \frac{1}{N}\sum_{i=1}^N \nabla_{\boldsymbol{\Theta}} \ell(\boldsymbol{x}_i,\boldsymbol{y}_i; \boldsymbol{\Theta}).
+\]</div><p>Since, for each iteration of GDM, the gradient has to be computed using the entire dataset of size <span class="math">\(N\)</span>, the computational cost of evaluating <a href="#batchGD.eq">(5.7)</a> per iteration grows linearly with <span class="math">\(N\)</span>. Since deep learning often involves large-scale datasets, the batch gradient descent becomes prohibitively expensive.</p><p>An alternate approach is the <b>stochastic gradient descent</b> method (SGD) which replaces the full gradient by the gradient corresponding to a randomly chosen sample <span class="math">\((\boldsymbol{x}_{i_k},\boldsymbol{y}_{i_k})\)</span> and the update rule for each iteration is
+</p><div class="math" id="SGD">\begin{eqnarray}
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_k - \eta \, \nabla_{\boldsymbol{\Theta}} \ell(\boldsymbol{x}_{i_k},\boldsymbol{y}_{i_k}; \boldsymbol{\Theta}_k),~ k=0,1,\ldots, N-1,
+\end{eqnarray}<div style="text-align:right;">(5.8)</div></div><p>
+where <span class="math">\(i_k\)</span> is sampled uniformly from <span class="math">\(\{1,2,\dots,m\}\)</span>.  </p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Write the algorithm for the stochastic gradient descent method.
+</div></p><p>Note that <span class="math">\(\nabla_{\boldsymbol{\Theta}} \ell(\boldsymbol{x}_{i_k},\boldsymbol{y}_{i_k}; \boldsymbol{\Theta}_k)\)</span> is an unbiased estimator of the true gradient, and therefore
+</p><div class="math">\[
+\mathbb{E}_{i_k}\!\left[\nabla_{\boldsymbol{\Theta}} \ell(\boldsymbol{x}_{i_k},\boldsymbol{y}_{i_k}; \boldsymbol{\Theta}_k) \right] 
+= \nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}_k).
+\]</div><p>
+Thus, SGD can be viewed as a noisy discretization of the gradient system. The  stochasticity introduced in the procedure often helps in escaping saddle points and shallow local minima. However, it causes fluctuations in the trajectory and leads to slow convergence.</p><p><h3 id="mini-batch-gradient-descent">Mini-batch Gradient Descent</h3></p><p>The batch GD method is computationally expensive but accurate in capturing the correct gradient direction. Whereas, the SGD method is computationally less expensive, but slow in convergence.</p><p>A compromise between batch GD and SGD is to average the gradients over a small randomly chosen subset (mini-batch) <span class="math">\(\mathcal{B}_k\subset \{1,\dots,N\}\)</span> with <span class="math">\(|\mathcal{B}_k|=M\ll N\)</span>. The update reads
+</p><div class="math" id="miniGD">\begin{eqnarray}
+\boldsymbol{\Theta}_{k+1} 
+= \boldsymbol{\Theta}_k -  \frac{\eta}{M}\sum_{i\in \mathcal{B}_k} 
+\nabla_{\boldsymbol{\Theta}} \ell(\boldsymbol{x}_{i},\boldsymbol{y}_{i}; \boldsymbol{\Theta}_k).
+\end{eqnarray}<div style="text-align:right;">(5.9)</div></div><p>
+This method is called the <b>mini-batch gradient descent method</b>.
+Mini-batches reduce the variance of the stochastic gradient and provide a better computational efficiency than GD method. In practice, batch sizes such as <span class="math">\(32\)</span>, <span class="math">\(64\)</span>, or <span class="math">\(128\)</span> are widely used.</p><p>Another approach in mini-batch gradient descent method, which is common in practice, is the epoch-wise training. Here, in each epoch, the entire training dataset is first randomly shuffled and then divided into mini-batches of size <span class="math">\(M\ll N\)</span>.  This results in at least <span class="math">\(N/M\)</span> mini-batches, which are used to update <span class="math">\(\boldsymbol{\Theta}\)</span> sequentially within that epoch.  If <span class="math">\(N\)</span> is not exactly divisible by <span class="math">\(M\)</span>, then the last mini-batch of the epoch contains the remaining number of examples.  Thus, each mini-batch produces one parameter update, and one epoch corresponds to a complete pass over the training dataset, where all mini-batches are processed once. </p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Write the algorithm for the epoch-wise training of a mini-batch gradient descent method.
+</div></p><p><h3 id="momentum-method">Momentum Method</h3></p><p>One drawback of SGD is slow convergence due to oscillations in directions of high curvature. The momentum method introduces a velocity vector <span class="math">\(\boldsymbol{v}_k\)</span>:
+\begin{align*}
+\boldsymbol{v}_{k+1} &amp;= \mu \boldsymbol{v}_k - \eta \nabla_{\boldsymbol{\Theta}} \mathcal{C}_\beta(\boldsymbol{\Theta}_k), \\
+\boldsymbol{\Theta}_{k+1} &amp;= \boldsymbol{\Theta}_k + \boldsymbol{v}_{k+1},
+\end{align*}
+where <span class="math">\(\mu\in[0,1)\)</span> is the momentum parameter and <span class="math">\(\boldsymbol{v}_0=\boldsymbol{0}\)</span>. Here, <span class="math">\(\mathcal{C}_\beta\)</span> is the cost function on a mini-batch. Note that, if <span class="math">\(\beta=N\)</span>, then the momentum is applied to GD update rule, whereas if <span class="math">\(\beta=1\)</span> it is applied to the SGD rule.</p><p>Note that the term <span class="math">\(\mu \boldsymbol{v}_k\)</span> carries the memory of the previous update direction into the future updates, with <span class="math">\(\mu \in [0,1)\)</span> controlling the strength of this memory.  This is analogous to <b>inertia</b> in physics, where a particle in motion tends to keep moving in the same direction unless acted upon by a force.</p><p>The momentum method accelerates updates in consistent descent directions and damps oscillations along narrow valleys.   Moreover, in cases where GD gets stuck in shallow local minima, saddle points or regions with very small gradients, the momentum method often produces better progress by carrying forward past velocity.</p><p>The momentum term can also be interpreted from a control-theoretic perspective. 
+Treating <span class="math">\(\boldsymbol{v}_k\)</span> as a control input, the term <span class="math">\(\mu \boldsymbol{v}_k\)</span> acts as a feedback term with <span class="math">\(\mu\)</span> playing the role of a <b>feedback gain</b>. 
+This feedback regulates how strongly past velocity influences the current update, smoothing oscillations and accelerating convergence along consistent descent directions.</p><p>A further refinement is the <b>Nesterov Accelerated Gradient</b> (NAG), where the gradient is evaluated at the 'look-ahead' point <span class="math">\(\boldsymbol{\Theta}_k+\mu\boldsymbol{v}_k\)</span>.</p><p><h3 id="adaptive-step-size-methods">Adaptive Step Size Methods</h3></p><p>Another family of improvements involves adjusting the step size per coordinate based on past gradients.</p><p><h4 id="adagrad.">AdaGrad.</h4></p><p>Each parameter <span class="math">\(\Theta_j\)</span> has its own effective learning rate scaled by the accumulated squared gradients:
+</p><div class="math">\[
+\Theta_{j,k+1} = \Theta_{j,k} - \frac{\eta}{\sqrt{G_{j,k} + \epsilon}} \, g_{j,k},
+\]</div><p>
+where <span class="math">\(g_{j,k}\)</span> is the <span class="math">\(j\)</span>th component of the gradient <span class="math">\(\boldsymbol{g}_k = \nabla_\Theta \mathcal{C}(\Theta_k)\)</span> at step <span class="math">\(k\)</span>, 
+</p><div class="math">\[
+G_{j,k} = \sum_{\ell=0}^k g_{j,\ell}^2,
+\]</div><p>
+and <span class="math">\(\epsilon>0\)</span> is a small constant added to avoid blow-up of the learning rate.</p><p>AdaGrad performs well for sparse data but suffers from rapid decay of learning rates.</p><p><h4 id="root-mean-square-propagation-(rmsprop)">Root Mean Square Propagation (RMSProp)</h4></p><p>In order to address AdaGrad’s disadvantage of decay in learning rate, RMSProp uses an exponential moving average of squared gradients given by
+</p><div class="math">\[
+G_{j,k} = \rho G_{j,k-1} + (1-\rho) g_{j,k}^2,
+\]</div><p>
+where <span class="math">\(0<\rho<1\)</span>.</p><p><h4 id="adaptive-moments-(adam).">Adaptive Moments (Adam).</h4></p><p>The <b>Adam</b> optimizer combines RMSProp with momentum by maintaining exponentially weighted moving averages of both gradients and squared gradients. The update rule for the <b>Adam method</b> is given by
+\begin{align*}
+m_{j,k} &amp;= \beta_1 m_{j,k-1} + (1-\beta_1) g_{j,k}, \\
+v_{j,k} &amp;= \beta_2 v_{j,k-1} + (1-\beta_2) g_{j,k}^2, \\
+\Theta_{j,k+1} &amp;= \Theta_{j,k} - \frac{\eta}{\sqrt{\hat{v}_{j,k}}+\epsilon}\, \hat{m}_{j,k},
+\end{align*}
+where <span class="math">\(\hat{m}_{j,k}\)</span> and <span class="math">\(\hat{v}_{j,k}\)</span> are bias-corrected estimates given by
+</p><div class="math">\[
+\hat{m}_{j,k} = \frac{m_{j,k}}{1-\beta_1^k},~~\hat{v}_{j,k} = \frac{v_{j,k}}{1-\beta_2^k}.
+\]</div><p> 
+Adam is the most widely used optimizer in deep learning practice.</p><p><h2 id="regularization-and-generalization">Regularization and Generalization</h2></p><p>In mathematics, especially in the analysis of differential equations and inverse problems, <b>regularization</b> refers to a procedure that makes an unstable problem stable.  Recall that, for a problem to be stable, a  small change in the data (on which the problem depends) should not lead to a large change in the solution. For instance, in an initial value problem, the initial condition is the data. For a linear system, the right hand side vector and the coefficient matrix are considered data.</p><p>In the context of neural network training, the training dataset constitutes the data.
+The parameters in <span class="math">\(\boldsymbol{\Theta}\)</span> are determined by minimizing a cost function over the training dataset <span class="math">\(\mathcal{D}_{\text{train}}\)</span>. However, tuning the parameters too precisely to fit <span class="math">\(\mathcal{D}_{\text{train}}\)</span> has the risk of <b>overfitting</b> the data. In such cases, the model represents the training dataset very well (often referred to as memorizing the data) but fails to perform equally well on unseen data, such as the test dataset. This behavior is particularly prominent when the source of the data is noisy. Since the model is tuned tightly to fit the training dataset, even small changes in the data can lead to large deviations in its predictions.</p><p>On the other hand, if the parameters are not tuned adequately, the model may suffer from <b>underfitting</b>, where it fails to capture even the underlying patterns in the training dataset, and this again leads to poor performance on unseen data.  Hence, a balance must be achieved between overfitting and underfitting so that the model represents the training dataset reasonably well and at the same time performs satisfactorily on unseen data. Achieving this balance is the goal of <b>regularization</b>.  In neural networks, regularization refers to a set of techniques applied during training, in which certain constraints are applied to the learning process in order to reduce overfitting and improve the ability of the model to perform well on other unseen datasets. </p><p>On the other hand, <b>generalization</b> refers to the actual performance of the trained model on new data and is evaluated after the training process is complete. The aim of regularization is to reduce the <b>generalization gap</b>, defined as
+</p><div class="math">\[
+\mathcal{G}\big({\mathscr{F}_{L,\hat{n}}}(\cdot;\boldsymbol{\Theta}^*) \big) = \mathcal{C}_{\text{test}}(\boldsymbol{\Theta}^*) - \mathcal{C}_{\text{train}}(\boldsymbol{\Theta}^*),
+\]</div><p>
+where <span class="math">\(\mathcal{C}\)</span> is the cost (or loss) function used in training the model and <span class="math">\(\Theta^*\)</span> denotes the parameters of the trained model.  Here, the cost function value, <span class="math">\(\mathcal{C}_\text{test}\)</span>, computed on the test dataset is called the <b>test error</b>, whereas the cost function value, <span class="math">\(\mathcal{C}_\text{train}\)</span>, computed on the training dataset is called the <b>training error</b>.</p><p>Regularization can be applied in two broad ways. One way is the <b>parameter-based regularization</b>, which directly penalizes or constrains the model parameters (for example, weight decay by <span class="math">\(L^1\)</span> or <span class="math">\(L^2\)</span> penalties). Another form of regularization is the <b>process-based regularization</b>, which modifies the training procedure itself to reduce overfitting (for example, early stopping, dropout, or data augmentation).</p><p>In this section, we discuss some regularization techniques and generalization.</p><p><h3 id="underfitting-and-overfitting">Underfitting and Overfitting</h3></p><p><div class="figure">
+
+<img src="Figures/UnderOverFits.png" class="standalone-figure"></p><p><div style="text-align: center; font-weight: bold;">(a) Underfitting model illustration, where linear model is used for a complex dataset, which failed to capture the underlying pattern. (b) Overfitting illustration, where the model is fine tuned to capture the underlying pattern of the training dataset more closely.</div>
+
+
+</div></p><p><b>Underfitting</b> occurs when the model is too simple to capture the underlying patterns in the data.  In such cases, the model performs poorly on both the training and test datasets.  The above Figure(a) illustrates a binary classification model that underfits a complex dataset.</p><p><b>Overfitting</b> occurs when the model is too complex relative to the amount of noise level of the data. In such cases, the model fits the training data very accurately (including its noise) but fails to generalize to unseen data.  The above Figure(b) illustrates a binary classification model that overfits a complex dataset.</p><p>Both underfitting and overfitting are undesirable in a trained model.  The cost function can be used to characterize these behaviors as follows:
+<ol class="latex-enumerate">
+</li><li>If both <span class="math">\(\mathcal{C}_{\text{test}}(\boldsymbol{\Theta}^*)\)</span> and <span class="math">\(\mathcal{C}_{\text{train}}(\boldsymbol{\Theta}^*)\)</span> are high, then the model is said to be underfitted.</p><p></li><li>If <span class="math">\(\mathcal{C}_{\text{test}}(\boldsymbol{\Theta}^*)\)</span> is high and <span class="math">\(\mathcal{C}_{\text{train}}(\boldsymbol{\Theta}^*)\)</span> is low, then the model is said to be overfitted.
+</li></ol>
+An illustrative sketch showing the underfitting, optimal, and overfitting regions is presented in <a href="HTMLTrainingNeuralNetwork.html#train-test-cost.fig">Figure &laquo;Click Here&raquo; </a>.</p><p><div class="figure">
+
+<div  id="train-test-cost.fig">
+<img src="Figures/UnderOverFitsRegions.png" class="standalone-figure">
+<b> Variation of training cost function and test cost function
+with model complexity, illustrating underfitting, overfitting, and optimal generalization.</b>
+
+</div></p><p><h3 id="parameter-based-regularization">Parameter-based Regularization</h3></p><p>A neural network with large weights can easily overfit a training dataset. To see this, consider a single neuron with output
+</p><div class="math">\[
+y = \mathscr{A}\big(\boldsymbol{w}\cdot \boldsymbol{x} - b\big).
+\]</div><p>
+If the components of <span class="math">\(\boldsymbol{w}\)</span> are very large, then a small change in <span class="math">\(\boldsymbol{x}\)</span> can lead to a large change in the output <span class="math">\(y\)</span>.  This makes the neuron very sensitive to the input data. Since the model is trained to represent the training data well, the training error is small. However, small changes in the input (for instance, noisy input) can lead to large deviations in the output, leading to a large testing error.  Hence, the model shows poor generalization on unseen data, which corresponds to overfitting.</p><p>One way to prevent this is to keep the weights smaller by minimizing (also referred to as penalizing) the norm of the weight vector during training. This can be achieved by minimizing a <b>regularized cost function</b> defined as
+</p><div class="math">\[
+\mathcal{C}_{\alpha} (\boldsymbol{\Theta}) = \mathcal{C}(\boldsymbol{\Theta}) + \alpha \Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}),
+\]</div><p>
+where <span class="math">\(\alpha\ge 0\)</span> is a hyperparameter controlling the strength of penalization, and <span class="math">\(\Omega\)</span> is a <b>regularization function</b>, which is a function of the weights only (denoted by <span class="math">\(\boldsymbol{\Theta}_{\boldsymbol{w}}\)</span>). </p><p>Commonly used regularization parameters are the following:
+
+<li><b><span class="math">\(\ell^1\)</span>-Regularization</b>: In this case, the regularization function is taken as
+</p><div class="math">\[
+\Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}) = \|\boldsymbol{\Theta}_{\boldsymbol{w}}\|_1.
+\]</div><p>
+</li><li><b><span class="math">\(\ell^2\)</span>-Regularization</b>: In this case, the regularization function is taken as
+</p><div class="math">\[
+\Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}) = \frac{1}{2}\|\boldsymbol{\Theta}_{\boldsymbol{w}}\|^2_2.
+\]</div><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Obtain the gradient descent update rule for the regularized cost function with <span class="math">\(\ell^2\)</span>-regularization.  Recall that we have derived a similar update rule (with a different loss function) earlier in our course. What was it?
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+The <span class="math">\(\ell^2\)</span>-regularization is called <b>Tikhonov regularization</b> or <b>ridge regression</b>. The <span class="math">\(\ell^1\)</span>-regularization is called <b>lasso</b> in statistical learning.
+</div></p><p><div class="problem" id="alpha.dependency.of.c.prob">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+
+Consider the <span class="math">\(\ell^2\)</span>-regularized loss function (used for linear regression)
+</p><div class="math">\[
+\mathcal{L}_\alpha(\boldsymbol{w}) = \frac{1}{2}\|\boldsymbol{y} - X\boldsymbol{w}\|_{2}^2 + \frac{\alpha}{2} \| \boldsymbol{w} \|^{2}_{2},
+\]</div><p>
+where <span class="math">\(X\)</span> is an <span class="math">\(n\times n\)</span> invertible matrix, and <span class="math">\(\boldsymbol{w},\boldsymbol{y}\in \mathbb{R}^n\)</span>. Let <span class="math">\(\boldsymbol{w}^*(\alpha)\)</span> denote the minimizer of the above loss function and let <span class="math">\(c=\|\boldsymbol{w}^*(\alpha)\|^{2}_2\)</span>. Then, show that there exists a vector <span class="math">\(\boldsymbol{z}\in \mathbb{R}^n\)</span> such that
+</p><div class="math">\[
+c = \sum_{j=1}^n \frac{z_{j}^2}{(\alpha + \lambda_j)^2},
+\]</div><p>
+where <span class="math">\(\lambda_j\)</span>, <span class="math">\(j=1,2,\ldots, n\)</span>, are the eigenvalues of <span class="math">\(X X^\top\)</span>.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Constrained Optimization and Geometric Interpretation</b>]</p><p>The unconstrained optimization problem with a regularized cost function
+</p><div class="math">\[
+\tilde{\boldsymbol{\Theta}} = \text{argmin}_{\boldsymbol{\Theta}}~ \mathcal{C}_{\alpha} (\boldsymbol{\Theta}),
+\]</div><p>
+for a given <span class="math">\(\alpha>0\)</span>, can be equivalently posed as a constrained optimization problem as
+</p><div class="math">\[
+\tilde{\boldsymbol{\Theta}} = \left\{\begin{array}{ll}
+					&amp;\displaystyle{\text{argmin}_{\boldsymbol{\Theta}}}~ \mathcal{C}(\boldsymbol{\Theta}),\\
+					\text{subject to:} &amp; \|\boldsymbol{\Theta}_{\boldsymbol{w}}\|_p \le c,
+					\end{array}\right.
+\]</div><p>
+for <span class="math">\(p=1,2\)</span>, and for some constant <span class="math">\(c\)</span> depending on the regularization parameter <span class="math">\(\alpha\)</span>.</p><p><b>Geometric Interpretation:</b></p><p>For the sake of simplicity, let us take <span class="math">\(\boldsymbol{\Theta} = (b,\boldsymbol{w})\)</span> with <span class="math">\(\boldsymbol{w}\in \mathbb{R}^2\)</span>, and consider the linear regression model, where the cost function is the MSE function. The regularized minimizer <span class="math">\(\tilde{\boldsymbol{w}}\)</span> corresponds to the point of tangency between the contours (level sets) of the cost surface and the constraint region. The constraint region is a circle (for <span class="math">\(p=2\)</span>) centered at the origin with radius <span class="math">\(c\)</span>, as shown in the figure below.</p><p>As stated in <a href="HTMLTrainingNeuralNetwork.html#alpha.dependency.of.c.prob">Problem &laquo;Click Here&raquo; </a>, for linear regression, in general, we can observe (only numerically) the following dependency between <span class="math">\(\alpha\)</span> and <span class="math">\(c\)</span>: 
+<ol class="latex-enumerate">
+</li><li>as <span class="math">\(\alpha\)</span> increases, <span class="math">\(c\)</span> decreases, and
+</li><li>as <span class="math">\(\alpha\)</span> decreases, <span class="math">\(c\)</span> increases.
+</li></ol>
+Hence, choosing a large value of <span class="math">\(\alpha\)</span> makes <span class="math">\(\tilde{\boldsymbol{w}}\)</span> to lie very close to the origin.  This leads to a more stable model which is less sensitive to noise but may result in underfitting, with both training and test costs being large.  On the other hand, choosing a very small value of <span class="math">\(\alpha\)</span> makes <span class="math">\(\tilde{\boldsymbol{w}}\)</span> to be very close to <span class="math">\(\boldsymbol{w}^*\)</span>, often leading to overfitting, where the training error is small but the test error is large, as illustrated in <a href="HTMLTrainingNeuralNetwork.html#train-test-cost.fig">Figure &laquo;Click Here&raquo; </a>.
+</div></p><p><div class="figure">
+
+<img src="Figures/regularizedCostMinimizer.png" class="standalone-figure">
+<b>Geometric interpretation of <span class="math">\(\ell^2\)</span>-regularized cost function. 
+    The 3D surface represents the cost function</b> <span class="math">\(\mathcal{C}_\alpha(\boldsymbol{w})\)</span> <b>as a function of weights <span class="math">\(w_1\)</span> and <span class="math">\(w_2\)</span>. The ellipses in the <span class="math">\(w_1\)</span>-<span class="math">\(w_2\)</span> plane show the contour lines of the cost function. The red circle represents the regularization constraint</b> <span class="math">\(\|\boldsymbol{w}\|_2 \leq c\)</span>. <b>The unconstrained minimizer</b> <span class="math">\(\boldsymbol{w}^*\)</span> <b>is marked in blue, while the constrained minimizer</b> <span class="math">\(\tilde{\boldsymbol{w}}\)</span> <b>is marked in red, showing the tangency between the constraint and the cost contours.</b>
+
+</div></p><p><h3 id="process-based-regularization">Process-based Regularization</h3></p><p>Process-based regularization techniques work on modifying the training procedure itself to reduce overfitting, rather than directly constraining the model parameters. Some common approaches include early stopping, dropout, data augmentation, and batch normalization. In this subsection, we discuss the early stopping and dropout techniques, and omit the discussion on others.</p><p><h4 id="early-stopping">Early Stopping</h4></p><p>Perhaps, <b>early stopping</b> is the most commonly used regularization technique due to its simplicity and effectiveness.  This method monitors the performance of the model on a validation dataset during training and stops the optimization process (in terms of iterations or epoch) when the validation performance ceases to improve.</p><p>Recall that the given dataset is divided into three parts, namely, the training dataset, the validation dataset, and the test dataset.  The early stopping technique uses the validation dataset to monitor the performance of the model during the training process.  </p><p>It is generally observed that, as training progresses over iterations or epochs, the training error decreasing monotonically, whereas the validation error shows a different behavior.  For the initial iterations (or epochs), the validation error also decreases, but beyond certain point, it starts to increase gradually, producing a U-shape error profile as sketched in the following figure. The early stopping technique makes use of this behavior to decide the stopping criterion for the training process.</p><p><div class="figure">
+
+<img src="Figures/EarlyStopping.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">An illustrative sketch of the U-shape validation error with the monotonically decreasing training error.</div>
+
+
+</div></p><p>The idea behind the early stopping technique is well understood from the following algorithm:</p><p><div class="algorithm">
+<div class="heading-container">
+<b class="heading">Algorithm:</b>
+</div>
+[<b>Early Stopping</b>]</p><p><b>Input:</b></p><p><span class="math">\(\bullet\)</span> Training and validation datasets <span class="math">\(\mathcal{D}_\text{train}\)</span> and <span class="math">\(\mathcal{D}_\text{val}\)</span>,</p><p><span class="math">\(\bullet\)</span> Maximum number of epochs/iterations <span class="math">\(K\)</span> (choose this sufficiently large),</p><p><span class="math">\(\bullet\)</span> The number of times the training algorithm has to run before a validation <span class="math">\(n\ll K\)</span>,</p><p><span class="math">\(\bullet\)</span> Patience <span class="math">\(p_0\)</span>, and</p><p><span class="math">\(\bullet\)</span> Cost/loss function.</p><p><b>Processing:</b></p><p>Assign <span class="math">\(p=0\)</span>, and <span class="math">\(\mathcal{C}_{\text{val}}^* = +\infty\)</span> (a sufficiently large number while programming).</p><p>Initialize the parameter <span class="math">\(\boldsymbol{\Theta}_0\)</span> (mostly randomly and in some simple cases, take it zero).</p><p>Start with <span class="math">\(k=0\)</span> and do the following while <span class="math">\(k\le K\)</span>:</p><p><b>Step 1:</b> <b>Train</b> the model by running the epochs/iterations for <span class="math">\(j=1,2,\ldots, n\)</span> using any of the optimization methods that we discussed in the previous section. Assign
+</p><div class="math">\[
+k \leftarrow k + n.
+\]</div><p>
+Let the parameter at the end of this training step be denoted by <span class="math">\(\boldsymbol{\Theta}_k\)</span>.</p><p><b>Step 2:</b> <b>Validate</b> <span class="math">\(\boldsymbol{\Theta}_k\)</span> by performing the following steps:</p><p>	<span class="math">\(~~~~~~\)</span><b>Step 2A:</b> Perform forward propagation on all the examples of <span class="math">\(\mathcal{D}_\text{val}\)</span>,</p><p>	<span class="math">\(~~~~~~\)</span><b>Step 2B:</b> Compute <span class="math">\(\mathcal{C}_{\text{val}}\)</span>.</p><p>	<span class="math">\(~~~~~~\)</span><b>Step 2C:</b> Check the following:</p><p>		<span class="math">\(~~~~~~~~~~~\)</span> If <span class="math">\(\mathcal{C}_{\text{val}} < \mathcal{C}_{\text{val}}^*\)</span>, then assign </p><p>		<span class="math">\(~~~~~~~~~~~\)</span> <span class="math">\(~~~~\mathcal{C}_{\text{val}}^* = \mathcal{C}_{\text{val}},\)</span></p><p>		<span class="math">\(~~~~~~~~~~~\)</span> <span class="math">\(~~~~\tilde{\boldsymbol{\Theta}} = \boldsymbol{\Theta}_k\)</span>.</p><p>		<span class="math">\(~~~~~~~~~~~\)</span> <span class="math">\(~~~~p=0\)</span>.</p><p>		<span class="math">\(~~~~~~~~~~~\)</span> Else</p><p>		<span class="math">\(~~~~~~~~~~~\)</span> <span class="math">\(~~~~ p \leftarrow p+1.\)</span> </p><p>		<span class="math">\(~~~~~~~~~~~~~~~\)</span> If <span class="math">\(p \ge p_0\)</span>, then stop and go for the output.</p><p>		<span class="math">\(~~~~~~~~~~~~~~~\)</span> Else, go for the next epoch/iteration.</p><p><b>Output:</b> <span class="math">\(\tilde{\boldsymbol{\Theta}}\)</span>.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+<ol class="latex-enumerate">
+<li>It is advisable to also tune the learning rate <span class="math">\(\eta\)</span> simultaneously.  For instance, when <span class="math">\(p = p_0/2\)</span>, the validation performance might improve by reducing the learning rate.</p><p></li><li>The <b>validation frequency</b> <span class="math">\(n\)</span> in the above algorithm is a hyperparameter.
+</li></ol>
+</div></p><p><h4 id="dropout">Dropout</h4></p><p>As we can see from <a href="HTMLTrainingNeuralNetwork.html#train-test-cost.fig">Figure &laquo;Click Here&raquo; </a>, increasing the model complexity can lead to overfitting. However, in many practical situations, a high-capacity (more neurons and layers) model is desirable to capture complex patterns in the data. In such cases, <b>dropout</b> serves as an efficient regularization technique to prevent overfitting without substantially reducing model complexity (number of neurons and layers). </p><p>Given a neural network, the dropout technique implicitly trains an ensemble of subnetworks where all subnetworks share the same parameter set <span class="math">\(\boldsymbol{\Theta}\)</span>.</p><p>A <b>subnetwork</b> of a given parent network is obtained by removing a subset of neurons from one or more layers (typically excluding the output layer to preserve valid predictions).</p><p>The <b>dropout</b> technique is a training procedure where each iteration of the optimization is performed on a subnetwork which is obtained by dropping out some neurons from said layers (other than the output layer) randomly. The neurons are dropped by multiplying the output of the neurons by a factor <span class="math">\(r\)</span> that takes the value 0 with certain preassigned probability.</p><p>First, choose the vector of dropout probabilities <span class="math">\(\boldsymbol{p} = (p^{(0)}, p^{(1)}, \ldots, p^{(L-1)})\)</span>, where each <span class="math">\(p^{(l)}\in [0,1)\)</span>,  for <span class="math">\(l=0,1,2,\ldots, L-1\)</span>, is called the <b>dropout probability</b> of the <span class="math">\(l^{\rm th}\)</span> layer. </p><p>For each training iteration, a set of mask vectors <span class="math">\(\boldsymbol{r}^{(l)}\)</span>, for <span class="math">\(l=0,1,2,\ldots, L-1\)</span>, is randomly generated with <span class="math">\(r^{(l)}_i \sim \text{Bernoulli}(1-p^{(l)})\)</span>, <i>i.e.,</i>
+</p><div class="math">\[
+r^{(l)}_i = \left\{\begin{array}{ll}
+				0,&amp;\text{with probability}~ p^{l},\\
+				1,&amp;\text{with probability}~ 1-p^{l},
+			\end{array}\right.
+\quad i=1,2,\dots,n_l.
+\]</div><p>
+Then, the activation of the <span class="math">\(l^{\rm th}\)</span> layer is redefined as
+</p><div class="math">\[
+\tilde{\boldsymbol{a}}^{(l)} = \frac{\boldsymbol{r}^{(l)} \odot \boldsymbol{a}^{(l)}}{1-p^{l}},
+\]</div><p>
+where <span class="math">\(\boldsymbol{a}^{(l)}\)</span> is the vector without dropout. Thus, during training, each forward pass effectively uses a different subnetwork, with all subnetworks sharing the same parameter set <span class="math">\(\boldsymbol{\Theta}\)</span>. </p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+It is important to note that dropout procedure is applied only at during training.
+During testing (inference), the full network is used without dropout, <i>i.e.,</i> <span class="math">\(\tilde{\boldsymbol{a}}^{(l)} = \boldsymbol{a}^{(l)}\)</span>.
+</div></p><p>The dropout methodology allows us to implicitly train an ensemble of subnetworks, and it is generally observed to be successful in improving generalization and reducing overfitting without altering the basic architecture of the network.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Modify the batch forward propagation <a href="HTMLTrainingNeuralNetwork.html#batch.forward.propagation.algo">Algorithm &laquo;Click Here&raquo; </a> to incorporate the dropout procedure for a single forward pass.
+</div></p><p><h3 id="generalization">Generalization</h3></p><p>In deep learning, <b>generalization</b> refers to the ability of a model to perform well on an unseen dataset. Recall that before learning a model we consider three datasets, where the training dataset is used to learn the model parameters, the validation dataset is used to tune the hyperparameters during the training process to achieve an optimal trade-off between underfitting and overfitting.  Once the model is trained, it is then applied on the test dataset, which is kept unseen during training  and is used to evaluate the final performance of the trained model.</p><p>Most of the practical situations (if not always), we have
+</p><div class="math">\[
+\mathcal{C}_\text{train}(\boldsymbol{\Theta}) \le \mathcal{C}_\text{test}(\boldsymbol{\Theta}).
+\]</div><p>
+Given the above scenario, if the generalization gap satisfies the inequality
+</p><div class="math">\[
+\mathcal{C}_\text{test}(\boldsymbol{\Theta}) - \mathcal{C}_\text{train}(\boldsymbol{\Theta}) < \epsilon,
+\]</div><p>
+for some pre-assigned number <span class="math">\(\epsilon>0\)</span> and the model achieves a reasonably small training error,  then the model is said to <b>generalize</b> well.
+In this case, the model is expected to perform well on unseen data. This is the desired scenario in deep learning. In this case, we say that the model has learned the underlying patterns in the data rather than memorizing the training examples, which may include noise.</p><p>Achieving good generalization depends on appropriately tuning the hyperparameters, such as the complexity of the model (its depth and width), the size and representativeness of the training dataset, and the use of suitable regularization techniques. Although we have good mathematical understanding of the role of these parameters in learning a model, practical success often relies heavily on experience, experimentation, and intuition about their choice. Thus, achieving good generalization is often more of an art than a science. Nevertheless, there are some mathematical principles that can partially guide us towards achieving good generalization.  In this section, we discuss one such principle, known as the bias-variance tradeoff.</p><p><h4 id="bias-variance-tradeoff">Bias-Variance Tradeoff</h4></p><p>A classical statistical perspective of generalization comes from the <b>bias-variance tradeoff</b>. This perspective is particularly relevant when the cost function is MSE.  In this case, the expected cost function can be written as the sum of two opposing terms, namely the <b>bias</b> and the <b>variance</b>.</p><p>Assume that <span class="math">\(N\)</span> labeled examples are drawn independently from an unknown joint probability distribution <span class="math">\(p(\boldsymbol{x},\boldsymbol{y})\)</span> to form a training dataset, denoted by <span class="math">\(\mathcal{D}\)</span>. In this way, we can have many such training datasets. For each dataset, the learning algorithm produces a predictor (an ANN model in our case), denoted by <span class="math">\(\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\)</span>, which may differ depending on the dataset.</p><p>The aim is to design a learning process (by choosing a suitable network with suitably tuned hyperparameters) that can train a predictor capable of generalizing well to unseen test samples <span class="math">\((\boldsymbol{x},\boldsymbol{y})\)</span> drawn from the same distribution.</p><p>Clearly, there is a randomness in the way the training datasets are generated. We therefore treat <span class="math">\(\mathcal{D}\)</span> as a random variable representing a training dataset of <span class="math">\(N\)</span> examples.  Consequently, the leaned predictor <span class="math">\(\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\)</span>, obtained from a fixed learning algorithm (fixed architecture and a set of hyperparameters), is also a random variable. The generalization performance of these predictors can be assessed by taking an average over a collection of training datasets.</p><p>Assume that the true label is generated as
+</p><div class="math">\[
+\boldsymbol{y} = \boldsymbol{f}(\boldsymbol{x}) + \boldsymbol{\epsilon},
+\]</div><p>
+where <span class="math">\(\boldsymbol{f}\)</span> is the true underlying function to be learnt and <span class="math">\(\boldsymbol{\epsilon}\)</span> is a random noise term with mean <span class="math">\(\mathbb{E}(\boldsymbol{\epsilon}) = \boldsymbol{0}\)</span>  and the covariance matrix is denoted by <span class="math">\(\Sigma_\epsilon := \mathrm{Cov}(\boldsymbol{\epsilon})\)</span>. This accounts for variability or measurement noise in the data-generating process.</p><p>At a given test input <span class="math">\(\boldsymbol{x}\)</span>, the expected squared prediction error is given by
+</p><div class="math">\[
+\mathbb{E}_{\mathcal{D}, \boldsymbol{y}}\!\left[\|\boldsymbol{y} - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right]
+=
+\mathbb{E}_{\mathcal{D}, \boldsymbol{\epsilon}}\!\left[\|\boldsymbol{f}(\boldsymbol{x}) + \boldsymbol{\epsilon} - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right],
+\]</div><p>
+where the expectation is taken jointly over the randomness in both <span class="math">\(\mathcal{D}\)</span> and <span class="math">\(\boldsymbol{y}\)</span>, and <span class="math">\(\|\cdot\|\)</span> is the Euclidean norm.</p><p>Expanding the square and using <span class="math">\(\mathbb{E}[\boldsymbol{\epsilon}] = \boldsymbol{0}\)</span> and <span class="math">\(\mathbb{E}\!\left[\|\boldsymbol{\epsilon}\|^2\right] = \mathrm{tr}(\Sigma_\epsilon),\)</span> we can derive the decomposition of the total error as
+</p><div class="math">\[
+\mathbb{E}_{\mathcal{D}, \boldsymbol{y}}\!\left[\|\boldsymbol{y} - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right]
+= \underbrace{\|\mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})] - \boldsymbol{f}(\boldsymbol{x})\|^2}_{\text{Bias}^2}
++ \underbrace{\mathbb{E}_{\mathcal{D}}\!\left[\|\mathscr{F}_{\mathcal{D}}(\boldsymbol{x}) - \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})]\|^2\right]}_{\text{Variance}}
++ \underbrace{\mathrm{tr}(\Sigma_\epsilon)}_{\text{Noise}}.
+\]</div><p>
+Note that the intrinsic uncertainty in the data, represented by <span class="math">\(\mathrm{tr}(\Sigma_\varepsilon)\)</span>, is irreducible by any learning algorithm.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Give the full derivation of the above expression.
+</div></p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Interpretation</b>]</p><p>The left hand side of the above expression is the expected prediction error, which is decomposed into three parts, namely,
+<ol class="latex-enumerate">
+  <li><b>Bias</b><span class="math">\(^2\)</span> measures the squared difference between the average prediction of the model and the true function <span class="math">\(\boldsymbol{f}\)</span>. A high bias indicates a systematically wrong model (underfitting).
+  </li><li><b>Variance</b> measures how sensitive the model’s prediction is to fluctuations in the training data. High variance corresponds to overfitting.
+  </li><li><b>Noise</b> is the irreducible error due to randomness in the data itself. It sets a lower bound on the achievable prediction error.
+</li></ol>
+</div></p><p>The above expression explains how prediction error can arise from two opposing sources, namely,
+high bias, due to an overly simple model that fails to capture data complexity, and high variance, due to a model that is too sensitive to fluctuations of the training dataset.</p><p>In practice, increasing model complexity reduces the bias but increases the variance. The optimal generalization performance is achieved at a balance between these two opposing effects, known as the <b>bias-variance tradeoff</b> (see the following figure).</p><p><div class="figure">
+
+<img src="Figures/BiasVarianceTradeoff.png" class="standalone-figure">
+<div style="text-align: center; font-weight: bold;">An illustrative sketch of Bias-Variance Tradeoff</div>
+
+<footer>
+  © S. Baskar, Department of Mathematics, IIT Bombay. 2025 — Updated: 20-Oct-2025
+</footer>
+
+<style>
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f8f8f8;
+  color: #888;
+  font-size: 0.75em;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 1px solid #ddd;
+  z-index: 10;               /* low z-index */
+  pointer-events: none;      /* allows clicks to pass through */
+}
+
+/* Small screen adjustments */
+@media (max-width: 600px) {
+  footer {
+    font-size: 0.68em;
+    padding: 4px 0;
+  }
+}
+</style>
+
+
+</div></p>
+    </div>
+    
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

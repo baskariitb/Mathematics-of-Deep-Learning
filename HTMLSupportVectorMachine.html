@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Vector Machine</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML ">
+    </script>
+    <style>
+        body, p, li, div {
+        color: black !important;
+        line-height: 1.6;
+        }
+        ol.latex-enumerate, ol.latex-enumerate li {
+            line-height: 1.6 !important;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        /* Updated TOC styles */
+        #toc-panel {
+            font-size: 0.9em;
+        }
+        .toc-chapter, 
+        .toc-section, 
+        .toc-subsection {
+            color: black !important;
+        }
+        .toc-chapter a,
+        .toc-section a,
+        .toc-subsection a {
+            color: black !important;
+            text-decoration: none;
+        }
+        .toc-chapter.current {
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+        #toc-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #1a73e8;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #toc-panel {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 300px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            padding: 20px;
+            overflow-y: auto;
+            transition: left 0.3s ease-out;
+            will-change: transform;
+        }
+        #toc-panel.open {
+            left: 0;
+        }
+        #close-toc {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        #content {
+            padding: 20px;
+            padding-top: 60px;
+            max-width: 100%;
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+        .toc-chapter {
+            margin-bottom: 10px;
+            border-left: 3px solid #94714B;
+            padding-left: 10px;
+        }
+        .toc-chapter.current {
+            background-color: #F0EAE4;
+        }
+        .chapter-link {
+            font-weight: bold;
+            color: #1a73e8;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .toc-sections {
+            margin-left: 15px;
+            display: none;
+        }
+        .toc-sections.expanded {
+            display: block;
+        }
+        .toc-section {
+           font-weight: bold;
+            padding: 3px 0;
+            margin-left: 10px;
+        }
+        .toc-subsection {
+            padding: 1.5px 0;
+            margin-left: 25px;
+            font-size: 0.95em;
+        }
+        .toc-subsubsection {
+            padding: 3px 0;
+            margin-left: 40px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        :target {
+            scroll-margin-top: 80px;
+            animation: highlight 1.5s ease;
+        }
+        @keyframes highlight {
+            0% { background-color: rgba(26, 115, 232, 0.1); }
+            100% { background-color: transparent; }
+        }
+        @media (max-width: 768px) {
+            #toc-panel {
+                width: 85%;
+                left: -90%;
+            }
+            #toc-panel.open {
+                left: 0;
+                box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            }
+            #content {
+                transition: transform 0.3s ease-out;
+            }
+            #toc-panel.open ~ #content {
+                transform: translateX(85%);
+            }
+        }
+        .note {
+  background-color: color-mix(in srgb, var(--primary) 7%, white);
+border: 5px solid var(--primary);
+  padding: 5px;
+  margin: 10px;
+}
+.problem {
+  background-color: color-mix(in srgb, var(--primary) 18%, white);
+border: 1px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.example {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 10px;
+  margin: 10px;
+}
+.remark {
+  background-color: var(--environmentBackground);
+border-top: 7px solid var(--primary);
+border-bottom: 7px solid var(--primary);
+border-left: none;
+border-right: none;
+  padding: 20px;
+  margin: 10px;
+}
+.definition {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px double var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.lemma {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.theorem {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+.proofs {
+  background-color: var(--environmentBackground);
+border: 5px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.project {
+  background-color: var(--environmentBackground);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.hint {
+  background-color: color-mix(in srgb, var(--primary) 10%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.code {
+  background-color: color-mix(in srgb, var(--primary) 13%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+.algorithm {
+  background-color: color-mix(in srgb, var(--primary) 5%, white);
+border: 3px solid var(--primary);
+  padding: 10px;
+  margin: 10px;
+}
+    </style>
+</head>
+
+
+<body>
+    <button id="toc-button">☰ Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">×</button>
+       
+       <!-- Small Main Page Button -->
+<div style="text-align:right; margin-bottom: 10px;">
+  <a href="index.html" 
+     style="
+       background: var(--toc-primary, #94714B);
+       color: white;
+       padding: 4px 10px;
+       border-radius: 16px;
+       font-size: 0.75em;
+       font-weight: 900;
+       text-decoration: none;
+       display: inline-block;
+       box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+     ">
+    Main Page
+  </a>
+</div>
+       
+        <div class="full-toc">
+
+                <div class="toc-chapter ">
+            <a href="HTMLIntroductionNeurons.html" class="chapter-link">
+                CH 1: Introduction to Neurons
+            </a>
+             <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLIntroductionNeurons.html#introduction.neurons.ch">
+                        Introduction to Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#motivating.example.sec">
+                        Motivating Example
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#water-source-sink-control-problem">
+                        Water Source-Sink Control Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#electric.circuit.ssec">
+                        Electric Circuit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#linear.regression.subs">
+                        Linear Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLIntroductionNeurons.html#artificial.neurons.sec">
+                        Artificial Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#mathematical.formulation.subs">
+                        Mathematical Formulation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#comparison-with-biological-neurons">
+                        Comparison with Biological Neurons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLIntroductionNeurons.html#learning.model.subs">
+                        Supervised Learning: An Overview
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLPerceptrons.html" class="chapter-link">
+                CH 2: Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLPerceptrons.html#perceptrons.ch">
+                        Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#perceptrons.sec">
+                        Neuron Model
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#boolean-functions">
+                        Boolean Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#illustrative-datasets">
+                        Illustrative Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#separability-and-algorithm">
+                        Separability and Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#linear-separability">
+                        Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#perceptron.convergence.theorem.subs">
+                        Perceptron Convergence Theorem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLPerceptrons.html#beyond-linear-separability">
+                        Beyond Linear Separability
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLPerceptrons.html#feature-space-mapping">
+                        Feature Space Mapping
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter current">
+            <a href="HTMLSupportVectorMachine.html" class="chapter-link">
+                CH 3: Support Vector Machine
+            </a>
+            <div class="toc-sections expanded">
+
+                <div class="toc-item ">
+                    <a href="HTMLSupportVectorMachine.html#support-vector-machine">
+                        Support Vector Machine
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#linearly-separable-dataset">
+                        Linearly Separable Dataset
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#hard-and-soft-margins">
+                        Hard and Soft Margins
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#loss-function-form">
+                        Loss-function form
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#subgradient-descent-algorithm">
+                        Subgradient Descent Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#dual-optimazation-problem">
+                        Dual Optimazation Problem
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSupportVectorMachine.html#nonlinearly-separable-datasets">
+                        Nonlinearly Separable Datasets
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-method-implicit-feature-mapping">
+                        Kernel Method: Implicit Feature Mapping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSupportVectorMachine.html#kernel-trick">
+                        Kernel Trick
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLMultilayerPerceptrons.html" class="chapter-link">
+                CH 4: Multilayer Perceptrons
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLMultilayerPerceptrons.html#multilayer.perceptrons.ch">
+                        Multilayer Perceptrons
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#fully-connected-feedforward-networks">
+                        Fully Connected Feedforward Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#definition-and-network-dimensions">
+                        Definition and Network Dimensions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#shallow-networks">
+                        Shallow Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-forward-propagation">
+                        Batch Forward Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#batch-propagation">
+                        Batch Propagation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLMultilayerPerceptrons.html#activation-functions">
+                        Activation Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#step-functions">
+                        Step Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#heaviside-function">
+                        Heaviside function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bipolar-function">
+                        Bipolar Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-functions-logistic-regression">
+                        Sigmoid Functions: Logistic Regression
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hyperbolic-tangent-function">
+                        Hyperbolic Tangent Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#bumped-type-functions">
+                        Bumped-type Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#hockey-stick-functions">
+                        Hockey-stick Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#leaky-rectified-linear-unit">
+                        Leaky Rectified Linear Unit
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#sigmoid-linear-units">
+                        Sigmoid Linear Units
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softplus-function">
+                        Softplus Function
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLMultilayerPerceptrons.html#multi-class-classification">
+                        Multi-class Classification
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLMultilayerPerceptrons.html#softmax-function">
+                        Softmax Function
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLTrainingNeuralNetwork.html" class="chapter-link">
+                CH 5: Training Neural Network
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLTrainingNeuralNetwork.html#learning.mechanism.ch">
+                        Training Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#cost.functions.sec">
+                        Cost Functions
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mean-square-error">
+                        Mean Square Error
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#cross-entropy">
+                        Cross-Entropy
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#kullback-leibler-divergence">
+                        Kullback-Leibler divergence
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#backpropagation.sec">
+                        Backpropagation Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#chain-rule-and-gradient-computation">
+                        Chain Rule and Gradient Computation
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#gradient-for-a-neuron">
+                        Gradient for a Neuron
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#shallow-network">
+                        Shallow Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#deep-network">
+                        Deep Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#weight-updates-using-gradient-descent">
+                        Weight Updates Using Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#batch-gradient-descent-method">
+                        Batch Gradient Descent Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#stochastic-gradient-descent-sgd">
+                        Stochastic Gradient Descent (SGD)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#mini-batch-gradient-descent">
+                        Mini-batch Gradient Descent
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#momentum-method">
+                        Momentum Method
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-step-size-methods">
+                        Adaptive Step Size Methods
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adagrad">
+                        AdaGrad.
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#root-mean-square-propagation-rmsprop">
+                        Root Mean Square Propagation (RMSProp)
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#adaptive-moments-adam">
+                        Adaptive Moments (Adam).
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLTrainingNeuralNetwork.html#regularization-and-generalization">
+                        Regularization and Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#underfitting-and-overfitting">
+                        Underfitting and Overfitting
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#parameter-based-regularization">
+                        Parameter-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#process-based-regularization">
+                        Process-based Regularization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#early-stopping">
+                        Early Stopping
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#dropout">
+                        Dropout
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#generalization">
+                        Generalization
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLTrainingNeuralNetwork.html#bias-variance-tradeoff">
+                        Bias-Variance Tradeoff
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLExpressivityoverFunctionSpaces.html" class="chapter-link">
+                CH 6: Expressivity Over Function Spaces
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#expressivity.over.function.spaces.ch">
+                        Expressivity over Function Spaces
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#universal.approximation.sec">
+                        Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#continuous-function-approximations">
+                        Continuous Function Approximations
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#feature-mapping-perspective">
+                        Feature Mapping Perspective
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#connection-to-kernel-machines">
+                        Connection to kernel machines
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#learning-dynamics-and-the-neural-tangent-kernel">
+                        Learning dynamics and the Neural Tangent Kernel
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#pinns.sec">
+                        Physics Informed Neural Networks for ODEs
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#trial-solution">
+                        Trial Solution
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#residual-and-training-loss">
+                        Residual and Training Loss
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#training-algorithm">
+                        Training Algorithm
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLExpressivityoverFunctionSpaces.html#research-perspectives">
+                        Research Perspectives
+                    </a>
+                </div>
+</div></div>
+
+        <div class="toc-chapter ">
+            <a href="HTMLSpecialArchitectures.html" class="chapter-link">
+                CH 7: Special Architectures
+            </a>
+            <div class="toc-sections ">
+
+                <div class="toc-item ">
+                    <a href="HTMLSpecialArchitectures.html#advanced.architectures.ch">
+                        Special Architectures
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#convolution.neural.network.sec">
+                        Convolution Neural Network
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#networks-of-one-dimensional-signals">
+                        Networks of One-Dimensional Signals
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#one-dimensional-convolutional-layer">
+                        One-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsection">
+                    <a href="HTMLSpecialArchitectures.html#two-dimensional-convolutional-layer">
+                        Two-Dimensional Convolutional Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#convolution-operator">
+                        Convolution Operator
+                    </a>
+                </div>
+
+                <div class="toc-item toc-subsubsection">
+                    <a href="HTMLSpecialArchitectures.html#2d-convolution-layer">
+                        2D Convolution Layer
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#recurrent-neural-networks">
+                        Recurrent Neural Networks
+                    </a>
+                </div>
+
+                <div class="toc-item toc-section">
+                    <a href="HTMLSpecialArchitectures.html#transformers">
+                        Transformers
+                    </a>
+                </div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <p>
+<h1 id="support-vector-machine">Support Vector Machine</h1></p><p>Our main focus in this course is to study deep learning techniques. However, we take a slight deviation in this chapter to briefly discuss the core idea behind another similar ML method called the <b>Support Vector Machines</b> (SVMs). In particular, we highlight the geometric foundations of SVMs, which provide a useful perspective for comparing the learning methodologies of SVMs and artificial neural networks.</p><p>We demonstrate the SVM method for linearly separable datasets in the first <a href="HTMLSupportVectorMachine.html#linearly.separable.dataset.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>, where we derive primal optimization problems whose solution is the weight vector for the optimal separating hyperplane. We also derive the dual optimization problem and discuss its advantages when compared to primal problem. As we did in the previous chapter, we then go beyond linearly separable datasets in the last <a href="HTMLSupportVectorMachine.html#nonlinearly.separable.datasets.sec" class="internal-link">Section  &laquo;Click Here&raquo;</a>, where we discuss kernel tricks to construct SVM for a dataset which is nonlinearly separable.
+<div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Refer to Chapter 12 (page 370) in the following book:</p><p>Marc Peter Deisenroth, A. Aldo Faisal, Cheng Soon Ong, <i>Mathematics for Machine Learning</i>, 2020.</p><p><a href="https://mml-book.github.io/book/mml-book.pdf">
+  Click here for the pdf
+</a></p><p>
+</div></p><p><h2 id="linearly-separable-dataset">Linearly Separable Dataset</h2>
+</p><p>In the preceding section, we studied a perceptron, which is a basic model in deep learning architectures. Recall that the perceptron algorithm updates its weight vector based on misclassified examples, and the algorithm converges if and only if the dataset is linearly separable. However, when multiple separating hyperplanes exist, the perceptron may converge to any one (see Figure-(a) below) of them without regard to its generalization ability. </p><p>On the other hand, SVMs are classification methods in the broader field of machine learning that also seek a linear decision boundary (possibly in a transformed feature space) but are based on a different learning principle from the perceptron. Rather than updating the weight vector based on individual misclassifications, an SVM selects the one that maximizes the margin between the two classes among all possible separating hyperplanes (see Figure-(b) below). 
+This margin-based criterion leads to an optimal separating hyperplane, called the <b>SVM solution</b>, with a relatively strong generalization ability. </p><p>In this subsection, we briefly discuss the learning procedure of SVMs for linearly separable dataset, while postponing the treatment of the nonlinearly separable case to the next subsection.</p><p><h3 id="hard-and-soft-margins">Hard and Soft Margins</h3></p><p>Let us start with the definition of the margin between two class of examples in a given linearly separable dataset.</p><p><div class="figure">
+
+<img src="Figures/Ch03SVMDatasetODH.png" class="standalone-figure"></p><p><div style="text-align: center; font-weight: bold;">An illustration of a linearly separable dataset where red dots represents labels with value <span class="math">\(-1\)</span> and green dots corresponds to labels with value +1. (a) Each dotted line represents a separating lines (b) Solid line represents the optimal separating line (the SVM solution), and the dotted lines indicate lower and upper margins.</div>
+
+
+</div></p><p><div class="definition" id="margin.def">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Margin</b>]
+</p><p>Consider a linearly separable dataset 
+</p><div class="math">\[
+\mathcal{D}=\{(\boldsymbol{x}_k, y_k)~|~k=1,2,\ldots, N\}\subset \mathbb{R}^n\times \{-1,1\}.
+\]</div><p> 
+Let the decision boundary be defined by the hyperplane 
+</p><div class="math">\[
+H = \{\boldsymbol{x}\in \mathbb{R}^n~|~\boldsymbol{w}\cdot \boldsymbol{x} = b\}
+\]</div><p> 
+for a given weight vector <span class="math">\(\boldsymbol{w}\in \mathbb{R}^n\)</span> and bias <span class="math">\(b\in \mathbb{R}\)</span>.
+The <b>geometric margin</b> (or simply <b>margin</b>) <span class="math">\(\rho\)</span> of the hyperplane <span class="math">\(H\)</span> with respect to the dataset <span class="math">\(\mathcal{D}\)</span> is defined as
+</p><div class="math">\[
+\rho = \min_{k\in \{1,2,\ldots, N\}} \frac{|\boldsymbol{w}\cdot \boldsymbol{x}_k - b|}{\|\boldsymbol{w}\|_2}.
+\]</div><p>
+</div></p><p>Clearly the margin of a given hyperplane is the distance between the hyperplane and the nearest example in <span class="math">\(\mathcal{D}\)</span>. The <b>SVM solution</b> is the separating hyperplane that maximizes the margin as illustrated in the above Figure-(b). </p><p>A separating hyperplane (also referred to as decision boundary) classifies all the examples of <span class="math">\(\mathcal{D}\)</span> correctly.  This is equivalent to the condition that
+</p><div class="math">\[
+\begin{array}{ccc}
+\boldsymbol{w}\cdot \boldsymbol{x}_k - b \ge 0 &amp;\implies&amp; y_k = +1\\
+\boldsymbol{w}\cdot \boldsymbol{x}_k - b < 0 &amp;\implies&amp; y_k = -1.
+\end{array}
+\]</div><p>
+The above conditions can be combined to obtain the following lemma.</p><p><div class="lemma" id="separating.hyperplane.condition.eq">
+<div class="heading-container">
+<b class="heading">Lemma:</b>
+</div>
+A hyperplane 
+</p><div class="math">\[
+H = \{\boldsymbol{x}\in \mathbb{R}^n~|~ \boldsymbol{w}\cdot \boldsymbol{x} = b\},
+\]</div><p>
+is a separating hyperplane of a dataset <span class="math">\(\mathcal{D}\)</span> if and only if
+</p><div class="math" >\begin{eqnarray}
+y_k \big(\boldsymbol{w}\cdot \boldsymbol{x}_k - b\big) \ge 0,~\text{for all}~\boldsymbol{x}_k\in \mathcal{D}.
+\end{eqnarray}<div style="text-align:right;">(3.1)</div></div><p>
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Observe the difference between the label values used in the perceptron and those used in the SVMs.  In perceptrons, we used the binary label set <span class="math">\(\{0,1\}\)</span>, whereas in the SVM framework, we use the bipolar label set <span class="math">\(\{-1,1\}\)</span>. As already noted, we could have also used the bipolar activation function 
+</p><div class="math">\[
+H(x) = \left\{\begin{array}{rc}
+		-1,&amp;\text{if}~x<0\\
+		1,&amp;\text{if}~x\ge 0
+	\end{array}\right.
+\]</div><p>The difference between using either the binary or the bipolar labels is precisely in the condition given in the above lemma and in the update rule of the perceptron given in the previous chapter.  If binary labels are used, then the condition in the above lemma takes the form  <span class="math">\(\Delta_k \big(\boldsymbol{w}\cdot \boldsymbol{x}_k - b\big) \ge 0\)</span>, where <span class="math">\(\Delta_k\)</span> is defined in multiple epoch perceptron algorithm. On the other hand, if bipolar labels are used along with the bipolar activation function in the perceptron learning, then the update rule involves <span class="math">\(y_k\)</span> directly, in place of <span class="math">\(\Delta_k\)</span>.</p><p>
+</div></p><p>The following lemma is a consequence of the <a href="HTMLSupportVectorMachine.html#margin.def">Definition &laquo;Click Here&raquo; </a> on margin, and the condition given in the above lemma.</p><p><div class="lemma">
+<div class="heading-container">
+<b class="heading">Lemma:</b>
+</div>
+Let <span class="math">\((b, \boldsymbol{w})\)</span> be such that the hyperplane 
+</p><div class="math">\[
+H=\{\boldsymbol{x}\in \mathbb{R}^n~|~ \boldsymbol{w}\cdot \boldsymbol{x} = b\}
+\]</div><p> 
+is a separating hyperplane of  a dataset 
+</p><div class="math">\[
+\mathcal{D}=\{(\boldsymbol{x}_k, y_k)~|~k=1,2,\ldots, N\}\subset \mathbb{R}^n\times \{-1,1\}.
+\]</div><p> 
+If <span class="math">\(\rho\)</span> is the margin of <span class="math">\(H\)</span> for the dataset <span class="math">\(\mathcal{D}\)</span>, then
+</p><div class="math">\[
+y_k \big(\boldsymbol{w}\cdot \boldsymbol{x}_k - b\big) \ge \rho\, \|\boldsymbol{w}\|_2,~~k=1,2,\ldots, N.
+\]</div><p>
+</div></p><p>In view of the above lemma, the SVM solution of a linearly separable dataset can be obtained as the optimal separating hyperplane of the dataset.</p><p><div class="definition" id="SVM.Optimization.eq">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Optimal Separating Hyperplane</b>]</p><p>For a given linearly separable dataset <span class="math">\(\mathcal{D}\)</span>, the <b>optimal separating hyperplane</b> is defined as the hyperplane 
+</p><div class="math">\[
+H^* = \{\boldsymbol{x}\in \mathbb{R}^n~|~\boldsymbol{w}^*\cdot\boldsymbol{x}=b^*\},
+\]</div><p>  
+where  <span class="math">\((b^*, \boldsymbol{w}^*)\)</span> is a maximizer of the constrained optimization problem
+</p><div class="math" >\begin{eqnarray}
+ \left.\begin{array}{ll}
+&amp;\displaystyle{\max_{(b, \boldsymbol{w})}}~ \rho,\\
+\text{subject to:}&amp;
+\left\{\begin{array}{l}
+ y_k (\boldsymbol{w}\cdot \boldsymbol{x}_k - b)\ge \rho,~\text{for all}~ (\boldsymbol{x}_k, y_k)\in \mathcal{D},\\
+ \|\boldsymbol{w}\|=1,~
+ \end{array}\right.
+\end{array}\right\}
+\end{eqnarray}<div style="text-align:right;">(3.2)</div></div><p>
+where <span class="math">\(\rho\)</span> is as given in <a href="HTMLSupportVectorMachine.html#margin.def">Definition &laquo;Click Here&raquo; </a>.
+</div></p><p>The optimization problem <a href="#SVM.Optimization.eq">(3.2)</a> can be expressed equivalently as a convex optimization problem in the weight vector <span class="math">\(\boldsymbol{w}\)</span>, which is strictly convex and therefore admits a unique global solution for  <span class="math">\(\boldsymbol{w}.\)</span></p><p><div class="theorem" id="HardSVM.Optimization.eq">
+<div class="heading-container">
+<b class="heading">Theorem:</b>
+</div>
+[<b>Hard Margin SVM</b>]</p><p>Consider the convex optimization problem
+</p><div class="math" >\begin{eqnarray}
+\left.\begin{array}{ll}
+&amp; \displaystyle{\min_{(b, \boldsymbol{w})}}~ \frac{1}{2}\|\boldsymbol{w}\|_2^2,\\
+\text{subject to:}&amp; y_k \big( \boldsymbol{w}\cdot\boldsymbol{x}_k - b \big)\ge 1,~\text{for all}~ (\boldsymbol{x}_k, y_k)\in \mathcal{D},
+\end{array}\right\}
+\end{eqnarray}<div style="text-align:right;">(3.3)</div></div><p>
+where
+</p><div class="math">\[
+\mathcal{D}=\{(\boldsymbol{x}_k, y_k)~|~k=1,2,\ldots, N\}\subset \mathbb{R}^n\times \{-1,1\}
+\]</div><p> 
+is a linearly separable dataset.</p><p>Let <span class="math">\((b^*, \boldsymbol{w}^*)\)</span> be a maximizer of  <a href="#SVM.Optimization.eq">(3.2)</a> with the corresponding margin <span class="math">\(\rho^*>0\)</span>, and let <span class="math">\((b_*,\boldsymbol{w}_*)\)</span> be a minimizer of <a href="#HardSVM.Optimization.eq">(3.3)</a>. Then the following statements hold:
+<ol class="latex-enumerate">
+<li>There exists an <span class="math">\(\alpha\in \mathbb{R}\)</span> such that <span class="math">\((\alpha b^*, \alpha\boldsymbol{w}^*)\)</span> is a minimizer of <a href="#HardSVM.Optimization.eq">(3.3)</a>.
+</li><li>There exists a <span class="math">\(\beta\in \mathbb{R}\)</span> such that <span class="math">\((\beta b_*, \beta\boldsymbol{w}_*)\)</span> is a maximizer of <a href="#SVM.Optimization.eq">(3.2)</a>.
+</li></ol>
+In other words, the constrained optimization problems <a href="#SVM.Optimization.eq">(3.2)</a> and <a href="#HardSVM.Optimization.eq">(3.3)</a> are equivalent.  The minimizer of <a href="#HardSVM.Optimization.eq">(3.3)</a> is called the <b>hard margin SVM</b> of the given linearly separable dataset <span class="math">\(\mathcal{D}\)</span>.
+</div></p><p><div class="proofs" id="SVM.Optimization.Constraint.Scaled.eq">
+<div class="heading-container">
+<b class="heading">Proof:</b>
+</div>
+<span class="math">\(~\)</span>
+<ol class="latex-enumerate">
+<li>Let <span class="math">\(\tilde{\boldsymbol{w}}^* = \boldsymbol{w}^*/\rho^*\)</span> and <span class="math">\(\tilde{b}^* = b^*/\rho^*\)</span>. </p><p>Since <span class="math">\((b^*,\boldsymbol{w}^*)\)</span> is a maximizer of <a href="#SVM.Optimization.eq">(3.2)</a>, we have
+<span class="math">\(
+y_k (\boldsymbol{w}^*\cdot \boldsymbol{x}_k - b^*)\ge \rho^*.
+\)</span>
+Since <span class="math">\(\rho^*>0\)</span>, we can write the inequality as
+</p><div class="math" >\begin{eqnarray}
+y_k \left(  
+		\frac{\boldsymbol{w}^*}{\rho^*} \cdot \boldsymbol{x}_k - \frac{b^*}{\rho^*} 
+		\right) \ge 1.
+\end{eqnarray}<div style="text-align:right;">(3.4)</div></div><p>
+Therefore, <span class="math">\((\tilde{b}^*, \tilde{\boldsymbol{w}}^*)\)</span> satisfies the constraint of the problem <a href="#HardSVM.Optimization.eq">(3.3)</a>. Since <span class="math">\(\boldsymbol{w}^*\)</span> is an unit vector, we have
+</p><div class="math">\[
+\|\tilde{\boldsymbol{w}}^*\| = \left\|\frac{\boldsymbol{w}^*}{\rho^*}\right\| = \frac{1}{\rho^*}.
+\]</div><p>
+Since
+<span class="math">\(\displaystyle{\text{argmin}_{(b, \boldsymbol{w})}} \frac{1}{\rho^*}
+= \text{argmax}_{(b, \boldsymbol{w})}{\rho^*},\)</span>
+we see that 
+</p><div class="math" >\begin{eqnarray}
+(\tilde{b}^*, \tilde{\boldsymbol{w}}^*) 
+&amp;=&amp; 
+\left\{
+\begin{array}{ll}
+&amp;\displaystyle{\text{argmin}_{(b, \boldsymbol{w})}} ~ \|{\boldsymbol{w}}^*\|\\
+\text{subject to:}&amp; y_k \big( \boldsymbol{w}\cdot\boldsymbol{x}_k - b \big)\ge 1,~\text{for all}~ \boldsymbol{x}_k\in \mathcal{D}
+\end{array}\right.\\
+&amp;=&amp; 
+\left\{
+\begin{array}{ll}
+&amp;\displaystyle{\text{argmin}_{(b, \boldsymbol{w})}} ~ \frac{1}{2}\|{\boldsymbol{w}}^*\|^2\\
+\text{subject to:}&amp; y_k \big( \boldsymbol{w}\cdot\boldsymbol{x}_k - b \big)\ge 1,~\text{for all}~ \boldsymbol{x}_k\in \mathcal{D}.
+\end{array}\right.
+\end{eqnarray}<div style="text-align:right;">(3.5)</div></div><p>Thus, we have proved the first condition of the theorem with <span class="math">\(\alpha = 1/\rho^*\)</span>.</p><p></li><li>Let us take <span class="math">\(\beta=1/ \|\boldsymbol{w}_*\|\)</span> and define <span class="math">\(\hat{\boldsymbol{w}}_* = \frac{\boldsymbol{w}_*}{\|\boldsymbol{w}_*\|}\)</span> and <span class="math">\(\hat{b}_* = \dfrac{b_*}{\|\boldsymbol{w}_*\|}\)</span>. The claim that <span class="math">\((\hat{b}_*, \hat{\boldsymbol{w}}_*)\)</span> is a maximizer of <a href="#SVM.Optimization.eq">(3.2)</a> is left as an exercise.</p><p></li></ol>
+</div></p><p><div class="remark" id="support.vector.hardSVM.rem">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Support Vectors</b>]
+</p><p>Let <span class="math">\((b^*, \boldsymbol{w}^*)\)</span> be the hard margin SVM.  If an example <span class="math">\((\boldsymbol{x}_k, y_k)\in \mathcal{D}\)</span> is such that
+</p><div class="math">\[
+\boldsymbol{w}^* \cdot \boldsymbol{x}_k - b^* = \pm 1,
+\]</div><p>
+then the vector <span class="math">\(\boldsymbol{x}_k\)</span> is said to be a <b>support vector</b>.  These are the vectors which are very close to the optimal separating hyperplane.
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Suppose a hard-margin SVM in <span class="math">\(\mathbb{R}^2\)</span> has exactly four support vectors: two vectors <span class="math">\(\boldsymbol{x}_1,\boldsymbol{x}_2\)</span> from the class <span class="math">\(+1\)</span> and two vectors <span class="math">\(\boldsymbol{x}_3,\boldsymbol{x}_4\)</span> from the class <span class="math">\(-1\)</span>.  
+Show that the line through <span class="math">\(\boldsymbol{x}_1\)</span> and <span class="math">\(\boldsymbol{x}_2\)</span> is parallel to the line through <span class="math">\(\boldsymbol{x}_3\)</span> and <span class="math">\(\boldsymbol{x}_4\)</span>.</p><p>Does the result hold in <span class="math">\(\mathbb{R}^3\)</span>?
+</div></p><p><div class="remark" id="SoftSVM.Optimization.eq">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+[<b>Soft margin SVM</b>]</p><p>There are broadly two reasons why a dataset may fail to be linearly separable. One is when the decision boundary is not a hyperplane. In such cases, we use a feature space transformation, as discussed in 
+<a href="HTMLPerceptrons.html#feature-space-mapping" class="internal-link">Section«Click Here»</a>, 
+where basis functions may be implicitly approximated using kernels, which we discuss in the next subsection.  </p><p>The second scenario is when the dataset contains outliers or noise, making a perfect separation impossible. In such cases, one has to allow some classification errors while maximizing the margin. This leads to the concept of a <b>soft margin SVM</b> whose solution is obtained as the minimizer of the problem
+</p><div class="math" >\begin{eqnarray}
+\left.\begin{array}{ll}
+&amp; \displaystyle{\min_{(b, \boldsymbol{w}), \boldsymbol{\xi}}}~ 
+				\left[
+					\frac{1}{2}\|\boldsymbol{w}\|_2^2 + C \sum_{k=1}^N \xi_k
+					\right],\\
+\text{subject to:}&amp; 
+\left\{\begin{array}{cl}
+y_k \big( \boldsymbol{w}\cdot\boldsymbol{x}_k - b \big)\ge 1-\xi_k,&amp;\text{for all}~ (\boldsymbol{x}_k,y_k)\in \mathcal{D}, \\
+\xi_k\ge 0,~k=1,2,\ldots, N.
+\end{array}\right.
+\end{array}\right\}
+\end{eqnarray}<div style="text-align:right;">(3.6)</div></div><p>
+Here <span class="math">\(C>0\)</span> is a tuning parameter called the <b>regularization parameter</b>, and <span class="math">\(\boldsymbol{\xi} = (\xi_1,\xi_2,\ldots, \xi_N)\)</span> represents the margin errors. Each variable <span class="math">\(\xi_k\)</span>, <span class="math">\(k=1,2,\ldots, N\)</span>, referred to as a <b>slack variable</b>, quantifies the extent to which the point <span class="math">\(\boldsymbol{x}_k\)</span> violates the margin constraint. This allows some tolerance in classification including the possibility of lying on the wrong side of the decision boundary.
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+For a soft margin SVM, the support vectors are those which are the closest to the margin (as in the hard margin case, see <a href="HTMLSupportVectorMachine.html#support.vector.hardSVM.rem">Remark &laquo;Click Here&raquo; </a>), those which lie inside the margin, and those which are misclassified.</p><p>Equivalently, the support vectors are precisely the training points 
+<span class="math">\((\boldsymbol{x}_i, y_i)\)</span> for which  
+</p><div class="math">\[
+y_i \big( \boldsymbol{w} \cdot \boldsymbol{x}_i  - b \big) = 1 - \xi_i.
+\]</div><p>
+</div></p><p><h4 id="loss-function-form">Loss-function form</h4></p><p>We now present the equivalence between the quadratic optimization problem <a href="#SoftSVM.Optimization.eq">(3.6)</a> and an unconstrained optimization problem that involves a loss function based on the <b>hinge loss</b>.</p><p>We can eliminate the slack variables <span class="math">\(\boldsymbol{\xi}\)</span>​ and write the constraints in <a href="#SoftSVM.Optimization.eq">(3.6)</a> directly in terms of a <b>hinge loss</b> as 
+</p><div class="math">\[
+\ell_{\text{hinge}}(h(\boldsymbol{x}), y) = \max\big(0,\, 1 - y h(\boldsymbol{x})\big),
+\]</div><p>
+where <span class="math">\(h(\boldsymbol{x}) = \langle \boldsymbol{w}, \boldsymbol{x} \rangle - b\)</span> and <span class="math">\(y\in \{-1, 1\}\)</span>.
+Then the soft margin SVM objective <a href="#SoftSVM.Optimization.eq">(3.6)</a> can be written as
+</p><div class="math" id="SoftSVM.Hinge.eq">\begin{eqnarray}
+\min_{(b, \boldsymbol{w})} \left[ 
+    \frac{1}{2} \| w \|^2 
+    \;+\; 
+    C \hat{R}^{\text{hinge}}(b, \boldsymbol{w})
+\right],
+\end{eqnarray}<div style="text-align:right;">(3.7)</div></div><p>
+where
+</p><div class="math" id="SoftSVM.HingeLoss.eq">\begin{eqnarray}
+\hat{R}^{\text{hinge}}(b, \boldsymbol{w})\;=\; \frac{1}{N} \sum_{k=1}^N
+\ell_{\text{hinge}}\big(h(\boldsymbol{x}_k),\, y_k\big) 
+\end{eqnarray}<div style="text-align:right;">(3.8)</div></div><p>
+is the <b>empirical risk</b> based on the hinge loss. The first term in <a href="#SoftSVM.Hinge.eq">(3.7)</a> is called the <b>regularizer</b>.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show that the primal soft margin SVM problem 
+<a href="#SoftSVM.Optimization.eq">(3.6)</a>
+ is equivalent to the unconstrained optimization problem <a href="#SoftSVM.Hinge.eq">(3.7)</a>-<a href="#SoftSVM.HingeLoss.eq">(3.8)</a>.
+</div></p><p><h3 id="subgradient-descent-algorithm">Subgradient Descent Algorithm</h3></p><p>In this subsection, we outline an algorithm based on the subgradient descent method for the soft margin problem with hinge loss given by <a href="#SoftSVM.Hinge.eq">(3.7)</a>-<a href="#SoftSVM.HingeLoss.eq">(3.8)</a>.</p><p>Let us define the cost function as
+</p><div class="math">\[
+\mathcal{C}(b,\boldsymbol{w}) := 
+\frac{\lambda}{2}\|\boldsymbol{w}\|^2 \;+\; 
+\frac{1}{N} \sum_{k=1}^N \ell_{\text{hinge}}(\boldsymbol{x}_k, y_k;b,\boldsymbol{w}),
+\]</div><p>
+where <span class="math">\(\lambda\)</span> is the regularization parameter, and the hinge loss <span class="math">\(\ell_{\text{hinge}}\)</span> is given by
+</p><div class="math">\[
+\ell_{\text{hinge}}(\boldsymbol{x}, y;b,\boldsymbol{w}) = \max\big(0, \, 1 - y (\langle \boldsymbol{w}, \boldsymbol{x} \rangle - b)\big).
+\]</div><p>
+The aim is to compute the minimizer of the cost function. That is, to find
+</p><div class="math">\[
+(b^*, \boldsymbol{w}^*) = \text{argmin}_{(b,\boldsymbol{\boldsymbol{w}})} \mathcal{C}(b,\boldsymbol{w}).
+\]</div><p>
+Since both the regularizer and the empirical risk are convex with respect to <span class="math">\((b,\boldsymbol{w})\)</span>, the cost function is convex. Moreover, since the regularizer is strictly convex in <span class="math">\(\boldsymbol{w}\)</span>, for <span class="math">\(\lambda>0\)</span>, the optimal weight vector <span class="math">\(\boldsymbol{w}^*\)</span> is unique.</p><p>We use the gradient descent method to compute the global minimizer of the cost function. 
+Since the hinge loss function is not differentiable, we use subgradients and the resulting version of the gradient descent method is called the <b>subgradient descent method</b>.  The subgradient of the hinge loss function with respect to <span class="math">\(\boldsymbol{w}\)</span> is given by
+</p><div class="math">\[
+\nabla_{\boldsymbol{\boldsymbol{w}}} \ell_{\text{hinge}}(\boldsymbol{x}, y;b,\boldsymbol{w}) =
+\left\{\begin{array}{cc}
+ -  y \boldsymbol{x}, &amp; \text{if } y(\langle \boldsymbol{w}, \boldsymbol{x}\rangle - b) < 1, \\
+0, &amp; \text{if }y(\langle \boldsymbol{w}, \boldsymbol{x}\rangle - b)  \ge 1,
+\end{array}\right.
+\]</div><p>
+and the subgradient with respect to <span class="math">\(b\)</span> is given by
+</p><div class="math">\[
+\frac{\partial }{\partial b} \ell_{\text{hinge}}(\boldsymbol{x}, y;b,\boldsymbol{w})=
+\begin{cases}
+ y, &amp; \text{if } y(\langle \boldsymbol{w}, \boldsymbol{x}\rangle - b) < 1, \\
+0, &amp;  \text{if }y(\langle \boldsymbol{w}, \boldsymbol{x}\rangle - b)  \ge 1.
+\end{cases}
+\]</div><p>
+Therefore, the subgradient of the cost function with respect to <span class="math">\(\boldsymbol{w}\)</span> and <span class="math">\(b\)</span> are given, respectively, by
+</p><div class="math" >\begin{eqnarray}
+\nabla_{\boldsymbol{\boldsymbol{w}}} \mathcal{C}(b,\boldsymbol{w}) &amp;=&amp;
+\lambda \boldsymbol{w} + \frac{1}{N} \sum_{k=1}^N  \nabla_{\boldsymbol{\boldsymbol{w}}} \ell_{\text{hinge}}(\boldsymbol{x}_k, y_k;b,\boldsymbol{w}), \\
+\frac{\partial }{\partial b}  \mathcal{C}(b,\boldsymbol{w}) &amp;=&amp;
+  \frac{1}{N} \sum_{k=1}^N  \frac{\partial }{\partial b} \ell_{\text{hinge}}(\boldsymbol{x}_k, y_k;b,\boldsymbol{w}).
+\end{eqnarray}<div style="text-align:right;">(3.9)</div></div><p>
+The <b>subgradient descent update rule</b> for minimizing the primal soft margin SVM with hinge-loss objective is defined as
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{w}_{t+1} &amp;=&amp; \boldsymbol{w}_t -\eta \nabla_{\boldsymbol{\boldsymbol{w}}}  \mathcal{C}(b_t,\boldsymbol{w}_t),\\
+b_{t+1} &amp;=&amp; b_t - \eta\frac{\partial }{\partial b}  \mathcal{C}(b_t,\boldsymbol{w}_t),
+\end{eqnarray}<div style="text-align:right;">(3.10)</div></div><p>
+where <span class="math">\(0<\eta<1\)</span> is the learning rate.</p><p><div class="algorithm">
+<div class="heading-container">
+<b class="heading">Algorithm:</b>
+</div>
+[<b>Pegasos</b>]</p><p><b>Input:</b> 
+<ol class="latex-enumerate">
+<li>the training dataset <span class="math">\(\mathcal{D}_\text{train}=\{(\boldsymbol{x}_k,y_k)~|~ k=1,2,\ldots, N_\text{train}\}\)</span>;
+</li><li>the initial weight vector <span class="math">\(\boldsymbol{w}_0=(w_{0,1}, \ldots, w_{0,n})\in \mathbb{R}^{n}\)</span> and the bias <span class="math">\(b_0\)</span>; 
+</li><li>an integer <span class="math">\(0< m \le N_\text{train}\)</span>; 
+</li><li>a sufficiently large positive integer <span class="math">\(T\)</span>; and
+</li><li>a regularization parameter <span class="math">\(\lambda \in (0,\infty)\)</span>.
+</li></ol></p><p><b>Processing:</b> [<b>Subgradient Update Rule</b>]</p><p><b>Step 1:</b>
+For each <span class="math">\(t=1,2,\ldots, T\)</span>, select a set of <span class="math">\(m\)</span> distinct training example, iid randomly, and denote it as
+</p><div class="math">\[
+A_t := \Big\{(\boldsymbol{x}_{k_i}, y_{k_i})~|~\text{for each } i=1,2,\ldots, m, k_i\in \{1,2,\ldots, N_{\rm train}\}
+		\Big\}.
+\]</div><p><b>Step 2:</b> Check and collect the set of points <span class="math">\(A_{t}^- \subseteq A_t\)</span> that are not classified correctly by the hyperplane <span class="math">\((b_{t-1}, \boldsymbol{w}_{t-1})\)</span>. Let the cardinality be <span class="math">\(\#(A_{t}^-) = m_t.\)</span></p><p><b>Step 3:</b> Set <span class="math">\(\eta_t = \dfrac{1}{\lambda t}\)</span>.</p><p><b>Step 4:</b> Perform the <b>subgradient descent update</b> as follows:
+If <span class="math">\(m_t>0\)</span>, then
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{w}_{t} &amp;=&amp; (1- \eta_t\lambda) \boldsymbol{w}_{t-1}  + \frac{\eta_t}{m_t} \sum_{(\boldsymbol{x},y)\in A_{t}^-} y \boldsymbol{x}\\
+b_{t} &amp;=&amp; b_{t-1} - \frac{\eta_t}{m_t} \sum_{(\boldsymbol{x},y)\in A_{t}^-}y.
+\end{eqnarray}<div style="text-align:right;">(3.11)</div></div><p>
+Else, 
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{w}_{t} &amp;=&amp; (1- \eta_t\lambda) \boldsymbol{w}_{t-1}  \\
+b_{t} &amp;=&amp; b_{t-1}.
+\end{eqnarray}<div style="text-align:right;">(3.12)</div></div><p><b>Output:</b> <span class="math">\((b_T, \boldsymbol{w}_T).\)</span></p><p>
+</div></p><p><div class="note">
+<div class="heading-container">
+<b class="heading">Note:</b>
+</div>
+Pegasos stands for Primal Estimated sub-GrAdient SOlver for SVM. The algorithm is proposed by </p><p>Shalev-Shwartz, S., Singer, Y., Srebro, N., and Cotter, A. Pegasos: primal estimated sub-gradient solver for SVM. <i>Math. Program</i>, <b>127</b>, pp 3--30 (2011).</p><p><a href="https://doi.org/10.1007/s10107-010-0420-4">
+DOI (https://doi.org/10.1007/s10107-010-0420-4)
+</a></p><p>This method is often referred to as <b>subgradient projection method</b>. For <span class="math">\(m=N_{\text{train}},\)</span> the method is the deterministic subgradient method and for <span class="math">\(m=1\)</span>, the method is called the <b>stochastic sub-gradient method</b>.
+</div></p><p><h3 id="dual-optimazation-problem">Dual Optimazation Problem</h3></p><p>The SVM problems 
+ <a href="#HardSVM.Optimization.eq">(3.3)</a> and
+<a href="#SoftSVM.Optimization.eq">(3.6)</a>
+ are referred to as the <b>primal optimization problems</b>.  These are convex optimization problems with quadratic objective functions and linear constraints. An alternative formulation is derived from the primal problem which is referred to as the <b>dual optimization problem</b> which are equivalent to the original problem. </p><p>A convex dual problem can be derived by forming the Lagrangian of the primal problem as
+</p><div class="math" id="SoftSVM.Lagrangian.eq">\begin{eqnarray}
+\mathcal{L}(b, \boldsymbol{w},  \boldsymbol{\xi}, \boldsymbol{\alpha}, \boldsymbol{\beta}) 
+= \frac{1}{2} \|\boldsymbol{w}\|_2^2 + C \sum_{k=1}^N \xi_k 
+- \left(
+\sum_{k=1}^N \alpha_k \left[ y_k(\boldsymbol{w} \cdot \boldsymbol{x}_k - b) - 1 + \xi_k \right] 
++ \sum_{k=1}^N \beta_k \xi_k \right),
+\end{eqnarray}<div style="text-align:right;">(3.13)</div></div><p>
+where the first two terms correspond to the objective function in 
+<a href="#SoftSVM.Optimization.eq">(3.6)</a>, and the expressions inside the brackets correspond to the inequality constraints enforced using the parameter vectors <span class="math">\(\boldsymbol{\alpha}\ge \boldsymbol{0}\)</span> and <span class="math">\(\boldsymbol{\beta}\ge \boldsymbol{0}\)</span>, called the <b>Lagrange multipliers</b>.</p><p>The gradient of <span class="math">\(\mathcal{L}\)</span> with respect to <span class="math">\(\boldsymbol{w}\)</span> is given by
+</p><div class="math" id="Diff.L.wrt.w.eq">\begin{eqnarray}
+\nabla_{\!\!\boldsymbol{w}}\, \mathcal{L} = \boldsymbol{w} - \sum_{k=1}^N \alpha_k y_k \boldsymbol{x}_k.
+\end{eqnarray}<div style="text-align:right;">(3.14)</div></div><p>Also, differentiating <span class="math">\(\mathcal{L}\)</span> with respect to the bias <span class="math">\(b\)</span> and <span class="math">\(\xi_k\)</span>, for <span class="math">\(k=1,2,\ldots, N\)</span>, gives
+</p><div class="math" id="Diff.wrt.b.eq">\begin{eqnarray}
+\frac{\partial \mathcal{L}}{\partial b}
+=\sum_{k=1}^N \alpha_k  y_k
+
+\end{eqnarray}<div style="text-align:right;">(3.15)</div></div><div class="math" id="Diff.wrt.xik.eq">\begin{eqnarray}
+\frac{\partial \mathcal{L}}{\partial \xi_k}
+= C-\alpha_k - \beta_k.
+\end{eqnarray}<div style="text-align:right;">(3.16)</div></div><p>
+In order to obtain the extremum of the Lagrangian, we equate the above three expressions to zero. First, equating gradient vector in <a href="#Diff.L.wrt.w.eq">(3.14)</a> to zero,  we obtain
+</p><div class="math" id="representation.w.eq">\begin{eqnarray}
+\boldsymbol{w} = \sum_{j=1}^N \alpha_j y_j \boldsymbol{x}_j,
+\end{eqnarray}<div style="text-align:right;">(3.17)</div></div><p>
+which shows that the optimal weight vector of the primal problem <a href="#SoftSVM.Optimization.eq">(3.6)</a> can be obtained as a linear combination of the input vectors where the coefficients are such that 
+</p><div class="math" id="Lagrangian.Stationarity.wrt.b.eq">\begin{eqnarray}
+\displaystyle{\sum_{k=1}^N} \alpha_k y_k = 0
+\end{eqnarray}<div style="text-align:right;">(3.18)</div></div><p> 
+from stationarity of the Lagrangian with respect to <span class="math">\(b\)</span>.  Note that only those vectors <span class="math">\(\boldsymbol{x}_k\)</span> for which <span class="math">\(\alpha_k>0\)</span>, for <span class="math">\(k=1,2,\ldots, N\)</span> contribute to the weight <span class="math">\(\boldsymbol{w}\)</span> and they are called <b>support vectors</b>.</p><p>Substituting <a href="#representation.w.eq">(3.17)</a> and <a href="#Lagrangian.Stationarity.wrt.b.eq">(3.18)</a> into 
+<a href="#SoftSVM.Optimization.eq">(3.6)</a>, we get
+</p><div class="math">\[
+\mathcal{L}_{\tiny D}(\boldsymbol{\xi}, \boldsymbol{\alpha}, \boldsymbol{\beta}) = 
+-\frac{1}{2} \sum_{j=1}^N \sum_{k=1}^N \alpha_j \alpha_k y_j y_k \langle \boldsymbol{x}_j, \boldsymbol{x}_k\rangle 
++ \sum_{k=1}^N \alpha_k +   \sum_{k=1}^N (C - \alpha_k  -  \beta_k) \xi_k.
+\]</div><p>
+Equating 
+<a href="#Diff.wrt.xik.eq">(3.16)</a>
+ to zero, we obtain
+</p><div class="math" id="DualSVM.Lagrangian.eq">\begin{eqnarray}
+\mathcal{L}_{\tiny D}(\boldsymbol{\alpha}) = 
+-\frac{1}{2} \sum_{j=1}^N \sum_{k=1}^N \alpha_j \alpha_k y_j y_k \langle \boldsymbol{x}_j, \boldsymbol{x}_k\rangle 
++ \sum_{k=1}^N \alpha_k .
+\end{eqnarray}<div style="text-align:right;">(3.19)</div></div><p>
+Thus, we have proved
+</p><div class="math">\[
+\mathcal{L}_{\tiny D}(\boldsymbol{\alpha}) = \displaystyle{\min_{(b, \boldsymbol{w}), \boldsymbol{\xi}}} \mathcal{L}(b, \boldsymbol{w},\boldsymbol{\xi},\boldsymbol{\alpha},\boldsymbol{\beta}).
+\]</div><p>
+Further, since <span class="math">\(\boldsymbol{\beta}\ge \boldsymbol{0}\)</span>, we see that <span class="math">\(\alpha_k\le C\)</span> for each <span class="math">\(k=1,2,\ldots, N\)</span>.</p><p>The following constrained optimization problem is called the <b>Lagrange dual problem</b> associated to the primal problem 
+<a href="#SoftSVM.Optimization.eq">(3.6)</a>:
+</p><div class="math">\[
+\left.\begin{array}{ll}
+&amp; \displaystyle{\max_{\boldsymbol{\alpha}}}~\mathcal{L}_{\tiny D}(\boldsymbol{\alpha})\\
+\text{subject to:}&amp; 
+\left\{\begin{array}{cl}
+\displaystyle{\sum_{j=1}^N} \alpha_j y_j = 0, \\
+0\le \alpha_k\le C,&amp;k=1,2,\ldots, N.
+\end{array}\right.
+\end{array}\right\}
+\]</div><p>
+Using <a href="#DualSVM.Lagrangian.eq">(3.19)</a>, the  <b>Lagrange dual problem</b> can also be written as
+</p><div class="math" id="DualSVM.Optimization.eq">\begin{eqnarray}
+\left.\begin{array}{ll}
+&amp; \displaystyle{\min_{\boldsymbol{\alpha}}}~\left(\frac{1}{2} \sum_{j=1}^N \sum_{k=1}^N \alpha_j \alpha_k y_j y_k \langle \boldsymbol{x}_j, \boldsymbol{x}_k\rangle 
+- \sum_{k=1}^N \alpha_k \right) \\
+\text{subject to:}&amp; 
+\left\{\begin{array}{cl}
+\displaystyle{\sum_{j=1}^N} \alpha_j y_j = 0, \\
+0\le \alpha_k\le C,&amp;k=1,2,\ldots, N.
+\end{array}\right.
+\end{array}\right\}
+\end{eqnarray}<div style="text-align:right;">(3.20)</div></div><p>
+The above dual problem gives <span class="math">\(\boldsymbol{\alpha}^*\)</span> which can be substituted in <a href="#representation.w.eq">(3.17)</a> to obtain the weight vector <span class="math">\(\boldsymbol{w}^*\)</span>.  To obtain an approximation to <span class="math">\(b^*\)</span>, compute <span class="math">\(|y_k - \boldsymbol{w}^*\cdot \boldsymbol{x}_k|\)</span> for all support vectors <span class="math">\(\boldsymbol{x}_k\)</span> from the dataset and take the median value as the value of  <span class="math">\(b^*\)</span>.</p><p><div class="remark">
+<div class="heading-container">
+<b class="heading">Remark:</b>
+</div>
+A point 
+\((b^*, \mathbf{w}^*, \boldsymbol{\xi}^*, \boldsymbol{\alpha}^*, \boldsymbol{\beta}^*)\)
+is a <b>saddle point</b> of \(\mathcal{L}\) if</p><div class="math" >\begin{eqnarray}
+\mathcal{L}(b^*, \mathbf{w}^*, \boldsymbol{\xi}^*, \boldsymbol{\alpha}, \boldsymbol{\beta}) 
+\le \mathcal{L}(b^*, \mathbf{w}^*, \boldsymbol{\xi}^*, \boldsymbol{\alpha}^*, \boldsymbol{\beta}^*) 
+\le \mathcal{L}(b, \mathbf{w}, \boldsymbol{\xi}, \boldsymbol{\alpha}^*, \boldsymbol{\beta}^*) 
+\end{eqnarray}<div style="text-align:right;">(3.21)</div></div><p>for all feasible \(b, \mathbf{w}, \boldsymbol{\xi} \ge 0\) and \(\boldsymbol{\alpha}, \boldsymbol{\beta} \ge 0\).</p><p>Observe that
+
+    <li>the left inequality corresponds to maximization over the dual variables \((\boldsymbol{\alpha}, \boldsymbol{\beta})\).
+    </li><li>the right inequality corresponds to minimization over the primal variables \((b, \mathbf{w}, \boldsymbol{\xi})\).
+</p><p>Thus, a saddle point is a point where the Lagrangian is simultaneously minimal with respect to the primal variables and maximal with respect to the dual variables. This is exactly the point that satisfies the <b>Karush-Kuhn-Tucker (KKT) </b>conditions for the SVM problem, which are given as follows:</p><p><b>Stationarity:</b>
+</p><div class="math" >\begin{eqnarray}
+\frac{\partial \mathcal{L}}{\partial \mathbf{w}} &amp;=&amp; \mathbf{w} - \sum_{k=1}^N \alpha_k y_k \mathbf{x}_k = 0, \\
+\frac{\partial \mathcal{L}}{\partial b} &amp;=&amp; \sum_{k=1}^N \alpha_k y_k = 0, \\
+\frac{\partial \mathcal{L}}{\partial \xi_k} &amp;=&amp; C - \alpha_k - \beta_k = 0, \quad k=1,\dots,N, \nonumber 
+\end{eqnarray}<div style="text-align:right;">(3.22)</div></div><p>
+<b>Primal feasibility:</b>
+</p><div class="math" >\begin{eqnarray}
+y_k (\mathbf{w} \cdot \mathbf{x}_k - b) \ge 1 - \xi_k, &amp;&amp; k=1,\dots,N, \\
+\xi_k \ge 0, &amp;&amp; k=1,\dots,N, 
+\end{eqnarray}<div style="text-align:right;">(3.23)</div></div><p>
+<b>Dual feasibility:</b> 
+</p><div class="math" >\begin{eqnarray}
+\alpha_k \ge 0, \quad \beta_k \ge 0, \quad k=1,\dots,N, \nonumber 
+\end{eqnarray}<div style="text-align:right;">(3.24)</div></div><p>
+<b>Complementary slackness:</b> 
+</p><div class="math" >\begin{eqnarray}
+\alpha_k \big[ y_k (\mathbf{w} \cdot \mathbf{x}_k - b) - 1 + \xi_k \big] = 0, &amp;&amp; k=1,\dots,N, \\
+\beta_k \, \xi_k = 0, &amp;&amp; k=1,\dots,N. \nonumber
+\end{eqnarray}<div style="text-align:right;">(3.25)</div></div><p>
+A point \((\mathbf{w}^*, b^*, \boldsymbol{\xi}^*, \boldsymbol{\alpha}^*, \boldsymbol{\beta}^*)\) satisfying these conditions is a <em>saddle point</em> of \(\mathcal{L}\).</p><p>
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show that an input vector <span class="math">\(\boldsymbol{x}_i\)</span> is a support vector of a soft-margin SVM if and only if its associated Lagrange multiplier <span class="math">\(\alpha_i > 0\)</span> at the saddle point of the Lagrangian.
+</div></p><p>These problems have been extensively studied in the optimization literature, and various computational algorithms are  available.  We omit further discussion of this topic, as our primary focus is on deep learning techniques. SVM is introduced here mainly for comparison, to highlight an alternative classical approach to classification problems within the broader field of machine learning. </p><p><h2 id="nonlinearly-separable-datasets">Nonlinearly Separable Datasets</h2>
+</p><p>So far, we have formulated the SVM problems to classify a given dataset.  If the dataset is linearly separable, then hard margin SVM can be efficiently used.  On the other hand, the soft margin SVM allows some violations of the margin constraints by introducing slack variables. In this way, the soft margin SVM can handle nonlinearly separable dataset in the given input space.  However, this method finally obtains a hyperplane as the decision boundary, and hence is a linear classifier in the input space with a better tolerance to noise or overlap.</p><p>In the previous chapter, we discussed how mapping data into a higher-dimensional feature space can make a dataset linearly separable.  In this section, we extend our discussion from the previous chapter on feature mapping and introduce the <b>kernel method</b>, which enables SVM to be a  nonlinear classifier.</p><p><h3 id="kernel-method:-implicit-feature-mapping">Kernel Method: Implicit Feature Mapping</h3>
+</p><p>At the end of previous chapter, we have seen that through a suitable feature map, one can transform the dataset from the input space to the feature space where the dataset is linearly separable.  However, explicitly constructing such a map is often impossible, especially when the dataset is large or when the separation requires a highly nonlinear decision boundary. </p><p>Kernel methods overcome this difficulty by introducing a kernel function that compute inner products in a higher dimensional feature space implicitly. This approach is known as the <b>kernel trick</b>. In this subsection, we outline the idea of kernel trick without getting into technical details.</p><p>First, let us give the definition of a <b>kernel function</b> in the context of machine learning.</p><p><div class="definition">
+<div class="heading-container">
+<b class="heading">Definition:</b>
+</div>
+[<b>Kernel Function</b>]</p><p>Let <span class="math">\(\mathcal{X}\)</span> denote an input space.  A function <span class="math">\(\text{𝕜}: \mathcal{X}\times \mathcal{X} \rightarrow \mathbb{R}\)</span> is called a <b>kernel function</b> over <span class="math">\(\mathcal{X}\)</span> if there exists a feature map <span class="math">\(\boldsymbol{\phi}: \mathcal{X} \rightarrow \mathbb{H}\)</span>, for some Hilbert space <span class="math">\(\mathbb{H},\)</span> such that
+</p><div class="math">\[
+\text{𝕜}(\boldsymbol{x}_1, \boldsymbol{x}_2) = \langle \boldsymbol{\phi}(\boldsymbol{x}_1), \boldsymbol{\phi}(\boldsymbol{x}_2) \rangle,
+~\text{for all}~\boldsymbol{x}_1, \boldsymbol{x}_2\in \mathcal{X},
+\]</div><p>
+where <span class="math">\(\langle \cdot, \cdot \rangle\)</span> denotes the inner product on <span class="math">\(\mathbb{H}\)</span>.
+</div></p><p>The following results gather some important properties of kernel functions.</p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+For any finite set of points <span class="math">\(\{\boldsymbol{x}_1,\boldsymbol{x}_2,\dots,\boldsymbol{x}_N\}\subset \mathcal{X}\)</span>, show that the <b>Gram matrix</b>
+</p><div class="math">\[
+G = \Big(\text{𝕜}(\boldsymbol{x}_i, \boldsymbol{x}_j)\Big)_{i,j=1}^N
+\]</div><p>
+is symmetric and positive semidefinite.
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Let <span class="math">\(\text{𝕜}_1, \text{𝕜}_2:\mathcal{X}\times\mathcal{X}\to\mathbb{R}\)</span> be kernel functions. That is, there exists feature maps <span class="math">\(\boldsymbol{\phi}_1: \mathcal{X}\rightarrow \mathbb{H}_1\)</span> and <span class="math">\(\boldsymbol{\phi}_2: \mathcal{X}\rightarrow \mathbb{H}_2\)</span> such that
+</p><div class="math">\[
+\text{𝕜}_j(\boldsymbol{x},\boldsymbol{y}) = \langle \boldsymbol{\phi}_j(\boldsymbol{x}),\boldsymbol{\phi}_j(\boldsymbol{y})\rangle_{\mathbb{H}_j},~~j=1,2.
+\]</div><p>
+Then show the following properties:
+<ol class="latex-enumerate">
+</li><li><b>Linear combination:</b> For any <span class="math">\(\alpha,\beta \ge 0\)</span>, 
+    </p><div class="math">\[
+\text{𝕜}(\boldsymbol{x},\boldsymbol{y}) = \alpha \text{𝕜}_1(\boldsymbol{x},\boldsymbol{y}) + \beta \text{𝕜}_2(\boldsymbol{x},\boldsymbol{y})
+\]</div><p>
+    is a kernel.</p><p></li><li><b>Product:</b> 
+    </p><div class="math">\[
+\text{𝕜}(\boldsymbol{x},\boldsymbol{y}) = \text{𝕜}_1(\boldsymbol{x},\boldsymbol{y}) \cdot  \text{𝕜}_2(\boldsymbol{x},\boldsymbol{y})
+\]</div><p>
+    is a kernel.</p><p></li><li><b>Polynomial transformation:</b>  
+    If <span class="math">\(p(x)\)</span> is a polynomial with non-negative coefficients, then <span class="math">\(p(\text{𝕜}_1(\boldsymbol{x},\boldsymbol{y}))\)</span> is a kernel.  </p><p></li><li><b>Exponential transformation:</b>  
+    <span class="math">\(\exp(\text{𝕜}_1(\boldsymbol{x},\boldsymbol{y}))\)</span> is also a kernel.</p><p></li><li>For any function <span class="math">\(f:\mathcal{X}\rightarrow \mathbb{R}\)</span>, the function <span class="math">\(\text{𝕜}(\boldsymbol{x},\boldsymbol{y}) = f(\boldsymbol{x})\text{𝕜}_1(\boldsymbol{x},\boldsymbol{y})f(\boldsymbol{y})\)</span> is a kernel.
+</li></ol>
+</div></p><p>Observe that the dual problem <a href="#DualSVM.Optimization.eq">(3.20)</a> depends on the 
+input vectors only through the inner products appearing in the objective function. 
+Thus, one can implicitly work in a feature space by replacing the inner product 
+of two input vectors with a kernel function based on a feature map <span class="math">\(\phi\)</span>. 
+This procedure is often referred to as the <b>kernel trick</b>.  Let us make the idea of kernel trick more precise.</p><p><h4 id="kernel-trick">Kernel Trick</h4>
+Let us explain kernel trick more precisely.  Following <a href="#representation.w.eq">(3.17)</a>, the representation of the weight vector in the feature space can be written as
+</p><div class="math">\[
+\boldsymbol{w} = \sum_{j=1}^N \alpha_j y_j \boldsymbol{\phi}(\boldsymbol{x}_j).
+\]</div><p>
+Thus, the hyperplane as the decision boundary in the input space is now transformed into a nonlinear function in the feature space given by
+</p><div class="math">\[
+\sum_{j=1}^N \alpha_j y_j \langle \boldsymbol{\phi}(\boldsymbol{x}_j), \boldsymbol{\phi}(\boldsymbol{x}) \rangle - b = 0,
+\]</div><p>
+where <span class="math">\(\alpha_k\)</span>, for <span class="math">\(k=1,2,\ldots, N\)</span>, are obtained by solving the dual problem <a href="#DualSVM.Optimization.eq">(3.20)</a>, but the objective function is now posed in the feature space as
+</p><div class="math">\[
+\displaystyle{\min_{\boldsymbol{\alpha}}}~\left(\frac{1}{2} \sum_{j=1}^N \sum_{k=1}^N \alpha_j \alpha_k y_j y_k \langle \boldsymbol{\phi}(\boldsymbol{x}_j), \boldsymbol{\phi}(\boldsymbol{x}_k)\rangle 
+- \sum_{k=1}^N \alpha_k \right).
+\]</div><p>
+The <b>kernel trick</b> is to replace the inner product in the above objective function with a kernel function <span class="math">\(\text{𝕜}(\boldsymbol{x_j}, \boldsymbol{x}_k)\)</span>. Hence, the dual problem under consideration is
+</p><div class="math" id="DualSVM.KernelTrick.Optimization.eq">\begin{eqnarray}
+\left.\begin{array}{ll}
+&amp; \displaystyle{\min_{\boldsymbol{\alpha}}}~\left(\frac{1}{2} \sum_{j=1}^N \sum_{k=1}^N \alpha_j \alpha_k y_j y_k \text{𝕜}(\boldsymbol{x_j}, \boldsymbol{x}_k)
+- \sum_{k=1}^N \alpha_k \right) \\
+\text{subject to:}&amp; 
+\left\{\begin{array}{cl}
+\displaystyle{\sum_{j=1}^N} \alpha_j y_j = 0, \\
+0\le \alpha_k\le C,&amp;k=1,2,\ldots, N.
+\end{array}\right.
+\end{array}\right\}
+\end{eqnarray}<div style="text-align:right;">(3.26)</div></div><p>The kernel trick enables us to use certain kernels without explicitly defining the corresponding feature map. </p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+[<b>Commonly Used Kernel Functions</b>]</p><p>Some of the widely used kernel functions are listed below:</p><p><ol class="latex-enumerate">
+    <li><b>Linear kernel:</b> This kernel is defined as
+    </p><div class="math" >\begin{eqnarray}
+      \text{𝕜}(\boldsymbol{x}_1, \boldsymbol{x}_2) = \langle \boldsymbol{x}_1, \boldsymbol{x}_2 \rangle,
+    \end{eqnarray}<div style="text-align:right;">(3.27)</div></div><p>
+    which corresponds to no feature mapping (the feature space is the same as input space).</p><p>    </li><li><b>Polynomial kernel:</b> This kernel is given by
+    </p><div class="math" >\begin{eqnarray}
+      \text{𝕜}(\boldsymbol{x}_1, \boldsymbol{x}_2) = \big( \langle \boldsymbol{x}_1, \boldsymbol{x}_2 \rangle + c \big)^d, 
+      \quad c \geq 0,\; d \in \mathbb{N},
+    \end{eqnarray}<div style="text-align:right;">(3.28)</div></div><p>
+    which maps into a higher-dimensional space involving monomials up to degree <span class="math">\(d\)</span>.</p><p>    </li><li><b>Radial Basis Function (RBF) or Gaussian kernel:</b> This is a commonly used kernel given by
+    </p><div class="math" >\begin{eqnarray}
+      \text{𝕜}(\boldsymbol{x}_1, \boldsymbol{x}_2) = \exp\!\left( - \frac{\|\boldsymbol{x}_1 - \boldsymbol{x}_2\|^2}{2\sigma^2} \right), 
+      \quad \sigma > 0,
+    \end{eqnarray}<div style="text-align:right;">(3.29)</div></div><p>
+which corresponds to an infinite-dimensional feature space.</p><p>    </li><li><b>Sigmoid kernel:</b> This kernel is defined as
+    </p><div class="math" >\begin{eqnarray}
+      \text{𝕜}(\boldsymbol{x}_1, \boldsymbol{x}_2) = \tanh\!\big( \kappa \langle \boldsymbol{x}_1, \boldsymbol{x}_2 \rangle + c \big), 
+      \quad \kappa > 0,\; c \in \mathbb{R}.
+    \end{eqnarray}<div style="text-align:right;">(3.30)</div></div><p>
+    This kernel originates from the activation function of a neural network with one hidden layer.</p><p>    </li><li><b>Exponential kernel:</b> This kernel is given by
+    </p><div class="math" >\begin{eqnarray}
+      \text{𝕜}(\boldsymbol{x}_1, \boldsymbol{x}_2) = \exp\!\left( - \frac{\|\boldsymbol{x}_1 - \boldsymbol{x}_2\|}{\sigma} \right), 
+      \quad \sigma > 0.
+    \end{eqnarray}<div style="text-align:right;">(3.31)</div></div><p>
+    This is similar to RBF but uses the <span class="math">\(L^1\)</span>-distance instead of squared <span class="math">\(L^2\)</span>-distance.</p><p>    </li><li><b>Rational quadratic kernel:</b> This kernel is given by
+    </p><div class="math" >\begin{eqnarray}
+      \text{𝕜}(\boldsymbol{x}_1,\boldsymbol{x}_2) = 1 - \frac{\|\boldsymbol{x}_1 - \boldsymbol{x}_2\|^2}{\|\boldsymbol{x}_1 - \boldsymbol{x}_2\|^2 + c}, 
+      \quad c > 0.
+    \end{eqnarray}<div style="text-align:right;">(3.32)</div></div><p>
+    This kernel acts like a scale mixture of RBF kernels with different length scales.
+</li></ol>
+</div></p><p>Let us illustrate the kernel trick by use the quadratic polynomial kernel to train a hard margin SVM for the XOR function.</p><p><div class="example">
+<div class="heading-container">
+<b class="heading">Example:</b>
+</div>
+Let <span class="math">\(\boldsymbol{x} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}, \; \boldsymbol{y} = \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} \in \mathbb{R}^2\)</span>.  
+The quadratic kernel is
+</p><div class="math" >\begin{eqnarray}
+\text{𝕜}(\boldsymbol{x}, \boldsymbol{y}) 
+&amp;=&amp; (\langle \boldsymbol{x}, \boldsymbol{y}\rangle + c)^2\\
+\end{eqnarray}<div style="text-align:right;">(3.33)</div></div><p>
+Define
+</p><div class="math" >\begin{eqnarray}
+\boldsymbol{\phi}(\boldsymbol{x}) =
+\begin{bmatrix}
+x_1^2 \\ x_2^2 \\ \sqrt{2} x_1 x_2 \\ \sqrt{2c} \, x_1 \\ \sqrt{2c} \, x_2 \\ c
+\end{bmatrix} \in \mathbb{R}^6.
+\end{eqnarray}<div style="text-align:right;">(3.34)</div></div><p>
+Then the kernel can be written as an inner product in this feature space:
+</p><div class="math" >\begin{eqnarray}
+\text{𝕜}(\boldsymbol{x}, \boldsymbol{y}) = \langle \boldsymbol{\phi}(\boldsymbol{x}), \boldsymbol{\phi}(\boldsymbol{y}) \rangle
+= x_1^2 y_1^2 + x_2^2 y_2^2 + 2 x_1 x_2 y_1 y_2 + 2 c x_1 y_1 + 2 c x_2 y_2 + c^2.
+\end{eqnarray}<div style="text-align:right;">(3.35)</div></div><p>
+Consider the <code>XOR</code> function with 0 replaced by <span class="math">\(-1\)</span>. Using the quadratic feature map <span class="math">\(\phi\)</span> given above, the dataset in the feature space is given by the following table:
+<img src="Figures/Ch03XORR6.png" class="standalone-figure">
+</div></p><p><div class="problem">
+<div class="heading-container">
+<b class="heading">Problem:</b>
+</div>
+Show that the <code>XOR</code> dataset is linearly separable in this feature space. Find the hard margin SVM and identify all the support vectors.
+</div>
+</p>
+    </div>
+
+<footer>
+  © S. Baskar, Department of Mathematics, IIT Bombay. 2025 — Updated: 02-Sep-2025
+</footer>
+
+<style>
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #f8f8f8;
+  color: #888;
+  font-size: 0.75em;
+  text-align: center;
+  padding: 6px 0;
+  border-top: 1px solid #ddd;
+  z-index: 10;               /* low z-index */
+  pointer-events: none;      /* allows clicks to pass through */
+}
+
+/* Small screen adjustments */
+@media (max-width: 600px) {
+  footer {
+    font-size: 0.68em;
+    padding: 4px 0;
+  }
+}
+</style>
+
+
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

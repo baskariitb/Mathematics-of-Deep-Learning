@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed Forward Architecture</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter current"><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#step-functions">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multi-class-classification">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="feed.forward.architecture.ch">Chapter 1: Feed Forward Architecture</h1>
+Artificial Intelligence (AI) is a subject that focuses on creating smarter machines to support humans in their work. These machines can be used as tools across diverse areas of science, engineering, and technology. The ultimate goal is to assist humans in their studies, research, business, and other daily activities, making processes smoother, more efficient, and more productive.
+</p><p>
+Machine Learning (ML) is a part of AI that has been of great interest in recent years, which deals with developing models capable of learning from input data and performing tasks with minimal human intervention. Artificial Neural Networks (ANNs) are a particular type of ML models whose basic fundamental architecture is inspired by the structure of a human brain and are particularly effective at handling complex patterns, large amounts of data, and high-dimensional inputs such as images, audio, and text.
+</p><p>
+Often, traditional ML models require manual feature extraction, which becomes challenging when the input data is high-dimensional or large in volume. On the other hand, since ANNs can automatically learn complex features directly from raw data, they are powerful tools for unstructured data sets. They are often viewed as black-box tools, because it is difficult to understand what a trained network has learned or why it produces a particular output for a given input. However, mathematical analysis of ANN architectures reveals some useful information, such as their expressivity in approximating a rich class of functions. Such analysis relies heavily on knowledge of fields such as algebra, multivariate calculus, probability theory, and optimization.
+</p><p>
+The basic unit of an ANN is the neuron or node. Each neuron takes a vector of inputs, processes it through an affine map and an activation function, and passes the resulting scalar output to the neurons of the next layer. In a typical network, neurons are arranged in layers. The layers of an ANN can be categorized into an input layer, one or more hidden layers, and an output layer. The core process of building a model takes place through the transformations applied in the layers. An ANN that has more than one hidden layer is called a <b>deep neural network</b>. The process of building models using deep neural networks is referred to as <b>deep learning</b>.
+</p><p>
+A deep learning architecture refers to the way it is structurally constructed into layers, neurons, and connections within the network. It also defines how the model processes the input data and how the final output is obtained. The complexity of the model, efficiency in the learning process, and shaping its ability to solve particular types of problems are determined by the network's architecture.
+</p><p>
+The most fundamental neural network architecture is the Feedforward Neural Network (FNN). In such networks, information is fed into the <b>input layer</b>, that flows through the <b>hidden layers</b>, and finally emerges as output from the <b>output layer</b>. 
+These networks are typically used for simple classification and regression tasks based on structured or tabular data. There are also other neural networks that are specialized to perform specific tasks, such as Convolutional Neural Networks (CNN) for image recognition, Recurrent Neural Networks (RNN) for sequence prediction, and so on.
+</p><p>
+
+The main objective of this course is to develop a rigorous mathematical understanding of deep learning architectures. We start from the elementary building block, the artificial neuron, and understand how neural networks are structured, trained to represent a labelled dataset, and validated. We progressively study the underlying mathematical structure of ANNs by first understanding the geometry of linear separability, then the role of kernels and feature maps, and the optimization principles behind learning algorithms. We also discuss some theoretical results demonstrating how well a neural network  can approximate a class of functions. 
+</p><p>
+This chapter lays the foundation for ANNs by providing the mathematical formulation of artificial neurons and giving an explanation of the functionality of biological neurons to justify the term artificial neurons. The chapter ends with an explanation of the process of learning a model from a given dataset.
+</p><p>
+We start the chapter with the introduction of neuron functions in <a href="Ch01FeedForwardArchitecture.html#neuron.function.sec" class="internal-link">Section 1.1</a>, where single artificial neurons are introduced in <a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs" class="internal-link">Subsection 1.1.1</a> and a comparison with biological neuron is discussed in <a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs" class="internal-link">Subsection 1.1.2</a>. <a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec" class="internal-link">Section 1.2</a> then defines the fully connected feed foward neural networks along with the notion of dimensions in <a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs" class="internal-link">Subsection 1.2.2</a> and provides a collection of commonly used activation functions in <a href="Ch01FeedForwardArchitecture.html#activation.functions.sec" class="internal-link">Subsection 1.3</a>. We end the chapter with an overview of learning a network is provided in <a href="Ch01FeedForwardArchitecture.html#learning.network.sec" class="internal-link">Section 1.4</a>, where we outline the supervised learning procedure and postpone the details to later chapters.
+<h2 id="neuron.function.sec">1.1 Artificial Neurons</h2>
+An artificial neuron is a mathematical function obtained as a composition of an affine transformation with an activation function.  Many such interconnected neurons, arranged in layers, form an artificial neural network.  Such artificial neurons are the building blocks of artificial neural networks, and therefore it is important to first understand how they are defined mathematically.
+<h3 id="artificial.neuron.subs">1.1.1 Neuron Function</h3>
+We now formalize the physical intuitions through the mathematical definition of an artificial neuron. 
+<div class="definition" id="artificial.neuron.def">
+<div class="heading-container"><b class="heading">Definition 1.1 (Artificial Neuron):</b></div><p>
+An <b>artificial neuron</b> is a tuple <span class="math">\( (\overline{\boldsymbol{w}}, \mathscr{A}) \)</span>, where
+<ul><li><span class="math">\(\overline{\boldsymbol{w}}=(w_0, \boldsymbol{w})\in \mathbb{R}\times \mathbb{R}^{n}\)</span> is the <b>augmented weight vector</b>, with <span class="math">\(w_0=b\in \mathbb{R}\)</span> as the <b>bias</b> and <span class="math">\(\boldsymbol{w}=(w_1,w_2,\ldots,w_n)\in \mathbb{R}^n\)</span> as the <b>weight vector</b>; and 
+</li><li><span class="math">\(\mathscr{A}:\mathbb{R}\rightarrow \mathbb{R}\)</span> is an <b>activation function</b>.
+</li></ul>
+Given an <b>input vector</b>  <span class="math">\(\boldsymbol{x}=( x_1,x_2,\ldots,x_n)\in \mathbb{R}^{n}\)</span>,  the <b>output</b> <span class="math">\(y\in \mathbb{R}\)</span> of the neuron is defined as
+<div class="math">\[
+y = \mathscr{A}\big(\overline{\boldsymbol{w}}\cdot \overline{\boldsymbol{x}}\big),
+\]</div>
+where <span class="math">\(\overline{\boldsymbol{x}} = (1, x_1,x_2,\ldots,x_n)=: (x_0, x_1, \ldots, x_n)\)</span> is called the <b>augmented input vector</b>.
+</p><p>
+For a given <span class="math">\(\overline{\boldsymbol{w}}\)</span>, the right hand side function is the composition of the <b>affine function</b> <span class="math">\(\text{𝕒}(\,\cdot\,;\overline{\boldsymbol{w}}): \{1\}\times \mathbb{R}^n\rightarrow \mathbb{R}\)</span> given by
+<div class="math">\[\text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}) = \sum_{k=0}^n w_k x_k = \sum_{k=1}^n w_k x_k + b,\]</div> 
+and the activation function <span class="math">\(\mathscr{A}\)</span>. We define the <b>neuron function</b> (or the <b>primitive function</b>) <span class="math">\(\text{𝕗}:\mathbb{R}^n\rightarrow \mathbb{R}\)</span> as 
+</p><div class="math numbered-math" id="neufun.eq">\begin{eqnarray}
+\text{𝕗}(\boldsymbol{x};\overline{\boldsymbol{w}}) = \mathscr{A}\big(\text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}) \big).
+\end{eqnarray}<span class="eq-number">(1.1)</span></div><p>
+
+</div>
+<div class="latex-figure" id="artificial.neuron.fig">
+<img src="Figures/Ch01ANFig.png" alt="">
+<div class="figure-caption"><p>Figure 1.1: Schematic of an artificial neuron architecture. 
+</p></div>
+</div><div class="example" id="linear.regression.eg">
+<div class="heading-container"><b class="heading">Example 1.1 (Linear Regression as an Artificial Neuron):</b></div>
+
+Consider an artificial neuron <span class="math">\((\overline{\boldsymbol{w}},\mathscr{A})\)</span> with the <b>identity activation function</b> <span class="math">\(\mathscr{A}(z) = z\)</span>. The neuron function <a href="#neufun.eq">(1.1)</a> then reduces to
+<div class="math">\[
+\text{𝕗}(\boldsymbol{x};\overline{\boldsymbol{w}}) = \text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}) = w_0 + \sum_{k=1}^n w_k x_k,
+\]</div>
+which is the well-known <b>linear regression</b> model, with <span class="math">\(w_0=b\)</span> as the intercept and <span class="math">\(w_1,\ldots,w_n\)</span> as the regression coefficients. Thus, an artificial neuron model as in <a href="Ch01FeedForwardArchitecture.html#artificial.neuron.def">Definition 1.1</a>, with identity activation, can be viewed as a generalization of a familiar statistical model.
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 1.1:</b></div>
+
+In the linear regression model in <a href="Ch01FeedForwardArchitecture.html#linear.regression.eg">Example 1.1</a>, the activation function is taken as the identity function and the neuron output <span class="math">\(y\in \mathbb{R}\)</span> is a real-valued prediction.  Suppose instead that the neuron's output is of classification type, say <span class="math">\(y\in \{0, 1\}\)</span>. Suggest an activation function <span class="math">\(\mathscr{A}\)</span> that achieves this.
+
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+There are other nonlinear activation functions, that are commonly used in various problems.  We will take a tour of those  functions in <a href="Ch01FeedForwardArchitecture.html#activation.functions.sec" class="internal-link">Section 1.3</a>.
+
+</div>
+<h3 id="biological.neuron.subs">1.1.2 Comparison with Biological Neurons</h3>
+The mathematical definition of <span class="math">\(\text{𝕗}\)</span> in <a href="#neufun.eq">(1.1)</a> is named as a neuron by taking inspiration from the biological neurons in the brains.  To have a clear understanding of these two concepts, we briefly understand the structure and the functionality of biological neurons in the brains and then make a comparison with the artificial neuron formulation.
+</p><p>
+From <a href="Ch01FeedForwardArchitecture.html#artificial.neuron.def">Definition 1.1</a>, we see that an artificial neuron includes a simple mathematical function (neuron function) with inputs, weights, bias, activation function and output.  On the other hand, a <b>biological neuron</b> is a specialized type of cell in the nervous system with dendrites, soma, axon, and synapses. Biological neurons are responsible for transmitting and processing information through electrical and chemical signals.
+<div class="latex-figure" id="Bio.Neuron.fig">
+<img src="Figures/Ch01BNFig.png" alt="">
+<div class="figure-caption"><p>Figure 1.2: An illustration of a biological neuron. The direction of the flow of information during neurotransmission is indicated by three arrows.</p></div>
+</div><p>
+A typical neuron has four main parts (shown in <a href="Ch01FeedForwardArchitecture.html#Bio.Neuron.fig">Figure 1.2</a>):
+<ol class="latex-enumerate"><li><b>Dendrites:</b> Branch-like structures that receive input signals from other neurons in the form of chemical signals, specifically neurotransmitters.
+</p><p>
+</li><li><b>Soma (Cell Body):</b> Contains the nucleus and most of the cell's organelles, where input signals (electrical impulses) are integrated and a nonlinear threshold is applied. If the combined input exceeds this threshold, the axon hillock triggers an action potential, which is then propagated down the axon.
+</p><p>
+</li><li><b>Axon:</b> A long projection that transmits electrical signals from the soma to other neurons. The axon terminal of one neuron connects to the dendrites of another neuron via synapses.
+</p><p>
+</li><li><b>Synaptic Boutons:</b> These are the small, bulb-like endings of axon terminals that are involved in transmitting signals to other neurons. When an electrical signal (action potential) reaches a synaptic bouton, it triggers the release of chemical messengers called neurotransmitters into the synaptic cleft, which is a tiny gap between the axon terminal and the dendrite of the next neuron. Electrical signals cannot cross this gap directly, so neurotransmitters are used to carry the signal across.
+</li></ol>
+<div class="latex-table" id="comparison.bio.artificial.neurons.tbl">
+<table><tr><td><b>Feature</b></td><td><b>Biological Neuron</b></td><td><b>Artificial Neuron</b></td></tr><tr><td>Structure</td><td>Has dendrites, soma (cell body), axon, and synapses</td><td>Consists of inputs, weights, bias, and activation function</td></tr><tr><td>Input</td><td>Receives chemical/electrical signals from other neurons</td><td>Receives numerical input values <span class="math">\(\boldsymbol{x}\)</span> from other neurons</td></tr><tr><td>Processing</td><td>Integrates input signals and fires when threshold is reached</td><td>Computes weighted sum <span class="math">\(\text{𝕒}\)</span> and applies an activation function <span class="math">\(\mathscr{A}\)</span></td></tr><tr><td>Output</td><td>Action potential transmitted through axon</td><td>Scalar value <span class="math">\(y\)</span> passed as output</td></tr></table>
+
+<div class="figure-caption"><p>Table 1.1: Comparison of Biological and Artificial Neurons</p></div></div>
+A comparison between biological neurons and artificial neurons is summarized in <a href="Ch01FeedForwardArchitecture.html#comparison.bio.artificial.neurons.tbl">Table 1.1</a>. As we can see, biological neurons are more complex in nature, whereas artificial neurons are simplified mathematical models that only resemble biological neurons. Artificial neurons are not intended to be accurate models of biological neurons. Rather, they are designed to mimic certain features, such as signal integration and nonlinear activation, to build systems capable of performing tasks through self-learning, giving rise to artificial intelligence.
+</p><p>
+A neuron can connect to many other neurons through its axon terminals, and similarly, it can receive inputs from several neurons via its dendrites, forming a biological neural network. Similarly, multiple artificial neurons can be connected through layers to form an artificial neural network, which we will discuss in a later chapter.
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+Throughout this course, the term ‘neuron’ refers to an artificial neuron. Discussions involving biological neurons will indicate this explicitly. This convention is adopted, as the focus of the course is on artificial neural networks, and our discussions on biological neural networks are intended only for motivational purposes.
+
+</div>
+<h2 id="fully.connected.networks.sec">1.2 Fully Connected Networks</h2>
+In this section, we introduce fully connected feedforward artificial neural networks (also called the <b>Multilayer Perceptrons</b> (MLPs)) as a natural extension of single-neuron models. 
+<h3 id="multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</h3>
+An artificial neural network (ANN) is a system consisting of layers of connected neurons that defines a parametric function mapping input vectors to output vectors.
+</p><p>
+An ANN is typically organized into three components, namely,
+<ol class="latex-enumerate"><li>an <b>input layer</b> that receives the input vectors;
+</li><li>a set of <b>hidden layers</b> that perform transformations through affine maps and activation functions; and
+</li><li>an <b>output layer</b> that produces the final prediction or classification.
+</li></ol>
+A <b>shallow network</b> refers to a neural network with at most one hidden layer between the input and output. A neural network with two or more hidden layers is considered a <b>deep network</b>.
+</p><p>
+The multilayered structure of a deep neural network is illustrated in <a href="Ch01FeedForwardArchitecture.html#multilayered.structure.fig">Figure 1.3</a>.
+<div class="latex-figure" id="multilayered.structure.fig">
+<img src="Figures/ANN.png" alt="">
+<div class="figure-caption"><p>Figure 1.3: Schematic of an ANN with three hidden layers. The leftmost (green) layer is the input layer, that receives the input vector <span class="math">\(\boldsymbol{x}\)</span>, and the rightmost (blue) layer corresponds to the output vector <span class="math">\(\boldsymbol{y}\)</span>. In the hidden (brown) layers, <span class="math">\(\text{𝕗}^{(l)}_{k}\)</span> denotes the <span class="math">\(k^{\rm th}\)</span> neuron function in the <span class="math">\(l^{\rm th}\)</span> layer, as defined in <a href="#neufun.eq">(1.1)</a>.
+</p></div>
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+Since the information flows from the input layer through the function evaluation to the output without any feedback, an artificial neural network is said to have a <b>feedforward</b> architecture.
+</p><p>
+An artificial neuron can be viewed as a special case of a single-layer neural network with just a single output unit.
+
+</div>
+<h3 id="network.dimensions.subs">1.2.2 Network Function and Dimensions</h3><p>
+Having set the structure of ANNs intuitively, we now turn our attention to give the mathematical definition of a fully connected ANN (also called a <b>multilayer perceptron</b> or a <b>densely connected neural network</b> or a <b>feedforward neural network</b>).
+</p><div class="definition" id="artificial.neural.network.def">
+<div class="heading-container"><b class="heading">Definition 1.2 (Artificial Neural Network (ANN)):</b></div><p>
+For a given <span class="math">\(L\in \mathbb{N}\)</span> and a set of <b>network dimensions</b> <span class="math">\(n_0,n_1, n_2, \ldots, n_L\in \mathbb{N}\)</span>, a fully connected <b>artificial neural network</b> of <b>depth</b> <span class="math">\(L\)</span> and <b>width</b> 
+<div class="math">\[
+\hat{n}=\left\{\begin{array}{cl}
+\max(n_1, n_2, \ldots, n_{L-1}),&L>1,\\
+0,&L=1,
+\end{array}\right.
+\]</div> 
+is a parametric function <span class="math">\({\mathscr{F}_{L,\hat{n}}}: \mathbb{R}^{n_0} \rightarrow \mathbb{R}^{n_L}\)</span> defined as 
+<div class="math">\[
+{\mathscr{F}_{L,\hat{n}}}(\boldsymbol{x}; \boldsymbol{\Theta}) =\mathfrak{h}^{(L)} \big( \mathfrak{h}^{(L-1)}\big(  \cdots \mathfrak{h}^{(2)} \big(\mathfrak{h}^{(1)} (\boldsymbol{x};\overline{W}^{(1)}); \overline{W}^{(2)} \big)\cdots; \overline{W}^{(L-1)}\big); \overline{W}^{(L)} \big),
+\]</div>
+for all input vectors <span class="math">\(\boldsymbol{x}\in \mathbb{R}^{n_0}\)</span> and for a fixed collection of parameters <span class="math">\(\boldsymbol{\Theta}\)</span>. 
+</p><p>
+Here, for each layer <span class="math">\(l=1,2,\ldots,L\)</span>, the <b>layer function</b> <span class="math">\( \mathfrak{h}^{(l)}: \mathbb{R}^{n_{l-1}} \rightarrow \mathbb{R}^{n_{l}}\)</span> is the vector-valued neuron function of the <span class="math">\(l^{\rm th}\)</span> layer
+<div class="math">\[
+\mathfrak{h}^{(l)} (\boldsymbol{x}^{(l-1)};\overline{W}^{(l)})
+ = \big( 
+ \text{𝕗}_1^{(l)} (\boldsymbol{x}^{(l-1)};\overline{\boldsymbol{w}}_1^{(l)}), 
+ 		\ldots, 
+			\text{𝕗}_{n_l}^{(l)} (\boldsymbol{x}^{(l-1)};\overline{\boldsymbol{w}}_{n_l}^{(l)}) \big)^\top,~~\boldsymbol{x}^{(0)} = \boldsymbol{x},
+ \]</div>
+with <span class="math">\(\text{𝕗}_{k}^{(l)}: \mathbb{R}^{n_{l-1}} \rightarrow \mathbb{R}\)</span>, <span class="math">\(k=1,2,\ldots, n_l\)</span> being the neuron functions defined by <a href="#neufun.eq">(1.1)</a>  in <a href="Ch01FeedForwardArchitecture.html#artificial.neuron.def">Definition 1.1</a>, 
+</p><div class="math">\[
+\overline{W}^{(l)} = \left[\overline{\boldsymbol{w}}_{1}^{(l)}~ \overline{\boldsymbol{w}}_2^{(l)}~\cdots~\overline{\boldsymbol{w}}_{n_l}^{(l)}\right]^\top,
+\]</div> 
+ being the <span class="math">\(n_{l} \times (n_{l-1}+1)\)</span> augmented weight matrix,
+ and <span class="math">\(\boldsymbol{\Theta}\)</span> denotes the collection of trainable parameters of the network as
+<div class="math">\[
+\boldsymbol{\Theta} = \big(\overline{W}^{(1)}, \overline{W}^{(2)}, \ldots, \overline{W}^{(L)}\big).
+\]</div>
+
+</div>
+The layer corresponding to <span class="math">\(l=0\)</span> is the <b>input layer</b>, and the layer with <span class="math">\(l=L\)</span> is the <b>output layer</b>. The layers for <span class="math">\(l=1,2,\ldots, L-1\)</span> are the <b>hidden layers</b> with <b>layer width </b> <span class="math">\(n_l\)</span>. 
+</p><p>
+Neurons in the hidden and output layers are often referred to as <b>units</b> or <b>nodes</b>. The function <span class="math">\({\mathscr{F}_{L,\hat{n}}}\)</span> is also called the <b>network function</b>.
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+<ul><li>Although an ANN function depends on the width of all the layers, our notation <span class="math">\({\mathscr{F}_{L,\hat{n}}}\)</span> only includes the width of the network. We adapt to this convention only for the sake of notational convenience, whereas the dependency of an ANN function is apparent from <span class="math">\(\boldsymbol{\Theta}\)</span>.
+</li><li>Different neurons in the hidden layers can use different activation functions. However, we always consider networks where the activation function in all neurons of a layer is the same.  
+</li></ul>
+
+</div>
+<div class="remark" id="ANN.representation.composition.rem">
+<div class="heading-container"><b class="heading">Remark 1.1 (ANN Function as a Composition of Layers):</b></div><p>
+In a simple notation, we may write
+</p><div class="math numbered-math" id="ANN.Function.eq">\begin{eqnarray} 
+{\mathscr{F}_{L,\hat{n}}} = \mathfrak{h}^{(L)} \circ \mathfrak{h}^{(L-1)} \circ \ldots \circ \mathfrak{h}^{(2)} \circ \mathfrak{h}^{(1)},
+\end{eqnarray}<span class="eq-number">(1.2)</span></div><p>
+which is a mapping <span class="math">\(\mathbb{R}^{n_0} \ni \boldsymbol{x} \mapsto \boldsymbol{y}\in \mathbb{R}^{n_L}\)</span> obtained by passing the input vector <span class="math">\(\boldsymbol{x}\)</span> successively through the hidden layers, starting from layer <span class="math">\(l=1\)</span> up to layer <span class="math">\(l=L-1\)</span>, and finally through the output layer <span class="math">\(l=L\)</span> to obtain the output vector <span class="math">\(\boldsymbol{y}\)</span>. Such a network is therefore called a <b>feedforward neural network</b>.  
+</p><p>
+As we mentioned earlier, a fully connected (or densely connected) feedforward neural network defined above is often referred to as a <b>multilayer perceptron</b> (MLP).
+</p><p>
+
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+In <a href="Ch01FeedForwardArchitecture.html#perceptrons.ch">Chapter &laquo;Click Here&raquo; </a>, we defined a perceptron as a single neuron with the Heaviside (or bipolar) activation function. In contrast, in the context of neural networks, a multilayer perceptron may involve any of the commonly used activation functions in its neuron functions, and is not restricted to the Heaviside (or bipolar) choice.
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 1.2:</b></div>
+
+Find the network dimensions, width, and depth of the MLP shown in <a href="Ch01FeedForwardArchitecture.html#multilayered.structure.fig">Figure 1.3</a>. Also, find the total number of parameters (weights and bias) involved in the network.
+
+</div>
+Training or learning an artificial neural network means obtaining a collection of trainable parameters <span class="math">\(\boldsymbol{\Theta}\)</span> by optimizing a suitable cost function over the given training dataset. We briefly outline the supervised learning process in <a href="Ch01FeedForwardArchitecture.html#learning.network.sec" class="internal-link">Subsection 1.4</a>. Before this, we will introduce some commonly used activations functions.  
+<h2 id="activation.functions.sec">1.3 Activation Functions</h2>
+The learning efficiency and the model performance of an ANN depend crucially on the choice of an activation function.  In this section, we introduce a few commonly used activation functions, along with their derivatives which play a central role in the backpropagation algorithm used for training neural networks (discussed in a later chapter).  For clarity of exposition, we illustrate them using single neurons.
+<h3 id="step-functions">1.3.1 Step Functions</h3>
+Let us start our discussion with a class of activation functions that is historically important and is discussed in detail in <a href="Ch01FeedForwardArchitecture.html#perceptrons.ch">Chapter &laquo;Click Here&raquo; </a>.
+<h4 id="heaviside-function">1.3.1.1 Heaviside function</h4>
+Unit step function, called the <b>Heaviside function</b>, is referred to as the <b>threshold activation function</b> in the context of deep learning, and is given by
+</p><div class="math numbered-math" id="heaviside.function.activation.eq">\begin{eqnarray}
+\mathscr{H}(x) = \left\{\begin{array}{lc}
+		0,&\text{if}~x<0\\
+		1,&\text{if}~x\ge 0
+	\end{array}\right.
+\end{eqnarray}<span class="eq-number">(1.3)</span></div><p>
+In terms of distributional derivatives, the derivative of the Heaviside function is  <span class="math">\(\mathscr{H}' = \delta\)</span>, the Dirac measure (a unit mass at 0).
+<h4 id="bipolar-function">1.3.1.2 Bipolar Function</h4>
+The bipolar function is called the <b>bipolar activation function</b> and is given by
+</p><div class="math numbered-math" id="bipolar.function.activation.eq">\begin{eqnarray}
+\mathscr{B}(x) = \left\{\begin{array}{rc}
+		-1,&\text{if}~x<0\\
+		1,&\text{if}~x\ge 0
+	\end{array}\right.
+\end{eqnarray}<span class="eq-number">(1.4)</span></div><p>
+It is easy to see that <span class="math">\(\mathscr{B}(x) = 2\mathscr{H}(x) - 1\)</span>.  Therefore, the distributional derivative of <span class="math">\(\mathscr{B}\)</span> is given by <span class="math">\(\mathscr{B}' = 2\delta\)</span>.
+</p><p>
+The threshold and bipolar activation functions are used at the output layer of problems involving binary classification, which we studied in the context of perceptrons in <a href="Ch01FeedForwardArchitecture.html#perceptrons.ch">Chapter &laquo;Click Here&raquo; </a>.
+<h3 id="sigmoid-functions">1.3.2 Sigmoid Functions</h3>
+A <b>sigmoid function</b> is a continuously differentiable function <span class="math">\(\mathscr{S}:\mathbb{R} \rightarrow (0,1)\)</span>, such that <span class="math">\(\mathscr{S}'>0\)</span> (strictly increasing) and <span class="math">\(\mathscr{S}(s)\rightarrow 0\)</span> as <span class="math">\(s\rightarrow -\infty\)</span> and <span class="math">\(\mathscr{S}(s)\rightarrow 1\)</span> as <span class="math">\(s\rightarrow +\infty\)</span>.
+</p><p>
+A commonly used sigmoid function is the <b>logistic function</b> with parameter <span class="math">\(k>0\)</span>,  defined as
+</p><div class="math numbered-math" id="sigmoid.function.activation.eq">\begin{eqnarray}
+\mathscr{S}_k(s) = \frac{1}{1+e^{-ks}}, ~ s\in \mathbb{R}.
+\end{eqnarray}<span class="eq-number">(1.5)</span></div><p>
+The graphs of the sigmoid function for various values of <span class="math">\(k\)</span> are depicted in <a href="Ch01FeedForwardArchitecture.html#sigmoid.varyc.fig">Figure 1.4</a>. From the figure, we observe that <span class="math">\(\mathscr{S}_k\rightarrow \mathscr{H}\)</span> pointwise as <span class="math">\(k\rightarrow \infty\)</span> on <span class="math">\(\mathbb{R}\backslash \{0\}\)</span>.
+<div class="latex-figure" id="sigmoid.varyc.fig">
+<img src="Figures/Ch01Sigmoidc.png" alt="">
+<div class="figure-caption"><p>Figure 1.4: Graphs of the logistic sigmoid <span class="math">\(\mathscr{S}_k(x)\)</span> for various values of <span class="math">\(k\)</span>, illustrating convergence to the Heaviside step function as <span class="math">\(k \to \infty\)</span>.</p></div>
+</div><p>
+Since we use gradient-based optimization methods (such as the gradient descent method) for learning a neural network, smooth activation functions like the logistic function are preferred over the Heaviside function, which has  zero derivative almost everywhere (and is not classically differentiable at the origin). This provides no gradient signal for gradient-based optimization. Moreover, the logistic function maps <span class="math">\(x \mapsto y \in (0,1)\)</span> and hence its output can be interpreted as a probability. This makes it particularly useful in probabilistic models such as logistic regression (discussed in detail in a later chapter).
+<div class="problem" id="derivative.sigmoid.pro">
+<div class="heading-container"><b class="heading">Problem 1.3:</b></div>
+
+Let <span class="math">\(\mathscr{S}_k\)</span> be the logistic function defined in <a href="#sigmoid.function.activation.eq">(1.5)</a>, with parameter <span class="math">\(k>0\)</span>.
+<ol class="latex-enumerate"><li>Show that
+<div class="math">\[
+\mathscr{S}_k'(s) = k\,\mathscr{S}_k(s)\big(1-\mathscr{S}_k(s)\big), \qquad s\in\mathbb{R}.
+\]</div>
+</li><li>Show that <span class="math">\(\mathscr{S}_k'\)</span> attains its maximum at <span class="math">\(s=0\)</span>, with maximum value <span class="math">\(\mathscr{S}_k'(0) = \dfrac{k}{4}\)</span>.
+</li><li>Show that <span class="math">\(\mathscr{S}_k'(s)\rightarrow 0\)</span> as <span class="math">\(s\rightarrow \pm\infty\)</span>.
+</li></ol>
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 1.2:</b></div>
+
+From <a href="Ch01FeedForwardArchitecture.html#derivative.sigmoid.pro">Problem 1.3</a>(3), we see that the logistic function saturates (tends to become constant) and its gradient tends to become smaller as me move away from the origin. During training, when such small gradients are compounded across the many layers of a deep network, we come across the well-konwl <b>vanishing gradient</b> problem, which we discuss in a later chapter.
+
+</div>
+<h3 id="hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</h3>
+The <b>hyperbolic tangent function</b>, also called the <b>bipolar sigmoid function</b>, is a map <span class="math">\(\mathscr{T}_k:\mathbb{R}\rightarrow (-1,1)\)</span> defined as
+<div class="math">\[
+\mathscr{T}_k(x) = \tanh(kx),~x\in \mathbb{R}, k>0.
+\]</div>
+This function can also be defined as
+<div class="math">\[
+\mathscr{T}_k(x) = \frac{e^{kx}-e^{-kx}}{e^{kx}+e^{-kx}},~x\in \mathbb{R}, k>0.
+\]</div>
+<div class="latex-figure" id="tanh.varyc.fig">
+<img src="Figures/Ch01Tanh.png" alt="">
+<div class="figure-caption"><p>Figure 1.5: Graphs of the hyperbolic tangent function <span class="math">\(\mathscr{T}_k(x)\)</span> for various values of <span class="math">\(k\)</span>, illustrating convergence to the bipolar step function as <span class="math">\(k \to \infty\)</span>.</p></div>
+</div>
+The graphs of the hyperbolic tangent function for various values of <span class="math">\(k\)</span> are depicted in <a href="Ch01FeedForwardArchitecture.html#tanh.varyc.fig">Figure 1.5</a>. From the figure, we observe that <span class="math">\(\mathscr{T}_k\rightarrow \mathscr{B}\)</span> pointwise as <span class="math">\(k\rightarrow \infty\)</span> on <span class="math">\(\mathbb{R}\backslash \{0\}\)</span>, where <span class="math">\(\mathscr{B}\)</span> is the bipolar function given by <a href="#bipolar.function.activation.eq">(1.4)</a>.
+</p><p>
+The hyperbolic tangent function is preferred over the bipolar function while learning an ANN using gradient-based optimization methods (such as gradient descent method).
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 1.4:</b></div>
+
+Show that <span class="math">\(\mathscr{T}_1 (x)=2\mathscr{S}_2(x)-1\)</span>.
+
+</div>
+The above problem shows that the tanh function is the logistic sigmoid stretched vertically (range doubled) and shifted downward by 1. Hence, the tanh activation function can be viewed as a particular affine transformation of the logistic sigmoid.
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 1.3:</b></div>
+
+We can see that the hyperbolic tangent function, like the logistic sigmoid, suffers from the <b>vanishing gradient</b> problem when used as an activation function in deep networks. This holds since <span class="math">\(\mathscr{T}_k'(x)\rightarrow 0\)</span> as <span class="math">\(x\rightarrow \pm\infty\)</span>. Nevertheless, <span class="math">\(\mathscr{T}_k\)</span> is generally preferred over the logistic sigmoid <span class="math">\(\mathscr{S}_k\)</span> in practice, for two reasons: 
+<ol class="latex-enumerate"><li>its output is centered at <span class="math">\(0\)</span> (as opposed to the sigmoid's output, which is always positive), which leads to better-behaved gradient updates during training; and 
+</li><li>its maximum gradient, <span class="math">\(\mathscr{T}_k'(0)=k\)</span>, is larger than that of the logistic sigmoid, <span class="math">\(\mathscr{S}_k'(0)=k/4\)</span>.
+</li></ol>
+
+</div>
+<h3 id="hockey-stick-functions">1.3.4 Hockey-stick Functions</h3>
+Any function whose graph resembles a hockey stick, <i>i.e.,</i> an increasing L-shaped curve is a <b>hockey-stick</b> function.
+<h4 id="leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</h4>
+The <b>leaky rectified linear unit</b> with parameter <span class="math">\(\alpha\in [0, 1)\)</span> is the function <span class="math">\(\mathscr{R}_\alpha :\mathbb{R} \rightarrow \mathbb{R}\)</span> defined as
+<div class="math">\[
+\mathscr{R}_\alpha(x) = \left\{\begin{array}{cc}
+						\alpha x, & {if}~x<0,\\
+						x, & {if}~x\ge 0.
+						\end{array}\right.
+\]</div>
+In particular, if we take <span class="math">\(\alpha=0\)</span>, we get the <b>rectified linear unit</b> <span class="math">\(\mathscr{R}_0 = \texttt{ReLU}\)</span> defined as
+<div class="math">\[
+\mathscr{R}_0 (x) = \max\{0,x\},~x\in \mathbb{R}.
+\]</div>
+Since <span class="math">\(\mathscr{R}_0'(x) = \mathscr{H}(x)\)</span>, for <span class="math">\(x\neq 0\)</span>, the derivative neither vanishes nor saturates for <span class="math">\(x>0\)</span>. Thus, <span class="math">\(\texttt{ReLU}\)</span> does not suffer from the <b>vanishing gradient</b> problem on the positive axis.   This makes networks with <span class="math">\(\texttt{ReLU}\)</span> activation train faster than those with logistic sigmoid or hyperbolic tangent activations.  
+</p><p>
+Instead of choosing <span class="math">\(\alpha\in [0,1)\)</span>, if we treat <span class="math">\(\alpha>0\)</span> as a trainable parameter, then the activation function <span class="math">\(\mathscr{R}_\alpha\)</span> is called the <b>parametric rectified linear unit</b>.
+<div class="latex-figure" id="ReLU.fig">
+<img src="Figures/Ch01ReLU.png" alt="">
+<div class="figure-caption"><p>Figure 1.6: Graph of hockey-stick activation functions.</p></div>
+</div>
+<h4 id="sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</h4>
+<b>Sigmoid linear units</b> (also called <b>swish</b>) is a smooth function <span class="math">\(\texttt{SLU}_k:\mathbb{R}\rightarrow \mathbb{R}\)</span> defined as
+<div class="math">\[
+\texttt{SLU}_k(x) = x\mathscr{S}_k(x),
+\]</div>
+for a fixed parameter <span class="math">\(k>0\)</span>.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 1.5:</b></div>
+
+Show that <span class="math">\(\texttt{SLU}_k(x) \rightarrow \texttt{ReLU}\)</span>(x) as <span class="math">\(k\rightarrow \infty\)</span>, for all <span class="math">\(x\in \mathbb{R}\)</span>.
+
+</div><h4 id="softplus-function">1.3.4.3 Softplus Function</h4>
+Another smooth version of the <span class="math">\(\texttt{ReLU}\)</span> function is the <b>softplus function</b> defined as
+<div class="math">\[
+\texttt{sp}(x) = \text{ln}(1+e^x).
+\]</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 1.6:</b></div>
+
+Show the following properties:
+<ol class="latex-enumerate"><li><span class="math">\(\texttt{sp}(x) - \texttt{sp}(-x) = x.\)</span>
+</li><li><span class="math">\(\texttt{sp}'(x) = \mathscr{S}_1(x).\)</span>
+</li></ol>
+
+</div><p>
+Graphs of hockey-stick functions are depicted in <a href="Ch01FeedForwardArchitecture.html#ReLU.fig">Figure 1.6</a>.
+<h3 id="identity-function">1.3.5 Identity Function</h3>
+The <b>identity function</b> <span class="math">\(\texttt{Id}:\mathbb{R}\rightarrow\mathbb{R}\)</span>, given by
+<div class="math">\[
+\texttt{Id}(x) = x, \qquad x\in\mathbb{R},
+\]</div>
+is itself a valid activation function. In particular, since it does not saturate, it does not suffer from the vanishing gradient problem. However, being linear,  it is degenerate as an activation function in the sense that a deep network using the identity activation throughout collapses to a single neuron that recovers the linear regression model of <a href="Ch01FeedForwardArchitecture.html#linear.regression.eg">Example 1.1</a>. 
+</p><p>
+In practice, the identity function is typically used only at the output layer, and only for regression tasks, where the target <span class="math">\(y\in\mathbb{R}\)</span> is a real-valued (unbounded) quantity.
+</p><h3 id="multi-class-classification">1.3.6 Multi-class Classification</h3>
+Multi-class classification refers to assigning exactly one class to each input out of a set of more than two possible classes.
+</p><p>
+In a multi-class classification, the outputs (targets/labels) are often categories (discrete class names), such as identifying whether a photograph depicts a cat, or a dog, or a cow.  In this case, the output is <span class="math">\(y \in \{\text{`cat'}, \text{`dog'}, \text{`cow'}\}.\)</span> Since neural networks cannot handle symbolic categories directly, the target must be represented numerically.  A canonical way of interpreting an <span class="math">\(n\)</span>-class classification numerically is to use <b>one-hot</b> vector encoding, where each class is represented by the <span class="math">\(n\)</span>-dimensional <span class="math">\(i^{\rm th}\)</span> standard basis vector <span class="math">\(\boldsymbol{e}_i=(0,0,\ldots,1,0,\ldots, 0)\)</span> of <span class="math">\(\mathbb{R}^n\)</span>, for <span class="math">\(i=1,2,\ldots, n\)</span>, with <span class="math">\(1\)</span> appearing at the <span class="math">\(i^{\rm th}\)</span> coordinate. For instance, the above example is a 3-class classification, which can be encoded by the three dimensional one-hot mapping as
+</p><div class="math numbered-math">\begin{eqnarray}
+\text{`cat'} &\mapsto& (1,0,0)\\
+\text{`dog'} &\mapsto& (0,1,0)\\
+\text{`cow'} &\mapsto& (0,0,1)
+\end{eqnarray}<span class="eq-number">(1.6)</span></div><h4 id="softmax-function">1.3.6.1 Softmax Function</h4>
+In a multi-class classification problem with <span class="math">\(n\)</span> classes, a neural network produces a pre-activation vector of real numbers at the output layer as
+<div class="math">\[
+\boldsymbol{z}=(z_1, z_2, \ldots, z_n)^\top,
+\]</div>
+whose entries are called the <b>logits</b> of the <span class="math">\(n\)</span> classes.
+</p><p>
+To interpret these logits as probabilities of each class, we apply the <b>softmax function</b> as the activation function at the output layer to get the output as <span class="math">\(\boldsymbol{y} = (y_1, y_2, \ldots, y_n)^\top\)</span>, where
+<div class="math">\[
+y_i = \frac{e^{z_i}}{\displaystyle{\sum_{j=1}^n} e^{z_j}}, \text{ for } i=1,2,\ldots, n.
+\]</div>
+Thus, softmax is a function <span class="math">\(\texttt{sm}: \mathbb{R}^n \rightarrow \Delta^{n-1}\)</span>, where the range is the open probabilistic simplex
+<div class="math">\[
+\Delta^{n-1} = \big\{\boldsymbol{y}=(y_1,\ldots, y_n)\in \mathbb{R}^n ~\big|~ 
+						\sum_{k=1}^n y_k = 1,~y_k>0\big\}
+\]</div>
+defined by
+<div class="math">\[
+\texttt{sm}(\boldsymbol{z}) = \left(
+					\frac{e^{z_1}}{\displaystyle{\sum_{i=1}^n} e^{z_i}}, 
+					\frac{e^{z_2}}{\displaystyle{\sum_{i=1}^n} e^{z_i}}, 
+					\ldots,
+					\frac{e^{z_n}}{\displaystyle{\sum_{i=1}^n} e^{z_i}}
+					\right),~\boldsymbol{z}\in \mathbb{R}^n.
+\]</div>
+The softmax generalizes the logistic sigmoid to the multi-class setting, where the logit vector <span class="math">\(\boldsymbol{z}\)</span> is transformed  into an output vector <span class="math">\(\boldsymbol{y}\)</span> which is a probability distribution over the <span class="math">\(n\)</span> classes. This is illustrated in the following example for <span class="math">\(n=2\)</span>.
+<div class="example">
+<div class="heading-container"><b class="heading">Example 1.2:</b></div>
+
+For logits <span class="math">\(\boldsymbol{z}=(z_1,z_2)\)</span>, the softmax gives
+<div class="math">\[
+y_1 = \frac{e^{z_1}}{e^{z_1}+e^{z_2}}, 
+\qquad 
+y_2 = \frac{e^{z_2}}{e^{z_1}+e^{z_2}}.
+\]</div>
+We can rewrite
+<div class="math">\[
+y_1 = \frac{1}{1+e^{z_2-z_1}}
+= \mathscr{S}_1(z_1-z_2),~
+\text{and}~
+y_2 = 1-y_1.
+\]</div>
+
+</div><p>
+In general, for a given <span class="math">\(k>0\)</span>, we define the parametric softmax as
+<div class="math">\[
+\texttt{sm}_k(\boldsymbol{z}) = \left(
+					\frac{e^{kz_1}}{\displaystyle{\sum_{i=1}^n} e^{kz_i}}, 
+					\frac{e^{kz_2}}{\displaystyle{\sum_{i=1}^n} e^{kz_i}}, 
+					\ldots,
+					\frac{e^{kz_n}}{\displaystyle{\sum_{i=1}^n} e^{kz_i}}
+					\right),~\boldsymbol{z}\in \mathbb{R}^n,
+\]</div>
+where <span class="math">\(\texttt{sm}_1=\texttt{sm}\)</span> is the usual softmax function.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 1.7:</b></div>
+
+Let <span class="math">\(\boldsymbol{z}\in \mathbb{R}^n\)</span>, <span class="math">\(n\ge 2\)</span>, be a vector with a unique index <span class="math">\(j\in\{1,2,\ldots, n\}\)</span> such that <span class="math">\(z_j = \max\{z_1, . . . , z_n\}\)</span>. Then, show that <span class="math">\(\texttt{sm}_k(\boldsymbol{z}) \rightarrow \boldsymbol{e}_j\)</span> as <span class="math">\(k\rightarrow \infty\)</span>, where <span class="math">\( \boldsymbol{e}_j\in \mathbb{R}^n\)</span> is the one-hot vector with 1 appearing at the <span class="math">\(j^{\rm th}\)</span> component.
+
+</div><h2 id="learning.network.sec">1.4 Supervised Learning: An Overview</h2>
+The mathematical formulation of an artificial neural network (ANN) takes <span class="math">\(\boldsymbol{x}\in \mathbb{R}^{n_0}\)</span> as input and computes the output <span class="math">\(\boldsymbol{y}\in \mathbb{R}^{n_L}\)</span> as the value of the network function <span class="math">\({\mathscr{F}_{L,\hat{n}}}(\,\cdot\,;\boldsymbol{\Theta})\)</span>. A complete ANN model for a given problem therefore involves a well-defined network function, which in turn includes three choices, namely,
+<ol class="latex-enumerate"><li>the <b>architecture</b> of the network, <i>i.e.</i>, the depth <span class="math">\(L\)</span> and the dimensions <span class="math">\(n_0\)</span>, <span class="math">\(n_1\)</span>, <span class="math">\(\cdots,\)</span> <span class="math">\(n_L\)</span>;
+</li><li>a suitably chosen activation function for each layer; and
+</li><li>a fixed choice of the collection of weights and biases <span class="math">\(\boldsymbol{\Theta}\)</span>.
+</li></ol>
+The choice of the architecture and the activation functions depends on the problem under consideration. Whereas, the choice of the training parameters <span class="math">\(\boldsymbol{\Theta}\)</span> is more mathematical and is achieved through some optimization method.
+<h3 id="supervised.learning.subs">1.4.1 Labeled Dataset</h3>
+The process of obtaining <span class="math">\(\boldsymbol{\Theta}\)</span> is referred to as <b>learning a model</b> (or <b>training a model</b>) from a given dataset <span class="math">\(\mathcal{D} \subset \mathbb{R}^{n_0} \times \mathbb{R}^{n_L}\)</span> of the form
+<div class="math">\[
+\mathcal{D} = \{ (\boldsymbol{x}_k, \boldsymbol{y}_k)~|~k=1,2,\ldots, N\},
+\]</div>
+where <span class="math">\(\boldsymbol{x}_k\in \mathbb{R}^{n_0}\)</span> is an input vector (also called a <b>feature vector</b>) and <span class="math">\(\boldsymbol{y}_k \in \mathbb{R}^{n_L}\)</span> is the corresponding output or <b>label</b>.  The dataset <span class="math">\(\mathcal{D}\)</span> is called a <b>labeled dataset</b>, and each point <span class="math">\((\boldsymbol{x}_k, \boldsymbol{y}_k)\)</span> in <span class="math">\(\mathcal{D}\)</span> is called an <b>example</b> or a <b>training sample</b>. 
+</p><p>
+Learning from such a labeled dataset is called <b>supervised learning</b>, where the goal is to approximate a function (or a model) that maps inputs <span class="math">\(\boldsymbol{x}_k\)</span> to outputs <span class="math">\(\boldsymbol{y}_k\)</span>.
+<h3 id="learning.procedure.subs">1.4.2 Learning Procedure</h3>
+A general outline of the learning procedure is as follows:
+<ul><li><b>Data Preparation:</b> As a first step, we decompose the dataset <span class="math">\(\mathcal{D}\)</span> into three disjoint sets, 
+<div class="math">\[
+\mathcal{D} = \mathcal{D}_\text{train} \cup \mathcal{D}_\text{val} \cup \mathcal{D}_\text{test}.
+\]</div>
+Here, <span class="math">\(\mathcal{D}_\text{train}\)</span> is the <b>training set</b>, <span class="math">\(\mathcal{D}_\text{test}\)</span> is the <b>test set</b>, and <span class="math">\(\mathcal{D}_\text{val}\)</span> is the <b>valudation set</b>.  
+Typically, <span class="math">\(\mathcal{D}_\text{train}\)</span> contains a significantly larger portion of the data, often at least 70% of <span class="math">\(\mathcal{D}\)</span>, selected randomly in an unbiased manner. Let us use the notation
+<div class="math">\[
+\mathcal{D}_\text{train} :=  \big\{(\boldsymbol{x}_{k}^\text{train},\boldsymbol{y}_{k}^\text{train}) ~|~k = 1,2,\dots, N_\text{train}\big\},
+\]</div>
+where <span class="math">\(N_\text{train} = \#(\mathcal{D}_\text{train})\)</span>.
+</li><li><b>Training a Model:</b> Consider a suitable <b>cost function</b> (error) <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span> defined on the training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span>. The goal is to find parameters <span class="math">\(\boldsymbol{\Theta}\)</span> that minimize the cost function, <i>i.e.</i>,
+<div class="math">\[
+\boldsymbol{\Theta}^* = \text{argmin}_{{ \boldsymbol{\Theta}}} \mathcal{C}(\boldsymbol{\Theta}).
+\]</div>
+For instance, a commonly used cost function is the <b>mean squared error</b>
+<div class="math">\[
+\mathcal{C}(\boldsymbol{\Theta}) = \frac{1}{N_\text{train}} \sum_{k=1}^{N_\text{train}} \big\| {\mathscr{F}_{L,\hat{n}}}(\boldsymbol{x}_{k}^\text{train};\boldsymbol{\Theta}) - \boldsymbol{y}_{k}^\text{train} \big\|^2.
+\]</div>
+An optimization method such as the <b>gradient descent method</b> is used to compute <span class="math">\( \boldsymbol{\Theta}^* \)</span>.  This step is called the <b>training step</b> or <b>learning step</b>.
+</p><p>
+Once the optimal parameters are computed by minimizing the cost on the training data, we typically say that the <b>model is trained</b>. 
+</li><li><b>Evaluating the Model:</b> The next step is to assess how well the trained model performs on unseen data.  For this, we compute the cost function on the test dataset <span class="math">\(\mathcal{D}_\text{test}\)</span>.  If this value is sufficiently small, we say that the model `generalizes well' to unseen data.  This step is called <b>testing step</b>.  If the model does not generalize well, then we need to apply additional techniques to improve <b>generalization</b>, such as regularization, or early stopping, or collecting more data, or architecture changes.
+</p><p>
+Regularization generally includes fine tuning some key parameters, referred to as <b>hyperparameters</b>.  The validation set <span class="math">\(\mathcal{D}_\text{val}\)</span> is used to tune hyperparameters.
+</li></ul>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 31-Jul-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,176 +1,103 @@
 :root {
-    --primary: #977950; /* Second Environment Color */
-    --environmentBackground: #e6e6e6; /* Main Environment Color */
-    --heading: #977950; /* Theme Color */
+    --theme-color: #9e7967;
+    --environment-bg: #e6e6e6;
 }
 
-/* General Styling */
 body {
     font-family: 'Times New Roman', Times, serif;
     font-size: 24px;
     background-color: #f4f4f4;
-    margin: 25px; /* Increased from 50px */
-    padding: 25px; /* Increased from 50px */
+    margin: 25px;
+    padding: 25px;
 }
 
-.container {
-    max-width: 800px;
-    margin: 100px auto; /* Increased from 50px auto */
-    background: white;
-    padding: 40px; /* Increased from 20px */
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+body, p, li, div {
+    color: black;
+    line-height: 1.6;
 }
 
-/* Heading */
+h1, h2, h3, h4 {
+    color: var(--theme-color);
+}
 h1 {
-    color: var(--primary);
     text-align: center;
-}
-h2 {
-    color: var(--primary);
+    background-color: color-mix(in srgb, var(--theme-color) 22%, white);
+    color: color-mix(in srgb, var(--theme-color) 75%, black);
+    padding: 16px 24px;
+    border-radius: 14px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 10px 0 24px;
 }
 
-h3 {
-    color: var(--primary);
-}
-
-
-/* Text Formatting */
 p {
     font-size: 24px;
     color: #555;
     line-height: 1.6;
 }
 
-/* Prevent text selection */
-body, p, h1, h2, h3, h4, h5, h6 {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+ul, ol.latex-enumerate {
+    margin-left: 40px;
+    padding-left: 20px;
 }
-
-/* Disable right-click context menu */
-body {
-    -webkit-touch-callout: none; /* Prevents long-press menu on mobile */
+ol.latex-enumerate li {
+    line-height: 1.6;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
-
-
-
-    .note{
-        background-color: var(--environmentBackground);
-        border: 5px solid var(--primary);
-        padding: 10px;
-        margin: 10px;
-    }
-
-    .problem{
-        background-color: var(--primary);
-        padding: 10px;
-        margin: 10px;
-    }
-
-    .example{
-            border-top: 5px double var(--primary);
-            border-bottom: 5px double var(--primary);
-            padding: 10px;
-            margin: 10px 0;
-        
-    }
-    .remark{
-        background-color: var(--primary);
-        border: 3px solid var(--primary);
-        padding: 10px;
-        margin: 10px;
-    }
-    .project{
-        background-color: var(--primary);
-        border: 3px solid var(--primary);
-        padding: 10px;
-        margin: 10px;
-        box-shadow: #333;
-    }
-    .definition{
-        background-color: var(--primary);
-        border: 3px solid var(--primary);
-        padding: 10px;
-        margin: 10px;
-        text-shadow: #333;
-    }
-    .lemma{
-        background-color: var(--primary);
-        border: 3px solid var(--primary);
-        padding: 10px;
-        margin: 10px;
-        box-shadow: #333;
-    }
-    .theorem{
-        background-color: var(--primary);
-        border: 3px solid var(--primary);
-        padding: 10px;
-        margin: 10px;
-        box-shadow: 10px 10px 5px rgb(207, 207, 207);
-    }
-    .proofs{
-        background-color: var(--environmentBackground);
-        border: 5px solid var(--primary);
-        padding: 10px;
-        margin: 10px;
-        box-shadow: 10px 10px 5px rgb(207, 207, 207);
-    }
-
-
-
-.heading-container {
-    display: flex;
-    background-color: var(--heading);
-    padding: 5px 0px; /* Adds vertical padding */
-    margin: -10px -10px 10px -10px; /* Extends background to match the container */
-}
-
-.heading {
-    margin: 0;
-    padding: 8px 16px;
-    font-size: larger;
-    font-family:Arial, Helvetica, sans-serif;
-}
-/* Add indentation to unordered lists */
-ul {
-    margin-left: 40px; /* Adjust this value as needed */
-    padding-left: 20px; /* Optional: Add additional padding */
-}
-
-/* Optionally, target list items directly */
 li {
-    margin-left: 20px; /* Fine-tune indentation for individual items */
+    margin-left: 20px;
 }
-
 
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 100%;
-  }
-  
-  td, th {
+}
+td, th {
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
-  }
-  
-  tr:nth-child(even) {
+}
+tr:nth-child(even) {
     background-color: #dddddd;
-  }
+}
 
-/* Footnote styles */
+/* Uniform styling for every custom environment (note, theorem, example, ...) */
+.note, .problem, .example, .project, .remark, .definition, .lemma, .theorem,
+.proposition, .corollary, .proofs, .proof, .hint, .code, .algorithm {
+    background-color: var(--environment-bg);
+    border: 3px solid var(--theme-color);
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.heading-container {
+    display: flex;
+    background-color: var(--theme-color);
+    padding: 0;
+    margin: -10px -10px 8px -10px;
+}
+.heading {
+    margin: 0;
+    padding: 3px 12px;
+    font-size: 0.85em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.unresolved-macro {
+    color: #b00020;
+    border-bottom: 1px dashed #b00020;
+    font-family: 'Consolas', monospace;
+    font-size: 0.85em;
+}
+
+/* Footnotes */
 .footnote-ref {
     position: relative;
     display: inline;
     line-height: 1;
     margin-left: 2px;
 }
-
 .footnote-ref a {
     color: #0066cc;
     text-decoration: none;
@@ -179,7 +106,6 @@ table {
     line-height: 0;
     padding: 0 1px;
 }
-
 .footnote-tooltip {
     visibility: hidden;
     width: min(300px, 90vw);
@@ -203,33 +129,26 @@ table {
     pointer-events: none;
     word-wrap: break-word;
 }
-
-/* Adjust tooltip position if near viewport edges */
 .footnote-ref:hover .footnote-tooltip {
     visibility: visible;
     opacity: 1;
 }
-
-/* Handle tooltip positioning */
 @media (hover: hover) {
     .footnote-tooltip {
         bottom: auto;
         top: calc(100% + 5px);
     }
-    
     .footnote-ref:last-child .footnote-tooltip {
         bottom: calc(100% + 5px);
         top: auto;
     }
 }
-
 .footnotes-section {
     margin-top: 50px;
     padding-top: 20px;
     border-top: 1px solid #eee;
     font-size: 0.9em;
 }
-
 .footnotes-section ol {
     padding-left: 20px;
 }
@@ -239,101 +158,34 @@ table {
     padding: 0 2px;
 }
 
-
-/* Prevent text overflow */
-#content {
-    max-width: 100%;
-    overflow-x: hidden;
-    word-wrap: break-word;
-}
-
-/* Math content */
 .math {
     overflow-x: auto;
     max-width: 100%;
 }
 
-/* Add to your existing styles */
-:target {
-    scroll-margin-top: 70px; /* Prevent heading from being hidden under fixed elements */
+.numbered-math {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 50px;
+}
+.numbered-math .eq-number {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
 }
 
-#toc-panel {
-    transition: left 0.3s ease;
-}
-
-#content {
-    scroll-behavior: smooth;
-}
-
-@media (max-width: 768px) {
-    #toc-panel.open {
-        width: 80%;
-    }
-    
-    #toc-panel.open ~ #content {
-        margin-left: 80%;
-    }
-}
-
-
-/* Internal Link Styling */
 .internal-link {
     color: #1a73e8;
     text-decoration: none;
     transition: color 0.2s;
 }
-
 .internal-link:hover {
     color: #0d47a1;
     text-decoration: underline;
-}
-
-/* Smooth scrolling target offset */
-:target {
-    scroll-margin-top: 80px;
-    animation: highlight 1.5s ease;
-}
-
-@keyframes highlight {
-    0% { background-color: rgba(26, 115, 232, 0.1); }
-    100% { background-color: transparent; }
-}
-
-/* Add these to your existing styles */
-#toc-panel {
-    transition: left 0.3s ease;
-    z-index: 1000; /* Ensure it's above content */
-}
-
-#content {
-    transition: margin-left 0.3s ease;
-}
-
-/* Overlay for mobile */
-.toc-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 999;
-}
-
-@media (max-width: 768px) {
-    .toc-overlay {
-        display: block;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-    }
-    
-    #toc-panel.open ~ .toc-overlay {
-        opacity: 1;
-        pointer-events: auto;
-    }
 }
 
 .latex-figure {
@@ -341,22 +193,205 @@ table {
     padding: 10px;
     text-align: center;
 }
-
 .latex-figure img {
     max-width: 100%;
     height: auto;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
-
 .figure-caption {
     font-style: italic;
     text-align: center;
     margin-top: 8px;
 }
-
 .standalone-figure {
     max-width: 100%;
     display: block;
     margin: 10px auto;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+:target {
+    scroll-margin-top: 80px;
+    animation: highlight 1.5s ease;
+}
+@keyframes highlight {
+    0% { background-color: rgba(26, 115, 232, 0.1); }
+    100% { background-color: transparent; }
+}
+
+/* Table of contents panel */
+#toc-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: var(--theme-color);
+    color: white;
+    font-weight: 700;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22), 0 2px 4px rgba(0,0,0,0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+#toc-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.26), 0 3px 6px rgba(0,0,0,0.18);
+}
+#toc-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+#toc-panel {
+    position: fixed;
+    top: 0;
+    left: -350px;
+    width: 300px;
+    height: 100%;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 999;
+    padding: 20px;
+    overflow-y: auto;
+    transition: left 0.3s ease-out;
+    font-size: 0.75em;
+}
+#toc-panel.open {
+    left: 0;
+}
+#close-toc {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+#content {
+    padding: 20px;
+    padding-top: 60px;
+    max-width: 100%;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    transition: margin-left 0.3s ease;
+}
+.toc-chapter, .toc-section, .toc-subsection, .toc-subsubsection {
+    color: black;
+}
+.toc-chapter a, .toc-section a, .toc-subsection a {
+    color: black;
+    text-decoration: none;
+}
+.toc-chapter {
+    margin-bottom: 10px;
+    border-left: 3px solid var(--theme-color);
+    padding-left: 10px;
+}
+.toc-chapter.current {
+    background-color: color-mix(in srgb, var(--theme-color) 5%, white);
+}
+.chapter-link {
+    font-weight: bold;
+    color: var(--theme-color);
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+}
+.toc-sections {
+    margin-left: 0;
+    display: none;
+}
+.toc-sections.expanded {
+    display: block;
+}
+.toc-section {
+    font-weight: bold;
+    padding: 3px 0;
+    margin-left: 0;
+}
+.toc-subsection {
+    padding: 3px 0;
+    margin-left: 0;
+    font-size: 0.95em;
+}
+.toc-subsubsection {
+    padding: 3px 0;
+    margin-left: 0;
+    font-size: 0.9em;
+    color: #555;
+}
+.toc-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+
+/* Main Page button inside the TOC panel */
+.main-page-bar {
+    text-align: right;
+    margin-bottom: 10px;
+}
+.main-page-btn {
+    background: var(--theme-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.75em;
+    font-weight: 900;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* Author / copyright footer */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #f8f8f8;
+    color: #888;
+    font-size: 0.75em;
+    text-align: center;
+    padding: 6px 0;
+    border-top: 1px solid #ddd;
+    z-index: 10;
+    pointer-events: none;
+}
+@media (max-width: 600px) {
+    footer {
+        font-size: 0.68em;
+        padding: 4px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    #toc-panel {
+        width: 85%;
+        left: -90%;
+    }
+    #toc-panel.open {
+        left: 0;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+    }
+    #toc-panel.open ~ #content {
+        margin-left: 80%;
+    }
+    .toc-overlay {
+        display: block;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    #toc-panel.open ~ .toc-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perceptrons</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter "><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multi-class-classification">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter current"><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="perceptrons.ch">Chapter 2: Perceptrons</h1>
+In the previous chapter, we introduced the concept of an artificial neuron and outlined the supervised learning algorithm.  Artificial neurons (ANs) are the building blocks for artificial neural networks (ANNs).  A deeper understanding of ANs is therefore essential before proceeding further.  
+</p><p>
+Perceptrons are the simplest and most fundamental among various types of artificial neurons. They are binary classifiers designed to classify datasets that are <b>linearly separable</b>, where the decision boundary is a hyperplane. In such cases, a simple learning algorithm can be devised to determine the model parameters. Moreover, convergence of the learning algorithm can be analyzed using simple mathematical arguments. This chapter is devoted to a detailed discussion on perceptrons that includes a multi-epoch perceptron learning algorithm and its convergence.
+</p><p>
+<a href="Ch02Perceptrons.html#perceptrons.sec" class="internal-link">Section 2.1</a> introduces perceptrons and illustrates the construction of perceptrons for certain Boolean functions. This section also includes the proof of the non-existence of a perceptron for the <code>XOR</code> function and motivates the notion of linear separability as a necessary and sufficient condition for the existence of a perceptron for a dataset. The mathematical notion of linear separability of a dataset is then introduced in <a href="Ch02Perceptrons.html#separability.algorithm.sec" class="internal-link">Section 2.2</a>, where a discussion of the perceptron learning algorithm and a proof of the perceptron convergence theorem are presented. Finally, <a href="Ch02Perceptrons.html#beyond.linear.separability.sec" class="internal-link">Section 2.3</a> discusses the concept of feature mapping as a technique to handle datasets that are not linearly separable. We illustrate how mapping the input data to a higher-dimensional feature space can render it linearly separable, thereby enabling the construction of a perceptron in that feature space. 
+<h2 id="perceptrons.sec">2.1 Neuron Model</h2>
+Historically, the simplest artificial neuron is the one with the activation function as the Heaviside function or the step function given by
+</p><div class="math numbered-math" id="heaviside.function.eq">\begin{eqnarray}
+\mathscr{H}(x) = \left\{\begin{array}{lc}
+		0,&\text{if}~x<0\\
+		1,&\text{if}~x\ge 0
+	\end{array}\right.
+\end{eqnarray}<span class="eq-number">(2.1)</span></div><p>
+Such an artificial neuron is called a <b>perceptron</b>, which we already introduced in <a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs" class="internal-link">Subsection 1.3.1</a>. Perceptrons are oversimplified models that resemble biological neurons, where if the weighted input exceeds a threshold or bias <span class="math">\(b\)</span>, then the neuron gets activated. 
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+One can also use the bipolar step function <a href="Ch01FeedForwardArchitecture.html#bipolar.function.activation.eq">(1.4)</a> as the activation function, given by
+</p><div class="math numbered-math" id="bipolar.function.eq">\begin{eqnarray}
+\mathscr{B}(x) = \left\{\begin{array}{rc}
+		-1,&\text{if}~x<0\\
+		1,&\text{if}~x\ge 0
+	\end{array}\right.
+\end{eqnarray}<span class="eq-number">(2.2)</span></div><p>
+Note that the perceptron theory we discuss here holds for both types of activation functions with some obvious modifications.
+
+</div>
+<div class="remark" id="existence.perceptron.rem">
+<div class="heading-container"><b class="heading">Remark 2.1 (Existence of a perceptron):</b></div><p>
+We say that a perceptron exists for a given dataset 
+<div class="math">\[
+\mathcal{D} = \{(\boldsymbol{x}_k, y_k)~|~k=1,2,\ldots, N\} \subset \mathbb{R}^n \times \{0, 1\}
+\]</div> 
+if there exists a <span class="math">\(\overline{\boldsymbol{w}}=(b,\boldsymbol{w}) \in \mathbb{R}\times \mathbb{R}^{n}\)</span>, where <span class="math">\(b\in \mathbb{R}\)</span> is a bias and <span class="math">\(\boldsymbol{w}\in \mathbb{R}^n\)</span> is a weight vector, such that the resulting neuron <span class="math">\((\overline{\boldsymbol{w}}, \mathscr{H})\)</span> exactly models the dataset.  That is, the resulting neuron function <span class="math">\(\text{𝕗}\)</span> satisfies <span class="math">\(\text{𝕗}(\boldsymbol{x}_k) = y_k\)</span> for every <span class="math">\(k=1,2,\ldots, N\)</span>. Sometimes, we also say that a perceptron can be learnt or trained if it exists for a dataset.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+Throughout this chapter, the <b>augmented input vector</b> is defined as
+<div class="math">\[\overline{\boldsymbol{x}} = (-1, x_1, x_2, \ldots, x_n) \in \mathbb{R}^{n+1},\]</div>
+so that the affine function (only in this chapter) is now defined as
+<div class="math">\[\text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}) = \boldsymbol{w} \cdot \boldsymbol{x} - b.\]</div>
+Accordingly, the neuron function <a href="Ch01FeedForwardArchitecture.html#neufun.eq">(1.1)</a> of a perceptron is taken as
+<div class="math">\[\text{𝕗}(\boldsymbol{x};\overline{\boldsymbol{w}}) = \mathscr{H}(\boldsymbol{w} \cdot \boldsymbol{x} - b),\]</div> 
+where the bias <span class="math">\(b\)</span> plays the role of a <b>threshold</b> in the sense that the perceptron activates when the weighted input <span class="math">\(\boldsymbol{w} \cdot \boldsymbol{x}\)</span> meets or exceeds <span class="math">\(b\)</span>. This is the classical perceptron convention following Rosenblatt (1962). 
+</p><p>
+Observe that the above convention differs from the convention adopted in <a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Chapter 1</a>, where the augmented input is <span class="math">\((1, x_1, \ldots, x_n)\)</span> and the pre-activation (affine function) value is <span class="math">\(\boldsymbol{w} \cdot \boldsymbol{x} + b\)</span>.  The <span class="math">\(+b\)</span> convention in the previous chapter is chosen to align with modern deep learning practice. This convention is widely used in Python libraries such as PyTorch and TensorFlow and is standard throughout the deep learning literature.
+
+</div>
+<h3 id="boolean-functions">2.1.1 Boolean Functions</h3>
+A Boolean function of <span class="math">\(n\)</span> variables is a function that takes an <span class="math">\(n\)</span>-dimensional input vector <span class="math">\(\boldsymbol{x}\in \{0,1\}^n\)</span> and produces a binary output digit <span class="math">\(y\in \{0,1\}\)</span>. 
+</p><p>
+Logical functions are examples of Boolean functions. Perceptrons can be used to represent some logical functions as illustrated below:
+<div class="example" id="ANDPerceptron.ex">
+<div class="heading-container"><b class="heading">Example 2.1:</b></div>
+
+Consider the 2-dimensional dataset for logical <code>AND</code> function given in the following truth table:<br>
+</p><table><tr><td><span class="math">\(x_1\)</span></td><td><span class="math">\(x_2\)</span></td><td><span class="math">\(y=x_1 \land x_2\)</span></td></tr><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>0</td></tr></table><p>
+It is straightforward to model a perceptron <span class="math">\((\overline{\boldsymbol{w}}, \mathscr{H})\)</span> for the logical <code>AND</code> function. In fact, any choice of the weights <span class="math">\(w_1\)</span> and <span class="math">\(w_2\)</span>, and the bias <span class="math">\(w_0=b\)</span> such that
+<div class="math">\[ b \left\{ \begin{array}{ll}\leq x_1w_1 + x_2 w_2 , &\text{if}~x_1=x_2=1\\
+					 >x_1w_1 + x_2 w_2 , &\text{otherwise}.
+		\end{array}\right.
+\]</div>
+will be a perceptron that generates the same output as the <span class="math">\(\land\)</span> operator.  Here the line <span class="math">\(x_1w_1 + x_2 w_2 = b\)</span> is referred to as a <b>decision boundary</b>.
+</p><p>
+For instance, we can choose <span class="math">\(\overline{\boldsymbol{w}}=(1.5,1, 1)\)</span>. <a href="Ch02Perceptrons.html#ANDPerceptron.fig">Figure 2.1</a> depicts the decision boundary <span class="math">\(x_1+x_2 = 1.5\)</span> of the perceptron with the neuron function <span class="math">\(\text{𝕗}(x_1,x_2) = \mathscr{H}(x_1+x_2-1.5).\)</span>
+
+</div>
+<div class="latex-figure" id="ANDPerceptron.fig">
+<img src="Figures/Ch02ANDFig.png" alt="">
+<div class="figure-caption"><p>Figure 2.1: Input vectors and decision boundary (blue) of a perceptron for the <span class="math">\(\land\)</span> operator.</p></div>
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 2.1:</b></div>
+
+Give the truth table for the <code>OR</code> gate function <span class="math">\(\lor: \{0,1\}^2\rightarrow \{0,1\}\)</span>. Considering the truth table as the dataset, provide the general form of a perceptron that models the <code>OR</code> function and give the corresponding neuron function. Choose a particular perceptron and draw the diagram in the <span class="math">\((x_1,x_2)\)</span>-plane indicating the input data points, the decision boundary, and the regions corresponding to output values 0 and 1,  for the chosen perceptron. 
+
+</div><p>
+For <span class="math">\(n=2\)</span>, there are <span class="math">\( 2^4 = 16 \)</span> possible Boolean functions.
+Each Boolean function <span class="math">\( f: \{0,1\}^2 \to \{0,1\} \)</span> maps every pair <span class="math">\( (x_1, x_2) \)</span> to either 0 or 1. The list of all Boolean functions is given in the following table.
+</p><p>
+<img src="Figures/Ch02BooleanTable.png" class="standalone-figure" alt="">
+</p><p>
+Each column <span class="math">\( f_i \)</span> corresponds to a Boolean function identified by the binary pattern in that column, interpreted as the output for inputs <span class="math">\((0,0), (0,1), (1,0), (1,1)\)</span>.
+</p><p>
+A few named Boolean functions are as follows:
+<ul><li><span class="math">\( f_0(x_1, x_2) = 0 \)</span> (False)
+  </li><li><span class="math">\( f_1(x_1, x_2) = x_1 \land x_2 \)</span> (<code>AND</code>)
+  </li><li><span class="math">\( f_6(x_1, x_2) = x_1 \oplus x_2 \)</span> (<code>XOR</code> <span class="math">\(\rightarrow\)</span> exclusive OR)
+  </li><li><span class="math">\( f_7(x_1, x_2) = x_1 \lor x_2 \)</span> (<code>OR</code>)
+  </li><li><span class="math">\( f_8(x_1, x_2) = \neg (x_1 \lor x_2) \)</span> (<code>NOR</code>)
+  </li><li><span class="math">\( f_9(x_1, x_2) = \neg (x_1 \oplus x_2) \)</span> (<code>XNOR</code>)
+  </li><li><span class="math">\( f_{14}(x_1, x_2) = \neg (x_1 \land x_2) \)</span> (<code>NAND</code>)
+  </li><li><span class="math">\( f_{15}(x_1, x_2) = 1 \)</span> (True)
+</li></ul>
+The following problem shows that not all Boolean functions can be represented by a perceptron.
+<div class="problem" id="XORPerceptron.prob">
+<div class="heading-container"><b class="heading">Problem 2.2:</b></div>
+
+The <code>XOR</code> function (denoted by <span class="math">\(f_6\)</span> in the above table) outputs <span class="math">\(0\)</span> at <span class="math">\((0,0)\)</span> and <span class="math">\((1,1)\)</span>, and outputs <span class="math">\(1\)</span> at <span class="math">\((0,1)\)</span> and <span class="math">\((1,0)\)</span>.  Show that there does not exist a perceptron for the <code>XOR</code> function by showing that the two classes
+<div class="math">\[\mathcal{C}^- = \{(0,0),(1,1)\} \quad \text{and} \quad \mathcal{C}^+ = \{(0,1),(1,0)\}\]</div>
+cannot be separated by any straight line in the <span class="math">\((x_1,x_2)\)</span>-plane.
+
+</div>
+In a two-dimensional dataset (<i>i.e.,</i> the input vectors are in <span class="math">\(\mathbb{R}^2\)</span>), the decision boundary of a perceptron is a straight line. Similarly, the decision boundary of a perceptron for a three-dimensional dataset is a plane, and so on. For two- or three-dimensional datasets, this geometric interpretation allows us to visually inspect whether a perceptron exists for a given dataset.
+<h3 id="illustrative.datasets.subs">2.1.2 Illustrative Datasets</h3>
+In the previous subsection, we considered two-dimensional Boolean functions where the dataset consists of only four input points with domain in <span class="math">\(\{0,1\}\times \{0,1\}\)</span>. In such a case, it was feasible to construct a perceptron or establish its non-existence by direct inspection.  In practice, however, datasets are far larger, and such explicit construction becomes impossible. In fact, it is harder to even see whether a perceptron exists for a given data set or not.  However, the existence of a perceptron can be examined by a visual observation for two- or three-dimensional datasets.  In this subsection, we present two larger two-dimensional datasets, where the perceptron exists for one dataset whereas it does not exist for the other. In order to keep our examples more intuitive, we construct them from a practical view point.
+</p><p>
+We begin with a practical scenario where the data are separated by a linear decision boundary.
+<div class="example" id="placement.training.dataset.ex">
+<div class="heading-container"><b class="heading">Example 2.2 (Placement Prediction System: Synthetic Dataset Generation):</b></div>
+
+The placement office in an educational institute has a dataset of students who appeared for the placement for the past five years. Let us hypothetically assume that a student's success in getting a job depends only on the following two factors:
+<ol class="latex-enumerate"><li>the CPI, denoted by <span class="math">\(x_1\)</span>; and
+</li><li>the marks scored in the screening test, denoted by <span class="math">\(x_2\)</span>.
+</li></ol>
+The success in getting a job is denoted by <span class="math">\(y=1\)</span> and the failure is taken as <span class="math">\(y=0\)</span>.  The aim is to train a perceptron model to predict whether a student will get a job or not based on the values of <span class="math">\((x_1, x_2)\)</span> of that student.
+</p><p>
+Recall that a perceptron is represented by the tuple <span class="math">\((\overline{\boldsymbol{w}}, \mathscr{H})\)</span>, where <span class="math">\(\overline{\boldsymbol{w}}=(b,w_1,w_2)\)</span> is a weight vector to be obtained. Finding a weight vector <span class="math">\(\overline{\boldsymbol{w}}\)</span> is referred to as learning (or training) a model (see <a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs" class="internal-link">Subsection 1.4.2</a>). As per the learning algorithm, we first have to get a dataset <span class="math">\(\mathcal{D}_\text{train}\)</span>, called a <b>training set</b>, to train the model.
+</p><p>
+Assume that the placement office provided us with their dataset <span class="math">\(\mathcal{D}\)</span>, which is shown in <a href="Ch02Perceptrons.html#placement.training.dataset.fig">Figure 2.2</a>(a) and a training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span> is depicted in <a href="Ch02Perceptrons.html#placement.training.dataset.fig">Figure 2.2</a>(b).  The decision boundary is shown as the black dashed line. Since the decision boundary is a straight line, we can learn a perceptron that exactly represent this dataset.  However, unlike the Boolean function examples above, the dataset is too large to determine the weights by hand; a systematic learning algorithm is therefore essential.
+
+</div>
+<div class="latex-figure" id="placement.training.dataset.fig">
+<img src="Figures/Ch02PlacementProblem.png" alt="">
+<div class="figure-caption"><p>Figure 2.2: (a) The full dataset <span class="math">\(\mathcal{D}\)</span>; (b) the training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span> for <a href="Ch02Perceptrons.html#placement.training.dataset.ex">Example 2.2</a>. Green dots indicate students who were successfully placed, while red dots represent those who were not placed. There are 250 examples in <span class="math">\(\mathcal{D}\)</span> and 70% of examples are taken randomly into <span class="math">\(\mathcal{D}_\text{train}\)</span>.</p></div>
+</div><div class="code">
+<div class="heading-container"><b class="heading">Code 2.1:</b></div>
+
+Understand the following python code that generates <a href="Ch02Perceptrons.html#placement.training.dataset.fig">Figure 2.2</a>:
+</p><p>
+<a href="https://colab.research.google.com/drive/1LGaOpNz3zF_ccyqFc24tPaWZveJmGO5f?usp=sharing" target="_blank"><code>PlacementPredictorDatasetGenerator</code></a>
+</p><p>
+
+</div>
+We will see in the next section that the dataset illustrated in the above example is a <b>linearly separable dataset</b>.
+</p><p>
+Our next example illustrates a practical scenario where the dataset is not linearly separable.
+<div class="example" id="creditcard.training.dataset.ex">
+<div class="heading-container"><b class="heading">Example 2.3 (Credit Card Approval Decision System: Synthetic Dataset Generation):</b></div>
+
+
+Assume that a bank issues credit cards, where they use various customer-related parameters for approval decisions.  Over the years, the bank has accumulated a large database of credit card approval history, where humans were involved in taking the approval decisions based on certain internal policy rules.  Now, the bank aims to build a model to automate these decisions.
+</p><p>
+For simplicity, let us assume that the approval decision depends only on two parameters, namely,
+<ol class="latex-enumerate"><li>the customer's monthly income, denoted by <span class="math">\(x_1\)</span>; and
+</li><li>the customer's expected monthly expenditure through the credit card, denoted by <span class="math">\(x_2\)</span>.
+</li></ol>
+Let us consider the bank's dataset <span class="math">\(\mathcal{D}\)</span> as depicted in <a href="Ch02Perceptrons.html#bank.training.dataset.fig">Figure 2.3</a>(a). Further, a training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span> chosen randomly from <span class="math">\(\mathcal{D}\)</span> is shown in <a href="Ch02Perceptrons.html#bank.training.dataset.fig">Figure 2.3</a>(b). From <a href="Ch02Perceptrons.html#bank.training.dataset.fig">Figure 2.3</a>(a), we can see that a perceptron does not exist for this dataset, a scenario similar to <code>XOR</code> dataset.
+
+</div>
+<div class="latex-figure" id="bank.training.dataset.fig">
+<img src="Figures/Ch02CreditCardProblem.png" alt="">
+<div class="figure-caption"><p>Figure 2.3: (a) The full dataset <span class="math">\(\mathcal{D}\subset [50, 500] \times [10, 200]\)</span>; (b) the training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span> for <a href="Ch02Perceptrons.html#creditcard.training.dataset.ex">Example 2.3</a>. Green dots represent approved applications and red dots indicate declined applications. There are 500 examples in <span class="math">\(\mathcal{D}\)</span> and 70% of examples are taken randomly into <span class="math">\(\mathcal{D}_\text{train}\)</span>.</p></div>
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+We will revisit the credit card dataset in <a href="Ch02Perceptrons.html#beyond.linear.separability.sec" class="internal-link">Section 2.3</a>, where we discuss how feature mapping can be used to train a perceptron in a transformed feature space. However, we can see that the choice of such a feature map has to be done manually and it is often challenging for higher dimensional datasets.
+
+</div>
+<div class="code" id="credit.card.dataset.generator.cd">
+<div class="heading-container"><b class="heading">Code 2.2:</b></div>
+
+Write a Python code to plot a pair of figures similar to <a href="Ch02Perceptrons.html#bank.training.dataset.fig">Figure 2.3</a> by first generating a synthetic dataset <span class="math">\(\mathcal{D}\)</span> and then randomly selecting 70% of the examples from <span class="math">\(\mathcal{D}\)</span> to form a training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span>.
+</p><p>
+Design your own decision boundary (that roughly resembles the observed boundary in the figure) by interpreting the following approval policy rules:
+<ol class="latex-enumerate"><li>Customers with high income and high credit card utilization are more likely to be approved.
+</li><li>Customers with low income and low credit card utilization are also more likely to be approved.
+</li></ol>
+
+</div>
+<h2 id="separability.algorithm.sec">2.2 Separability and Algorithm</h2>
+In the previous section, we first constructed perceptrons for certain Boolean functions. Since the dataset for such a two-dimensional Boolean function is small (contains only four entries), it was feasible to determine the weights by direct inspection. We then illustrated that in practical situations, the dataset may be so large that an explicit construction of a perceptron (even if it exists) is impossible. Therefore, it is desirable to have an efficient algorithm to compute the weights automatically. This can be achieved by first considering an appropriate cost function and then computing the weights that minimize the cost function, which is referred to as <b>learning a model</b>. We discuss different ways of defining cost functions and some optimization methods in a later chapter. In this section, we introduce a simple learning algorithm to train a perceptron based on incremental updates.
+<h3 id="linear.separability.subs">2.2.1 Linear Separability</h3>
+First, let us define the mathematical notion of a linearly separable dataset.
+<div class="definition" id="linearly.separable.def">
+<div class="heading-container"><b class="heading">Definition 2.1 (Linearly Separable):</b></div>
+
+Two subsets <span class="math">\(\mathcal{C}^-\)</span> and <span class="math">\(\mathcal{C}^+\)</span> of <span class="math">\(\mathbb{R}^{n}\)</span> are said to be <b>linearly separable</b> if there exists a vector <span class="math">\(\overline{\boldsymbol{w}}=(w_0, w_1, \ldots, w_n) \in \mathbb{R}^{n+1}\)</span> such that
+</p><div class="math numbered-math">\begin{eqnarray}
+\begin{array}{l}
+\text{for every } \boldsymbol{x}=(x_1, \ldots, x_n) \in \mathcal{C}^-, \text{ we have }
+\displaystyle{\sum_{k=1}^n} w_k x_k < w_0; {and}\\
+\text{for every } \boldsymbol{x}=(x_1, \ldots, x_n) \in \mathcal{C}^+, \text{ we have }
+\displaystyle{\sum_{k=1}^n} w_k x_k \ge w_0.
+\end{array}
+\end{eqnarray}<span class="eq-number">(2.3)</span></div><p>
+We call such a vector <span class="math">\(\overline{\boldsymbol{w}}\)</span> an <b>augmented weight vector</b>.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 2.2 (Geometric Interpretation):</b></div>
+
+Let us write the augmented weight vector as <span class="math">\(\overline{\boldsymbol{w}} = (w_0, \boldsymbol{w})\in \mathbb{R}\times \mathbb{R}^n\)</span>. If the sets <span class="math">\(\mathcal{C}^-\)</span> and <span class="math">\(\mathcal{C}^+\)</span> are linearly separable, then there exists a hyperplane
+<div class="math">\[L: \boldsymbol{w}\cdot\boldsymbol{x} = w_0,\]</div>
+that separates these two subsets. This hyperplane is the <b>decision boundary</b> of the perceptron. The weight vector <span class="math">\(\boldsymbol{w}\)</span> is normal (perpendicular) to <span class="math">\(L\)</span>.
+
+</div>
+The following lemma provides a necessary and sufficient condition for the existence of a perceptron for a given dataset, which is a direct consequence of <a href="Ch02Perceptrons.html#existence.perceptron.rem">Remark 2.1</a> and <a href="Ch02Perceptrons.html#linearly.separable.def">Definition 2.1</a>.
+<div class="lemma" id="existence.perceptron.lem">
+<div class="heading-container"><b class="heading">Lemma 2.1 (Existence of a Perceptron):</b></div>
+
+
+A perceptron exists for a dataset <span class="math">\(\mathcal{D}\subset \mathbb{R}^{n}\times \{0,1\}\)</span> if and only if there exist two linearly separable sets <span class="math">\( \mathcal{C}^-\subset \mathbb{R}^{n}\)</span> and <span class="math">\(\mathcal{C}^+\subset \mathbb{R}^{n} \)</span> such that
+<div class="math">\[
+\mathcal{D} = \big(\mathcal{C}^- \times \{0\}\big)  \cup  \big(\mathcal{C}^+ \times \{1\} \big).
+\]</div>
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+Assume that a perceptron exists for the dataset <span class="math">\(\mathcal{D}\)</span>.  Then by <a href="Ch02Perceptrons.html#existence.perceptron.rem">Remark 2.1</a>, there exists a vector <span class="math">\((b, \boldsymbol{w})\in \mathbb{R}\times \mathbb{R}^{n}\)</span> such that <span class="math">\(\text{𝕗}(\boldsymbol{x}) = y\)</span>, for all <span class="math">\((\boldsymbol{x},y)\in \mathcal{D}\)</span>.
+</p><p>
+We have to find two linearly separable sets <span class="math">\( \mathcal{C}^-\subset \mathbb{R}^{n}\)</span> and <span class="math">\(\mathcal{C}^+\subset \mathbb{R}^{n} \)</span> such that
+<div class="math">\[
+\mathcal{D} = \big(\mathcal{C}^- \times \{0\}\big)  \cup  \big(\mathcal{C}^+ \times \{1\} \big).
+\]</div>
+Define
+<div class="math">\[
+\mathcal{C}^- = \{\boldsymbol{x} \in \mathbb{R}^n ~|~ (\boldsymbol{x}, 0) \in \mathcal{D} \}, \quad
+\mathcal{C}^+ = \{\boldsymbol{x} \in \mathbb{R}^n ~|~ (\boldsymbol{x}, 1) \in \mathcal{D} \}.
+\]</div>
+Clearly, <span class="math">\(\mathcal{C}^- \cap \mathcal{C}^+ = \emptyset\)</span> and therefore
+<span class="math">\(\big(\mathcal{C}^- \times \{0\}\big) \cap \big(\mathcal{C}^+ \times \{1\}\big) = \emptyset.\)</span>
+</p><p>
+Since the activation function of a perceptron is the Heaviside function, we see that the output <span class="math">\(y\in \{0,1\}\)</span>.  Therefore, we have
+</p><div class="math">\[
+\mathcal{D} = \big(\mathcal{C}^- \times \{0\}\big)  \cup  \big(\mathcal{C}^+ \times \{1\} \big).
+\]</div>
+In other words, <span class="math">\(\Big\{\mathcal{C}^- \times \{0\}, \mathcal{C}^+ \times \{1\}\Big\}\)</span> forms a partition of <span class="math">\(\mathcal{D}\)</span>.
+</p><p>
+We now claim that <span class="math">\(\mathcal{C}^-\)</span> and <span class="math">\(\mathcal{C}^+\)</span> are linearly separable.
+</p><p>
+By the definition of perceptron, we have
+</p><div class="math">\[\text{𝕗}(\boldsymbol{x}) = \mathscr{H}( \boldsymbol{w} \cdot\boldsymbol{x}-b),\]</div>
+where <span class="math">\(\boldsymbol{w} \cdot\boldsymbol{x}-b=0\)</span> defines a hyperplane in <span class="math">\(\mathbb{R}^{n}\)</span> and <span class="math">\(\mathscr{H}\)</span> is the Heaviside function.
+This shows that
+</p><div class="math numbered-math" id="linear.separable.condition.eq">\begin{eqnarray}
+\boldsymbol{x}\in \mathcal{C}^- ~\implies~ \boldsymbol{w} \cdot\boldsymbol{x}<b,\\
+\boldsymbol{x}\in  \mathcal{C}^+  ~\implies~ \boldsymbol{w} \cdot\boldsymbol{x}\ge b.
+\end{eqnarray}<span class="eq-number">(2.4)</span></div><p>
+Thus, by <a href="Ch02Perceptrons.html#linearly.separable.def">Definition 2.1</a> (with <span class="math">\(w_0=b\)</span>), we see that <span class="math">\(\mathcal{C}^-\)</span> and <span class="math">\(\mathcal{C}^+\)</span> are linearly separable.
+</p><p>
+Conversely, assume that there exist two linearly separable subsets <span class="math">\( \mathcal{C}^-\)</span> and <span class="math">\(\mathcal{C}^+ \)</span> of <span class="math">\(\mathbb{R}^n\)</span> such that <span class="math">\(\mathcal{D} = \big(\mathcal{C}^- \times \{0\}\big)  \cup  \big(\mathcal{C}^+ \times \{1\} \big)\)</span>. Then, by <a href="Ch02Perceptrons.html#linearly.separable.def">Definition 2.1</a>, there exists a vector <span class="math">\(\overline{\boldsymbol{w}}=(w_0, w_1, \ldots, w_n) \in \mathbb{R}^{n+1}\)</span> such that the conditions <a href="#linear.separable.condition.eq">(2.4)</a> hold with <span class="math">\(w_0=b\)</span>. This shows that <span class="math">\((\overline{\boldsymbol{w}}, \mathscr{H})\)</span> is a perceptron.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 2.3:</b></div>
+
+Throughout this chapter, we denote a binary classification dataset as <span class="math">\(\mathcal{D}\subset \mathcal{C}\times \{0,1\}\)</span>. Here, <span class="math">\(\mathcal{C}\)</span> denotes the set of input vectors, and <span class="math">\(\{0,1\}\)</span> represents the corresponding outputs (or labels).
+</p><p>
+We call a dataset <b>linearly separable</b> if there exists a partition of the input set <span class="math">\(\mathcal{C}\)</span> consisting of two linearly separable sets.
+</p><p>
+Equivalently, by virtue of <a href="Ch02Perceptrons.html#linearly.separable.def">Definition 2.1</a>, we say that a dataset is linearly separable if there exists an augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}\)</span> that classifies all examples of the dataset correctly.
+
+</div>
+<div class="problem" id="odd.even.perceptron.prob">
+<div class="heading-container"><b class="heading">Problem 2.3:</b></div>
+
+
+Consider the set of integers <span class="math">\(\{0,1,\ldots,15\}\)</span>, each represented by its 4-bit binary representation as a vector <span class="math">\(\boldsymbol{x}=(x_1,x_2,x_3,x_4)\in\{0,1\}^4\)</span>, where <span class="math">\(x_1\)</span> is the most significant bit and <span class="math">\(x_4\)</span> is the least significant bit (any integer <span class="math">\(N\in \{0,1,\ldots,15\}\)</span> can be written as <span class="math">\(N=8x_1 + 4x_2 + 2x_3 + x_4\)</span>).
+</p><p>
+We want a perceptron that takes such a 4-bit binary vector as input and outputs <span class="math">\(1\)</span> if the corresponding integer is <i>odd</i> and <span class="math">\(0\)</span> if it is <i>even</i>.
+</p><p>
+Does there exist a perceptron that can perform this odd/even classification? Justify your answer. If your answer is <i>NO</i>, give a mathematical justification. If your answer is <i>YES</i>, first give a mathematical justification and then construct a perceptron that performs the classification correctly (without running the perceptron algorithm).
+
+</div>
+<h3 id="training.algorithm.subs">2.2.2 Training Algorithm</h3><p>
+Given a linearly separable dataset, our next task is to design an algorithm that learns a perceptron by computing a separating hyperplane. We begin by describing an algorithm for a single <b>epoch</b> in the training process using a given training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span>.
+<div class="algorithm" id="single.epoch.perceptron.alg">
+<div class="heading-container"><b class="heading">Algorithm 2.1 (Perceptron Learning (Single Epoch)):</b></div>
+
+
+<b>Input:</b>
+<ul><li>the training dataset <span class="math">\(\mathcal{D}_\text{train}=\{(\boldsymbol{x}_k,y_k)~|~ k=1,2,\ldots, N_\text{train}\}\)</span>;
+</li><li>the initial augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}_0=(b_0, w_{0,1}, \ldots, w_{0,n})\in \mathbb{R}^{n+1}\)</span>; and
+</li><li>the <b>learning rate</b> <span class="math">\(\eta \in (0,\infty)\)</span>.
+</li></ul>
+<b>Processing:</b>
+Let <span class="math">\(N_\text{train} = \#(\mathcal{D}_\text{train})\)</span> (cardinality of the set <span class="math">\(\mathcal{D}_\text{train}\)</span>) 
+For each <span class="math">\(k=1,2,\ldots, N_\text{train}\)</span>, perform the following <b>perceptron update rule</b>:
+<div class="math">\[
+\overline{\boldsymbol{w}}_k = \overline{\boldsymbol{w}}_{k-1} + \eta \, \Delta_k\, \overline{\boldsymbol{x}}_k,
+\]</div>
+where
+<div class="math">\[\Delta_k := y_k - \mathscr{H}(\overline{\boldsymbol{w}}_{k-1} \cdot \overline{\boldsymbol{x}}_k).\]</div>
+Recall that the augmented input vector is given by <span class="math">\(\overline{\boldsymbol{x}}_k = (-1, \boldsymbol{x}_k)\)</span>.
+</p><p>
+<b>Output:</b> <span class="math">\(\overline{\boldsymbol{w}}^{(1)} := \overline{\boldsymbol{w}}_{N_\text{train}}\)</span>.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 2.4:</b></div>
+
+Observe from the above algorithm that the augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}_{N_\text{train}}\)</span> is obtained by sequentially applying the update rule to all the examples in the training dataset. Such a complete pass through the entire training set is referred to as an <b>epoch</b>.
+
+</div>
+Let us illustrate the computation of a single epoch by considering a small training dataset.
+<div class="example" id="single.epoch.example1.ex">
+<div class="heading-container"><b class="heading">Example 2.4:</b></div>
+
+Consider the following training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span>:
+</p><table><tr><td><span class="math">\(x_1\)</span></td><td><span class="math">\(x_2\)</span></td><td><span class="math">\(y\)</span></td></tr><tr><td>0.9</td><td>0.1</td><td>0</td></tr><tr><td>0.1</td><td>0.9</td><td>1</td></tr><tr><td>0.5</td><td>0.7</td><td>1</td></tr></table><p>
+Let us take <span class="math">\(\overline{\boldsymbol{w}}_0 = (0, 0, 0)\)</span> and <span class="math">\(\eta = 1\)</span>.
+</p><p>
+Since our training dataset contains three examples (<span class="math">\(N_{\text{train}}=3\)</span>), we have to perform three updates to obtain the augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}^{(1)}\)</span> in one epoch.
+</p><p>
+The updates in a single epoch using <a href="Ch02Perceptrons.html#single.epoch.perceptron.alg">Algorithm 2.1</a> are the following:
+</p><p>
+<b>Update 1</b>:  <span class="math">\(\overline{\boldsymbol{w}}_1 = (1,-0.9,-0.1).\)</span>
+</p><p>
+<b>Update 2</b>: <span class="math">\(\overline{\boldsymbol{w}}_2 = (0, -0.8, 0.8).\)</span>
+</p><p>
+<b>Update 3</b>: <span class="math">\(\overline{\boldsymbol{w}}_3 = (0, -0.8, 0.8).\)</span>
+</p><p>
+Therefore, the augmented weight vector after the single epoch is given by
+<div class="math">\[\overline{\boldsymbol{w}}^{(1)} = (0, -0.8, 0.8).\]</div>
+The perceptron learnt from the single epoch <a href="Ch02Perceptrons.html#single.epoch.perceptron.alg">Algorithm 2.1</a> is <span class="math">\((\overline{\boldsymbol{w}}^{(1)},\mathscr{H})\)</span>.
+The decision lines along with the training dataset are depicted in <a href="Ch02Perceptrons.html#single.epach.example1.fig">Figure 2.4</a>.
+
+</div>
+<div class="latex-figure" id="single.epach.example1.fig">
+<img src="Figures/Ch02SingleEpochExample1.png" alt="">
+<div class="figure-caption"><p>Figure 2.4: Decision lines for the updates in <a href="Ch02Perceptrons.html#single.epoch.example1.ex">Example 2.4</a>.</p></div>
+</div><div class="problem" id="one.epoch.prob1">
+<div class="heading-container"><b class="heading">Problem 2.4:</b></div>
+
+Perform one epoch for the following training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span> with <span class="math">\(\overline{\boldsymbol{w}}_0 = (0, 0, 0)\)</span> and <span class="math">\(\eta = 1\)</span> to obtain the augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}^{(1)}\)</span>:
+</p><table><tr><td><span class="math">\(x_1\)</span></td><td><span class="math">\(x_2\)</span></td><td><span class="math">\(y\)</span></td></tr><tr><td>0.9</td><td>0.1</td><td>0</td></tr><tr><td>0.1</td><td>0.9</td><td>1</td></tr><tr><td>0.5</td><td>0.45</td><td>1</td></tr></table><p>
+Test the perceptron model <span class="math">\((\overline{\boldsymbol{w}}^{(1)},\mathscr{H})\)</span> on the training set by directly applying the model to each example of the dataset. Give the conclusion about whether the trained perceptron represents the training dataset exactly or not.
+
+</div><div class="code" id="single.epoch.code">
+<div class="heading-container"><b class="heading">Code 2.3:</b></div>
+
+Understand the following Python code implementing <a href="Ch02Perceptrons.html#single.epoch.perceptron.alg">Algorithm 2.1</a>:
+</p><p>
+<a href="https://colab.research.google.com/drive/1AsheZBIF6Dl9P-ojlpqlQCppaIwMQp-W?usp=sharing" target="_blank"><code>SingleEpochPerceptron</code></a>
+</p><p>
+Modify the above Python code to include a visual representation (graph) of the given dataset along with the graph of the separating lines at each update.
+
+</div>
+<div class="problem" id="pivot.geometry.pr">
+<div class="heading-container"><b class="heading">Problem 2.5:</b></div><p>
+Consider performing <a href="Ch02Perceptrons.html#single.epoch.perceptron.alg">Algorithm 2.1</a> on a two-dimensional dataset
+(that is, <span class="math">\(\boldsymbol{x}\in \mathbb{R}^2\)</span>).  
+Suppose that during the <span class="math">\(k^{\rm th}\)</span> update, <span class="math">\(\Delta_k \ne 0\)</span>, and the decision boundaries at <span class="math">\((k-1)^{\rm st}\)</span> and <span class="math">\(k^{\rm th}\)</span> updates intersect at a unique point. We call this point of intersection as the <b>pivot point</b> of the <span class="math">\(k^{\rm th}\)</span> update and denote it by <span class="math">\(\boldsymbol{x}_{k}^*\)</span> .
+</p><p>
+Show that <span class="math">\(\boldsymbol{x}_{k}^*\)</span> satisfies
+<div class="math">\[
+\boldsymbol{x}_k \cdot \boldsymbol{x}_{k}^* = -1,
+\]</div>
+where <span class="math">\(\boldsymbol{x}_k\)</span> is the <span class="math">\(k^{\rm th}\)</span> input vector in the dataset. 
+
+</div><p>
+Often, a single epoch is not always sufficient to obtain a perceptron that represents the given linearly separable training dataset exactly.
+<div class="problem" id="small.dataset.init.cond.pr">
+<div class="heading-container"><b class="heading">Problem 2.6:</b></div>
+
+Consider the training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span> given in the following table:
+</p><table><tr><td><span class="math">\(x_1\)</span></td><td><span class="math">\(x_2\)</span></td><td><span class="math">\(y\)</span></td></tr><tr><td>8.0</td><td>20</td><td>0</td></tr><tr><td>7.5</td><td>40</td><td>1</td></tr><tr><td>7.0</td><td>29</td><td>0</td></tr><tr><td>9.25</td><td>26</td><td>1</td></tr></table><p>
+With <span class="math">\(\eta=0.9\)</span>, perform one epoch using <a href="Ch02Perceptrons.html#single.epoch.perceptron.alg">Algorithm 2.1</a> for each of the following initial weight vectors, and determine in each case whether the resulting perceptron model <span class="math">\((\overline{\boldsymbol{w}}^{(1)},\mathscr{H})\)</span> correctly represents the training data:
+<ul><li> <span class="math">\(\overline{\boldsymbol{w}}_0 = (59.1,\; 11.2,\; 19)\)</span>.
+</li><li> <span class="math">\(\overline{\boldsymbol{w}}_0 = \tfrac{1}{60}(57,\; 4,\; 1)\)</span>.
+</li></ul>
+
+</div>
+As we can see that the initial condition in <a href="Ch02Perceptrons.html#small.dataset.init.cond.pr">Problem 2.6</a>(ii) does not lead to a perceptron that exactly fits the training dataset. In such cases, it is necessary to perform multiple epochs, by taking the output of one epoch as the initial weight vector for the next epoch, and updating the weights iteratively until a satisfactory perceptron is learned.
+</p><p>
+The following algorithm trains a perceptron using multiple epochs:
+<div class="algorithm" id="multiple.epoch.perceptron.alg">
+<div class="heading-container"><b class="heading">Algorithm 2.2 (Perceptron Learning (Multiple Epoch)):</b></div>
+
+
+<b>Input:</b>
+<ul><li>the training dataset <span class="math">\(\mathcal{D}_\text{train}=\{(\boldsymbol{x}_k,y_k)~|~ k=1,2,\ldots, N_\text{train}\}\)</span>;
+</li><li>the initial augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}_0=(b_0, w_{0,1}, \ldots, w_{0,n})\in \mathbb{R}^{n+1}\)</span>; and
+</li><li>the <b>learning rate</b> <span class="math">\(\eta \in (0,\infty)\)</span>.
+</li></ul>
+<b>Processing:</b>
+Let <span class="math">\(N_\text{train} = \#(\mathcal{D}_\text{train})\)</span> (cardinality of the set <span class="math">\(\mathcal{D}_\text{train}\)</span>)
+<ul><li> Set <span class="math">\(\overline{\boldsymbol{w}}^{(0)} = \overline{\boldsymbol{w}}_0.\)</span>
+</li><li> Define the augmented input vector <span class="math">\(\overline{\boldsymbol{x}}_k = (-1, \boldsymbol{x}_k)\)</span>, for all <span class="math">\(k=1,2,\ldots, N_\text{train}\)</span>.
+</li><li> For each <span class="math">\(j=1,2,\ldots\)</span>, perform the following <b>single epoch</b>:
+</p><ul><li><b>Update:</b> For each <span class="math">\(k=1,2,\ldots, N_\text{train}\)</span>, perform the following update rule:
+<ul><li><b>Step 1:</b> Compute <span class="math">\(\Delta_k = y_k - \mathscr{H}(\overline{\boldsymbol{w}}_{k-1} \cdot \overline{\boldsymbol{x}}_k).\)</span>
+</li><li><b>Step 2:</b> If <span class="math">\(| \Delta_k| < 0.5\)</span>, then take <span class="math">\(\overline{\boldsymbol{w}}_k = \overline{\boldsymbol{w}}_{k-1}.\)</span>
+</li><li><b>Step 3:</b> Otherwise, use the <b>perceptron update rule</b>:
+<div class="math">\[
+\overline{\boldsymbol{w}}_k = \overline{\boldsymbol{w}}_{k-1} + \eta\Delta_k\, \overline{\boldsymbol{x}}_k.
+\]</div>
+</li></ul><p>
+</li><li><b>Assign:</b> Set <span class="math">\(\overline{\boldsymbol{w}}^{(j)} := \overline{\boldsymbol{w}}_{N_\text{train}}\)</span>.
+</p><p>
+</li><li><b>Check:</b> For <span class="math">\(j\ge 1\)</span>, check the following condition:
+	</p><div class="math numbered-math" id="multiple.epoch.convergence.condition.eq">\begin{eqnarray}
+		\|\overline{\boldsymbol{w}}^{(j)} - \overline{\boldsymbol{w}}^{(j-1)}\|_2 = 0.
+	\end{eqnarray}<span class="eq-number">(2.5)</span></div><p>
+	If this condition is not satisfied, then take <span class="math">\(\overline{\boldsymbol{w}}_0 = \overline{\boldsymbol{w}}_{N_\text{train}}\)</span> and go for the next epoch.
+</p><p>
+	Else if this condition is satisfied, then stop the computation.
+</li></ul>
+</li></ul>
+<b>Output:</b> 
+<span class="math">\(\overline{\boldsymbol{w}}^{(n_e)}\)</span> where <span class="math">\(n_e=j-1\)</span>, the number of epochs taken to get a desired weight.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The norm <span class="math">\(\|\cdot\|_2\)</span> used in <a href="#multiple.epoch.convergence.condition.eq">(2.5)</a> is the euclidean norm.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 2.5 (Perceptron Convergence):</b></div>
+
+If the condition <a href="#multiple.epoch.convergence.condition.eq">(2.5)</a> is satisfied for some <span class="math">\(j=1,2,\ldots\)</span>, we say that the <b>perceptron algorithm converged</b> in <span class="math">\(j-1\)</span> epochs.
+</p><p>
+The perceptron trained through the above multi-epoch algorithm is denoted by <span class="math">\((\overline{\boldsymbol{w}}^{(n_e)}, \mathscr{H})\)</span>, where <span class="math">\(n_e\)</span> denotes the number of epochs taken by the algorithm to converge.
+
+</div>
+<div class="code">
+<div class="heading-container"><b class="heading">Code 2.4:</b></div>
+
+Extend the python program given in <a href="Ch02Perceptrons.html#single.epoch.code">Code 2.3</a> to implement the multiple epoch perceptron learning <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a>. Test your code with the following dataset generated in <a href="Ch02Perceptrons.html#placement.training.dataset.ex">Example 2.2</a>.
+</p><p>
+
+Take <span class="math">\(\overline{\boldsymbol{w}}=\boldsymbol{0}\)</span>, the zero vector, and <span class="math">\(\eta=0.9\)</span>. Find the number of epochs needed for the convergence of the weight vector sequence.  Let the weight vector limit be <span class="math">\(\overline{\boldsymbol{w}}^{*}\)</span>. Using the perceptron model <span class="math">\((\overline{\boldsymbol{w}}^{*}, \mathscr{H})\)</span>, compute the mean squared error on the test dataset.
+
+</div>
+<div class="problem" id="algorithm.convergence..pr">
+<div class="heading-container"><b class="heading">Problem 2.7:</b></div>
+
+For a given <span class="math">\(\overline{\boldsymbol{w}}^{(0)}\)</span>, <span class="math">\(\eta>0\)</span> and a training set <span class="math">\(\mathcal{D}_\text{train}\)</span>, let <span class="math">\(\{\overline{\boldsymbol{w}}^{(j)} \mid j = 1, 2, \ldots\}\)</span> be a sequence generated by <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a>.
+</p><p>
+Suppose that there exists an integer <span class="math">\(J\ge 0\)</span> such that the perceptron <span class="math">\((\overline{\boldsymbol{w}}^{(J)}, \mathscr{H})\)</span> correctly classifies all the examples of the training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span>. Then, show that the algorithm converges in <span class="math">\(n_e = J\)</span> epochs.  
+</p><p>
+Show that the converse does not hold by constructing a training dataset <span class="math">\(\mathcal{D}_\text{train}\)</span> and initial conditions <span class="math">\(\overline{\boldsymbol{w}}^{(0)}\)</span>, <span class="math">\(\eta>0\)</span> such that <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> converges but the limiting perceptron does not correctly classify all examples in <span class="math">\(\mathcal{D}_\text{train}\)</span>.
+
+</div><p>
+The above problem raises the challenge of finding sufficient conditions under which the algorithm converges to a correct classifier of the dataset. There are also other important questions to be answered, namely,
+<ol class="latex-enumerate"><li>Will the algorithm terminate in finite epochs?
+</li><li>If so, can we estimate the maximum number of epochs needed to guarantee convergence?
+</li></ol>
+<h3 id="perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</h3>
+The following theorem provides a sufficient condition for the convergence of  <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> in finite epochs.
+<div class="theorem" id="perceptron.convergence.theorem.th">
+<div class="heading-container"><b class="heading">Theorem 2.1 (Perceptron Convergence Theorem):</b></div><p>
+Let the training dataset <span class="math">\(\mathcal{D}_\text{train}=\{(\boldsymbol{x}_k,y_k)~|~ k=1,2,\ldots, N_\text{train}\}\)</span> be linearly separable, and let <span class="math">\(\overline{\boldsymbol{w}}^*\)</span> be an augmented weight vector such that the perceptron <span class="math">\((\overline{\boldsymbol{w}}^*, \mathscr{H})\)</span> classifies all examples of <span class="math">\(\mathcal{D}_\text{train}\)</span> correctly with <span class="math">\(\overline{\boldsymbol{w}}^*\cdot \overline{\boldsymbol{x}}_k \ne 0\)</span>, for all <span class="math">\(k=1,2,\ldots, N_\text{train}\)</span>.  Then, for any initial augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}_0\)</span> and any learning rate <span class="math">\(\eta > 0\)</span>, there exists an integer <span class="math">\(n_e\ge 0\)</span> such that the perceptron <span class="math">\((\overline{\boldsymbol{w}}^{(n_e)}, \mathscr{H})\)</span> classifies all examples in <span class="math">\(\mathcal{D}_\text{train}\)</span> correctly, where <span class="math">\(\overline{\boldsymbol{w}}^{(n_e)}\)</span> is computed using <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a>.
+</p><p>
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+Assume the contrary that the multi-epoch perceptron <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> performs epochs indefinitely.
+</p><p>
+Assume that the multi-epoch perceptron <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> had performed <span class="math">\(n_e>0\)</span> number of epochs and not all examples are correctly classified by the vector <span class="math">\(\overline{\boldsymbol{w}}^{(n_e) }\)</span>. Further, assume that <span class="math">\(\overline{\boldsymbol{w}}^{(n_e) }\)</span> is obtained after <span class="math">\(m-1\)</span> updates.
+</p><p>
+Let <span class="math">\(k_1\in \{1,2,\ldots, N_\text{train}\}\)</span> be the smallest integer such that the example (<span class="math">\(\boldsymbol{x}_{k_1}, y_{k_1}\)</span>) is not classified correctly by <span class="math">\(\overline{\boldsymbol{w}}^{(n_e) }\)</span>. Then, the algorithm performs the <span class="math">\(m^\text{th}\)</span> update and obtains <span class="math">\(\overline{\boldsymbol{w}}_{m}\)</span> which satisfies (how?)
+<div class="math">\[
+\overline{\boldsymbol{w}}^*\cdot \overline{\boldsymbol{w}}_{m} \ge  \overline{\boldsymbol{w}}^*\cdot\overline{\boldsymbol{w}}_0 + m\eta \rho.
+\]</div>
+where
+<div class="math">\[
+\rho
+= \min\Big\{|\overline{\boldsymbol{w}}^*\cdot \overline{\boldsymbol{x}}_k|~|~ k=1,2,\ldots, N_\text{train}\Big\}>0.
+\]</div>
+Using Cauchy-Schwarz inequality, we obtain
+</p><div class="math numbered-math" id="lower.bound.perceptron.update.eq">\begin{eqnarray}
+\|\overline{\boldsymbol{w}}_{m}\|^2 \ge \frac{\big( \overline{\boldsymbol{w}}^*\cdot\overline{\boldsymbol{w}}_0 + m\eta \rho \big)^2}{\|\overline{\boldsymbol{w}}^*\|^2}.
+\end{eqnarray}<span class="eq-number">(2.6)</span></div><p>
+On the other hand, since <span class="math">\(\overline{\boldsymbol{x}}_{k_1}\)</span> is not classified by <span class="math">\(\overline{\boldsymbol{w}}_{m-1}\)</span> correctly, we can show that (how?)
+</p><div class="math numbered-math" id="upper.bound.perceptron.update.eq">\begin{eqnarray}
+\|\overline{\boldsymbol{w}}_{m}\|^2 \le \|\overline{\boldsymbol{w}}_{0}\|^2 + m\eta^2 r^2.
+\end{eqnarray}<span class="eq-number">(2.7)</span></div><p>
+where <span class="math">\(r := \max\{\|\overline{\boldsymbol{x}}_{k}\|~|~k=1,2,\ldots, N_\text{train}\}\)</span>. The inequalities <a href="#lower.bound.perceptron.update.eq">(2.6)</a> and <a href="#upper.bound.perceptron.update.eq">(2.7)</a> lead to a contradiction (how?) to our assumption that the algorithm performs epochs indefinitely. Thus, the algorithm has to terminate in a finite number of epochs.
+</p><p>
+Further, by equating the lower and the upper bounds of <span class="math">\(\|\overline{\boldsymbol{w}}_{m}\|^2 \)</span>, we can obtain the maximum number of updates, denoted by <span class="math">\(m^*>0\)</span> (justify the existence of a positive <span class="math">\(m^*\)</span>). If there is an example <span class="math">\(\overline{\boldsymbol{x}}_k\)</span> that has still not been classified correctly by <span class="math">\(\overline{\boldsymbol{w}}_{m^*}\)</span>, then the algorithm will proceed to the next update <span class="math">\(\overline{\boldsymbol{w}}_{m^*+1}\)</span>, which must satisfy the conditions <a href="#lower.bound.perceptron.update.eq">(2.6)</a> and <a href="#upper.bound.perceptron.update.eq">(2.7)</a>. But, both these conditions do not hold simultaneously for <span class="math">\(m=m^*+1\)</span> (why?).  Therefore, the perceptron <span class="math">\((\overline{\boldsymbol{w}}_{m^*},\mathscr{H})\)</span> has to classify all the examples correctly.
+</p><p>
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+Note the difference between the number of epochs and the number of updates, as is apparent from the above proof.
+
+</div><div class="problem">
+<div class="heading-container"><b class="heading">Problem 2.8:</b></div>
+
+Let the training dataset <span class="math">\(\mathcal{D}_\text{train}=\{(\boldsymbol{x}_k,y_k)~|~ k=1,2,\ldots, N_\text{train}\}\)</span> be linearly separable and <span class="math">\(\overline{\boldsymbol{w}}^*\)</span> be an augmented weight vector such that the perceptron (<span class="math">\(\overline{\boldsymbol{w}}^*, \mathscr{H}\)</span>) classifies all examples of <span class="math">\(\mathcal{D}_\text{train}\)</span> correctly with  <span class="math">\(\overline{\boldsymbol{w}}^* \cdot \overline{\boldsymbol{x}}_k \ne 0\)</span>, for <span class="math">\(k=1,2,\ldots, N_\text{train}\)</span>. 
+</p><p>
+Let <span class="math">\(m^*\)</span> be the maximum number of updates performed by <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> to obtain a perceptron that classifies all the examples of the dataset correctly. If <span class="math">\(\overline{\boldsymbol{w}}_0=\boldsymbol{0}\)</span>, then show that there exist real numbers <span class="math">\(r>0\)</span> and <span class="math">\(\rho>0\)</span> such that
+<div class="math">\[
+m^* \le \frac{ r^2 \|\overline{\boldsymbol{w}}^*\|^2}{\rho^2}
+\]</div>
+
+</div>
+<h2 id="beyond.linear.separability.sec">2.3 Beyond Linear Separability</h2>
+In the previous section, we discussed a simple multi-epoch algorithm to train a perceptron to classify a linearly separable dataset. However, in real-world applications, we often encounter datasets that are not linearly separable.
+</p><p>
+There are two main scenarios where linear separability does not hold in a dataset:
+<ol class="latex-enumerate"><li>When the decision boundary cannot be represented by a hyperplane (for example, circular or any curved decision boundaries). In such  cases, the dataset is said to be <b>nonlinearly separable</b> and the decision boundary is called the <b>nonlinear discriminant</b>. 
+</li><li>When the classification task requires multiple hyperplanes (or curved surfaces) to separate the classes. This occurs in problems with complex class structures (such as the XOR example discussed in <a href="Ch02Perceptrons.html#XORPerceptron.prob">Problem 2.2</a> and the dataset generated in <a href="Ch02Perceptrons.html#creditcard.training.dataset.ex">Example 2.3</a>) or multi-class classification problems.
+</li></ol>
+The perceptron learning algorithm is only guaranteed to converge when the dataset is linearly separable. In general, single-neuron models are insufficient to learn datasets with complex decision boundaries.  There are at least two broad approaches to handle this situation.  One is to combine multiple neurons with nonlinear activation functions to form a deep neural network, which will be the subject of discussion in later chapters.  The other involves an alternative machine learning tool called <b>feature engineering</b>, which we will briefly explore in this section.
+</p><p>
+The underlying idea of feature engineering is to transform the input data into another space, called the <b>feature space</b>, where the dataset becomes linearly separable. In this section, we discuss the feature space transformation with a few illustrations.
+<h3 id="feature.space.mapping.subs">2.3.1 Feature Space Mapping</h3>
+Even if a dataset is not linearly separable in the input space, it may be possible to transform the input vectors <span class="math">\(\boldsymbol{x} \in \mathbb{R}^n\)</span> into new representations <span class="math">\(\boldsymbol{\phi}(\boldsymbol{x}) \in \mathbb{R}^{\hat{n}}\)</span>, such that the equivalent transformed dataset becomes linearly separable.  The perceptron training <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> can then be applied directly in the feature space  to learn a linear classifier for the transformed data (see <a href="Ch02Perceptrons.html#Feature.Space.Schematic.fig">Figure 2.5</a>).
+</p><div class="latex-figure" id="Feature.Space.Schematic.fig">
+<img src="Figures/Ch02FeatureSpaceSchematic.png" alt="">
+<div class="figure-caption"><p>Figure 2.5: Schematic view of mapping input data to a feature space where a linear classifier can be applied.</p></div>
+</div>
+The function <span class="math">\(\boldsymbol{\phi}:\mathbb{R}^n\rightarrow \mathbb{R}^{\hat{n}}\)</span>, with <span class="math">\(\hat{n}\ge n\)</span>, is a nonlinear map called the <b>feature function</b>. It maps the <b>input space</b> <span class="math">\(\mathbb{R}^n\)</span> into a <b>feature space</b> <span class="math">\(\mathbb{R}^{\hat{n}}\)</span>.
+</p><p>
+We write <span class="math">\(\boldsymbol{\phi}(\boldsymbol{x}) = (\phi_1(\boldsymbol{x}), \phi_2(\boldsymbol{x}), \ldots, \phi_{\hat{n}}(\boldsymbol{x}))\)</span>, where each component <span class="math">\(\phi_k:\mathbb{R}^n\rightarrow \mathbb{R}\)</span>, for <span class="math">\(k=1,2,\ldots, \hat{n}\)</span>, is called a <b>basis function</b>.
+</p><p>
+Consider the augmented feature function <span class="math">\(\overline{\boldsymbol{\phi}}(\boldsymbol{x}) = (-1, \phi_1(\boldsymbol{x}), \phi_2(\boldsymbol{x}), \ldots, \phi_{\hat{n}}(\boldsymbol{x}))\)</span> and define the <b>generalized linear discriminant</b> as
+<div class="math">\[
+\text{𝕒}(\overline{\boldsymbol{\phi}}(\boldsymbol{x});\overline{\boldsymbol{w}}) = \sum_{k=0}^{\hat{n}} w_k \phi_k(\boldsymbol{x}) = \sum_{k=1}^{\hat{n}} w_k \phi_k(\boldsymbol{x}) - b,
+\]</div>
+for a given augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}=(w_0,w_1,\ldots, w_{\hat{n}})\)</span> in the feature space <span class="math">\(\mathbb{R}^{\hat{n}}\)</span> with <span class="math">\(w_0=b\in \mathbb{R}\)</span> being the bias.
+</p><p>
+If such a feature map is constructed, then a neuron (such as a perceptron) can be trained on this transformed dataset using a linear classifying algorithm (such as  <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a>).
+</p><p>
+To have a better understanding of the feature space transformation, we illustrate the construction of feature maps for a given dataset provided the discriminant function is known explicitly.
+<div class="example" id="circular.decision.boundary.ex">
+<div class="heading-container"><b class="heading">Example 2.5 (Circular Decision Boundary):</b></div>
+
+
+Consider a two-dimensional input <span class="math">\( \boldsymbol{x} = (x_1, x_2) \)</span>. Let the nonlinear discriminant function in the input space be
+<div class="math">\[
+\text{𝕒}(\boldsymbol{x}) = x_1^2 + x_2^2 - r^2,
+\]</div>
+where <span class="math">\( r > 0 \)</span> is a given real number. The function <span class="math">\(\text{𝕒}\)</span> is nonlinear since it defines a circular decision boundary <span class="math">\(x_1^2 + x_2^2 = r^2\)</span>, where the region inside the circle corresponds to <span class="math">\(\text{𝕒}(\boldsymbol{x}) < 0 \)</span>, and the region outside corresponds to <span class="math">\(\text{𝕒}(\boldsymbol{x}) \ge 0 \)</span>.
+</p><p>
+In particular, consider the training dataset <span class="math">\(\mathcal{D}_{\text{train}} = \{(\boldsymbol{x}_k, y_k)\} \subset \mathbb{R}^2\times \{0,1\}\)</span> depicted in <a href="Ch02Perceptrons.html#Circular.Dataset.fig">Figure 2.6</a>(a). Here, we have taken <span class="math">\(r=1\)</span> and the decision boundary is the unit circle.  Obviously,  <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> cannot be used to train a perceptron that represents this dataset correctly.
+</p><p>
+However, by mapping the training dataset into a suitably chosen feature space, we can train a perceptron.  For instance, choose <span class="math">\(\boldsymbol{\phi}(x_1,x_2) = (x_1^2, x_2^2)\)</span>, where the basis functions are <span class="math">\(\phi_k(x_1,x_2) = x_k^2\)</span>, <span class="math">\(k=1,2\)</span>.  Then, we can see that the generalized linear discriminant is
+<div class="math">\[\text{𝕒} = \overline{\boldsymbol{w}}\cdot \overline{\boldsymbol{\phi}},\]</div>
+where the augmented weight vector is <span class="math">\(\overline{\boldsymbol{w}} = (r^2, 1, 1)\)</span> and the augmented feature function is <span class="math">\(\overline{\boldsymbol{\phi}}=(-1, \phi_1, \phi_2)\)</span>. <a href="Ch02Perceptrons.html#multiple.epoch.perceptron.alg">Algorithm 2.2</a> can then be applied on the dataset in the <span class="math">\((\phi_1, \phi_2)\)</span>-plane, which is the feature space. The training dataset <span class="math">\(\mathcal{D}_{\text{train}} = \{(\boldsymbol{\phi}_k, y_k)\}\)</span> in the feature space is depicted in <a href="Ch02Perceptrons.html#Circular.Dataset.fig">Figure 2.6</a>(b).
+
+</div>
+<div class="latex-figure" id="Circular.Dataset.fig">
+<img src="Figures/Ch02CircularDataset.png" alt="">
+<div class="figure-caption"><p>Figure 2.6: An illustration of a nonlinearly separable dataset mapped to a linearly separable dataset with feature map discussed in <a href="Ch02Perceptrons.html#circular.decision.boundary.ex">Example 2.5</a>. Here, red dots represent labels with value <span class="math">\(0\)</span> and green dots correspond to labels with value +1. Black dashed line represents the decision boundaries in the respective spaces. (a) Dataset in the input space (b) Dataset in the feature space.</p></div>
+</div>
+In the previous example, we illustrated an exact construction of the discriminant function, which is possible because the given function is a polynomial. However, if the discriminant function is non-polynomial, an explicit feature space mapping may not be feasible. In this case, we have to approximate the discriminant function. We illustrate such a situation in the following problem.
+</p><div class="problem">
+<div class="heading-container"><b class="heading">Problem 2.9:</b></div>
+
+Let the training dataset <span class="math">\(\mathcal{D}_\text{train}\in \mathbb{R}^2\times \{0,1\}\)</span> be such that the discriminant function is given by
+<div class="math">\[\text{𝕒}(x_1, x_2)=e^{x_1^2 + x_2^2} - c,\]</div>
+where <span class="math">\(c > 1\)</span> is a given constant. Using the Taylor expansion of <span class="math">\(e^{x_1^2+x_2^2}\)</span> about the origin up to total degree 4, construct a feature mapping function <span class="math">\(\boldsymbol{\phi} : \mathbb{R}^2 \rightarrow \mathbb{R}^{\hat{d}}\)</span> such that the dataset, when mapped into the feature space <span class="math">\(\mathbb{R}^{\hat{d}}\)</span>, can be separated by a linear discriminant function. Also, obtain a suitable augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}\)</span>.
+</p><p>
+<span class="math">\(~\)</span><b>Partial Answer:</b> <span class="math">\(\hat{d} = 5\)</span>
+
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The Taylor approximation above is valid only near the origin and becomes increasingly inaccurate far from it. An exact feature map for <span class="math">\(e^{x_1^2+x_2^2}\)</span> would require retaining the full Taylor series, corresponding to an infinite-dimensional feature space. This observation motivates machine learning methods — most notably <b>Support Vector Machines (SVMs)</b> with the <b>RBF (Gaussian) kernel</b> — that work implicitly in an infinite-dimensional feature space without ever constructing <span class="math">\(\boldsymbol{\phi}\)</span> explicitly. This idea is known as the <b>kernel trick</b>.
+
+</div>
+Recall, in <a href="Ch02Perceptrons.html#XORPerceptron.prob">Problem 2.2</a>, we have seen that it is not possible to train a perceptron for the <code>XOR</code> function in the input space. However, by suitably choosing a feature map, we can train a perceptron for <code>XOR</code> in the feature space.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 2.10:</b></div>
+
+Obtain a suitable feature map <span class="math">\(\boldsymbol{\phi}\)</span> such that the <code>XOR</code> function <span class="math">\( f_6(x_1, x_2) = x_1 \oplus x_2 \)</span> is represented exactly by a perceptron in the feature space.
+
+</div><div class="problem">
+<div class="heading-container"><b class="heading">Problem 2.11:</b></div>
+
+Obtain a suitable feature map <span class="math">\(\boldsymbol{\phi}\)</span> such that the dataset generated by the <code>NXOR</code> function, when mapped to the feature space, is linearly separable.
+
+</div>
+Building a feature map explicitly is seldom feasible, as the discriminant function is typically unknown and implicitly embedded in the dataset. It is therefore desirable to adopt methodologies in which the feature map is learned as part of the training process. This is a core idea in deep learning, where multiple layers of artificial neurons are used to extract increasingly abstract features from data. However, there are also other well-established machine learning models, such as Support Vector Machines (SVMs), that can learn complex decision boundaries directly from data through the use of kernels, without requiring an explicit construction of the feature map.</p>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 12-Aug-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

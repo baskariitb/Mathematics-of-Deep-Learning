@@ -26,7 +26,7 @@
 <div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
 <div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
 <div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
-<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#step-functions">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
 <div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
 <div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
 <div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
@@ -41,6 +41,18 @@
 <div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
 <div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
 <div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
 </div></div>
 </div>
     </div>
@@ -230,7 +242,7 @@ As we mentioned earlier, a fully connected (or densely connected) feedforward ne
 </div><div class="note">
 <div class="heading-container"><b class="heading">Note:</b></div>
 
-In <a href="Ch01FeedForwardArchitecture.html#perceptrons.ch">Chapter &laquo;Click Here&raquo; </a>, we defined a perceptron as a single neuron with the Heaviside (or bipolar) activation function. In contrast, in the context of neural networks, a multilayer perceptron may involve any of the commonly used activation functions in its neuron functions, and is not restricted to the Heaviside (or bipolar) choice.
+In <a href="Ch02Perceptrons.html#perceptrons.ch">Chapter 2</a>, we defined a perceptron as a single neuron with the Heaviside (or bipolar) activation function. In contrast, in the context of neural networks, a multilayer perceptron may involve any of the commonly used activation functions in its neuron functions, and is not restricted to the Heaviside (or bipolar) choice.
 
 </div>
 <div class="problem">
@@ -242,8 +254,8 @@ Find the network dimensions, width, and depth of the MLP shown in <a href="Ch01F
 Training or learning an artificial neural network means obtaining a collection of trainable parameters <span class="math">\(\boldsymbol{\Theta}\)</span> by optimizing a suitable cost function over the given training dataset. We briefly outline the supervised learning process in <a href="Ch01FeedForwardArchitecture.html#learning.network.sec" class="internal-link">Subsection 1.4</a>. Before this, we will introduce some commonly used activations functions.  
 <h2 id="activation.functions.sec">1.3 Activation Functions</h2>
 The learning efficiency and the model performance of an ANN depend crucially on the choice of an activation function.  In this section, we introduce a few commonly used activation functions, along with their derivatives which play a central role in the backpropagation algorithm used for training neural networks (discussed in a later chapter).  For clarity of exposition, we illustrate them using single neurons.
-<h3 id="step-functions">1.3.1 Step Functions</h3>
-Let us start our discussion with a class of activation functions that is historically important and is discussed in detail in <a href="Ch01FeedForwardArchitecture.html#perceptrons.ch">Chapter &laquo;Click Here&raquo; </a>.
+<h3 id="heaviside.activation.subs">1.3.1 Step Functions</h3>
+Let us start our discussion with a class of activation functions that is historically important and is discussed in detail in <a href="Ch02Perceptrons.html#perceptrons.ch">Chapter 2</a>.
 <h4 id="heaviside-function">1.3.1.1 Heaviside function</h4>
 Unit step function, called the <b>Heaviside function</b>, is referred to as the <b>threshold activation function</b> in the context of deep learning, and is given by
 </p><div class="math numbered-math" id="heaviside.function.activation.eq">\begin{eqnarray}
@@ -263,7 +275,7 @@ The bipolar function is called the <b>bipolar activation function</b> and is giv
 \end{eqnarray}<span class="eq-number">(1.4)</span></div><p>
 It is easy to see that <span class="math">\(\mathscr{B}(x) = 2\mathscr{H}(x) - 1\)</span>.  Therefore, the distributional derivative of <span class="math">\(\mathscr{B}\)</span> is given by <span class="math">\(\mathscr{B}' = 2\delta\)</span>.
 </p><p>
-The threshold and bipolar activation functions are used at the output layer of problems involving binary classification, which we studied in the context of perceptrons in <a href="Ch01FeedForwardArchitecture.html#perceptrons.ch">Chapter &laquo;Click Here&raquo; </a>.
+The threshold and bipolar activation functions are used at the output layer of problems involving binary classification, which we study in the context of perceptrons (see  <a href="Ch02Perceptrons.html#perceptrons.ch">Chapter 2</a>).
 <h3 id="sigmoid-functions">1.3.2 Sigmoid Functions</h3>
 A <b>sigmoid function</b> is a continuously differentiable function <span class="math">\(\mathscr{S}:\mathbb{R} \rightarrow (0,1)\)</span>, such that <span class="math">\(\mathscr{S}'>0\)</span> (strictly increasing) and <span class="math">\(\mathscr{S}(s)\rightarrow 0\)</span> as <span class="math">\(s\rightarrow -\infty\)</span> and <span class="math">\(\mathscr{S}(s)\rightarrow 1\)</span> as <span class="math">\(s\rightarrow +\infty\)</span>.
 </p><p>
@@ -492,7 +504,7 @@ Once the optimal parameters are computed by minimizing the cost on the training 
 Regularization generally includes fine tuning some key parameters, referred to as <b>hyperparameters</b>.  The validation set <span class="math">\(\mathcal{D}_\text{val}\)</span> is used to tune hyperparameters.
 </li></ul>
     </div>
-    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 31-Jul-2026</footer>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 12-Aug-2026</footer>
     <script>
     document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
     document.addEventListener("keydown", function(e) {

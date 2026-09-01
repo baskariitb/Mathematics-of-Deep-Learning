@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistic Regression</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter "><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multi-class-classification">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
+</div></div>
+<div class="toc-chapter current"><a href="Ch03LogisticRegression.html" class="chapter-link">CH 3: Logistic Regression</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch03LogisticRegression.html#logistic.regression.ch">Logistic Regression</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#model.derivation.sec">3.1 The Logistic Regression Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#bayes.derivation.susb">3.1.1 Derivation using Bayes' Formula</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#logistic.regression.neuron.sec">3.1.2 Single Neuron Interpretation</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#training.a.model.sec">3.2 Training Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#cross-entropy.loss.function.subs">3.2.1 Cross-Entropy Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs">3.2.2 Gradient Descent Algorithm</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#applications.logistic.regression.sec">3.3 Applications of Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#credit.default.subs">3.3.1 Finance: Credit Default Prediction</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch03LogisticRegression.html#model-and-training">3.3.1.1 Model and training.</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="logistic.regression.ch">Chapter 3: Logistic Regression</h1><p>
+Neurons can be categorized mainly into two types based on their output. If the output belongs to a discrete set, then the neuron is of a classification type. On the other hand, if the output is any real number in an interval, then the neuron is said to be of regression type. There is also a third type of neuron, whose output is a real number in the interval <span class="math">\((0, 1)\)</span>, which is interpreted as a class probability and used for probabilistic classification.
+</p><p>
+The perceptron, studied in the previous chapter, involves a hard classification rule, which is suitable for a linearly separable dataset. However, such a hard decision boundary does not measure confidence in the prediction when the dataset structure is unknown or the data involves random noise. In such cases, it is desirable to have a model that outputs a probability that the input belongs to each class, allowing both a probabilistic interpretation and more flexible decision rules at inference time.
+</p><p>
+In this chapter, we introduce a statistical model, called <b>logistic regression</b>, for probabilistic binary classification.  Assuming that the log-likelihood ratio between two classes is affine in the feature vector, the model obtains the posterior probability of either class in the form of a logistic sigmoid composed with an affine function of the input. Thus, the model has a single neuron structure. 
+</p><p>
+In <a href="Ch03LogisticRegression.html#bayes.derivation.susb" class="internal-link">Subsection 3.1.1</a>, we derive logistic regression from first principles using Bayes' theorem. 
+In <a href="Ch03LogisticRegression.html#logistic.regression.neuron.sec" class="internal-link">Subsection 3.1.2</a>, we observe that logistic regression is precisely a single artificial neuron with the sigmoid activation. The natural cost function for training a logistic regression model, derived from maximum likelihood estimation, is the <b>cross-entropy</b> cost function, discussed in <a href="Ch03LogisticRegression.html#cross-entropy.loss.function.subs" class="internal-link">Subsection 3.2.1</a>. We also present a training algorithm based on the gradient descent method in <a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs" class="internal-link">Subsection 3.2.2</a> and end the chapter with a few real-world applications discussed in <a href="Ch03LogisticRegression.html#applications.logistic.regression.sec" class="internal-link">Section 3.3</a>.
+<h2 id="model.derivation.sec">3.1 The Logistic Regression Model</h2>
+Consider a dataset
+<div class="math">\[
+\mathcal{D} = \big(\mathcal{C}^-\times \{0\}\big) \cup \big(\mathcal{C}^+\times \{1\}\big).\]</div><p>
+If <span class="math">\(\mathcal{D}\)</span> is linearly separable, then a perceptron can learn a separating hyperplane with weight <span class="math">\(\boldsymbol{w}\)</span> and bias <span class="math">\(b\)</span>, and classify inputs by the rule
+<div class="math">\[
+\hat{y} = \begin{cases}
+1, & \langle \boldsymbol{w}, \boldsymbol{x}\rangle + b > 0, \\
+0, & \text{otherwise}.
+\end{cases}
+\]</div>
+This is a <b>hard classification rule</b> that works only when the dataset is linearly separable.
+However, there are many instances where the data is noisy and consequently, the dataset is not linearly separable. In such cases, instead of making a hard decision, we may ask the following question:
+</p><p>
+<i>What is the probability that an input  <span class="math">\(\boldsymbol{x}\)</span> belongs to <span class="math">\(\mathcal{C}^+\)</span>? </i>
+</p><p>
+This leads to a probabilistic model, which is preferable to a hard classification rule. We begin with a motivating example.
+<div class="example" id="hours.studied.example">
+<div class="heading-container"><b class="heading">Example 3.1 (Hours studied versus exam outcome):</b></div>
+
+
+A class of <span class="math">\(N_\text{train} = 100\)</span> students each study for a certain number of hours and subsequently sit an exam. The input is <span class="math">\(x_i \in [0, 10]\)</span>, the number of hours studied by student <span class="math">\(i\)</span>, and the label is <span class="math">\(y_i \in \{0,1\}\)</span>, where <span class="math">\(y_i = 1\)</span> denotes a pass and <span class="math">\(y_i = 0\)</span> a fail. The dataset <span class="math">\(\mathcal{D}\)</span> is shown in <a href="Ch03LogisticRegression.html#hours.studied.fig">Figure 3.1</a>.
+</p><p>
+Since the data is one-dimensional, the separating hyperplane is just a point in this case. From the illustrating figure, we can see that the point cannot be placed anywhere in the interval <span class="math">\([0,10]\)</span> so that the failed students are separated from the students who passed the exam. Therefore, a perceptron classification will induce a misclassification in this problem.  An alternative is to seek a probabilistic approach, where the probability of passing as a function of hours studied is illustrated as a solid curve in <a href="Ch03LogisticRegression.html#hours.studied.fig">Figure 3.1</a>.
+
+</div>
+<div class="latex-figure" id="hours.studied.fig">
+<img src="Figures/HoursVSPass.png" alt="">
+<div class="figure-caption"><p>Figure 3.1: The hours-studied dataset of <a href="Ch03LogisticRegression.html#hours.studied.example">Example 3.1</a> is visually shown where plus (<span class="math">\(+\)</span>) denote failures (<span class="math">\(y_i=0\)</span>) and filled circles denote passes (<span class="math">\(y_i=1\)</span>).
+The probability of passing as a function of hours studied, <span class="math">\(\hat{p}(x)\)</span>, is shown as a solid black curve.</p></div>
+</div>
+<h3 id="bayes.derivation.susb">3.1.1 Derivation using Bayes' Formula</h3>
+In this subsection, we derive a probabilistic model, called the <b>logistic regression</b> model systematically using Bayes' theorem.
+</p><p>
+Using Bayes' theorem, the posterior probability for the class <span class="math">\(\mathcal{C}^+\)</span> can be written as
+<div class="math">\[
+\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}) =
+\frac{p(\boldsymbol{x} \mid \mathcal{C}^+) \mathbb{P}(\mathcal{C}^+)}
+{p(\boldsymbol{x} \mid \mathcal{C}^+) \mathbb{P}(\mathcal{C}^+) + p(\boldsymbol{x} \mid \mathcal{C}^-) \mathbb{P}(\mathcal{C}^-)},
+\]</div>
+where <span class="math">\(\mathbb{P}\)</span> denotes a probability measure, and <span class="math">\(p\)</span> is the probability density (or mass) function associated with <span class="math">\(\mathbb{P}\)</span>.
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The notation <span class="math">\(\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})\)</span> should be read as follows:
+</p><p>
+"Given that we have observed the input vector <span class="math">\(\boldsymbol{x}\)</span>, the probability that it belongs to the class <span class="math">\(\mathcal{C}^+\)</span>''
+</p><p>
+This notation is standard in machine learning literature and is a shorthand notation for the conditional probability <span class="math">\(\mathbb{P}(Y = 1 \mid \boldsymbol{X} = \boldsymbol{x})\)</span>, where <span class="math">\(Y \in \{0,1\}\)</span> is the class-label random variable and <span class="math">\(\boldsymbol{X}\)</span> is the input random vector. 
+
+</div>
+Taking the ratio of posteriors, we get
+<div class="math">\[
+\frac{\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})}{\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x})}
+= \frac{p(\boldsymbol{x} \mid \mathcal{C}^+) \mathbb{P}(\mathcal{C}^+)}{p(\boldsymbol{x} \mid \mathcal{C}^-) \mathbb{P}(\mathcal{C}^-)},
+\]</div>
+which is referred to as the <b>odds</b>.  The logarithm of the odds is called the <b>logit</b> or <b>log-odds</b>, and from the above expression, we see that the log-odds can be written as
+<div class="math">\[
+\log \frac{\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})}{\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x})}
+= \log \Lambda(\boldsymbol{x}) + \log\left( \frac{\mathbb{P}(\mathcal{C}^+)}{\mathbb{P}(\mathcal{C}^-)}\right),
+\]</div>
+where
+<div class="math">\[
+\Lambda(\boldsymbol{x}) = \frac{p(\boldsymbol{x} \mid \mathcal{C}^+)}{p(\boldsymbol{x} \mid \mathcal{C}^-)}
+\]</div>
+is the <b>likelihood ratio</b>.
+</p><p>
+Assume that the log-likelihood ratio is linear in <span class="math">\(\boldsymbol{x}\)</span>, that is, there is an augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}\)</span> such that
+</p><div class="math numbered-math" id="log-likelihood.ratio.linearity.eq">\begin{eqnarray}
+\log \Lambda(\boldsymbol{x}) = \langle \overline{\boldsymbol{w}}, \overline{\boldsymbol{x}} \rangle,
+\end{eqnarray}<span class="eq-number">(3.1)</span></div><p>
+for all input vectors <span class="math">\(\boldsymbol{x}\)</span>. Then the log-odds can be written as
+<div class="math">\[
+\log \frac{\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})}{\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x})}
+= \langle \boldsymbol{w}, \boldsymbol{x} \rangle + b,
+\]</div>
+where <span class="math">\(b = w_0 + \log\left( \tfrac{\mathbb{P}(\mathcal{C}^+)}{\mathbb{P}(\mathcal{C}^-)}\right)\)</span> is treated as the bias.
+</p><p>
+Noting that <span class="math">\(\mathbb{P}(\mathcal{C}^- \mid \boldsymbol{x}) = 1 - \mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})\)</span> and solving the above equation for <span class="math">\(\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})\)</span>, we obtain
+</p><div class="math numbered-math" id="logistic-regression.eq">\begin{eqnarray}
+\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x})
+= \mathscr{S}_1\big(\langle \boldsymbol{w}, \boldsymbol{x} \rangle 
++ b\big),
+\end{eqnarray}<span class="eq-number">(3.2)</span></div><p>
+where <span class="math">\(\mathscr{S}_1\)</span> is the logistic function defined in <a href="Ch01FeedForwardArchitecture.html#sigmoid.function.activation.eq">(1.5)</a>.
+</p><p>
+From the above expression, we see that estimating a weight vector <span class="math">\(\boldsymbol{w}\)</span> and a bias <span class="math">\(b\)</span> allows us to assign probabilities for each of the two classes  <span class="math">\(\mathcal{C}^+\)</span> and <span class="math">\(\mathcal{C}^-\)</span>.  At the inference stage, by applying a suitable decision rule (for instance, thresholding at <span class="math">\(0.5\)</span>),  we obtain a binary (hard) classification.  In the context of statistical learning, such a probabilistic classification model is called <b>logistic regression</b>.
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 3.1:</b></div>
+
+The name <i>logistic regression</i> is explained as follows:
+<ul><li>The word <i>logistic</i> refers to the logistic activation function used to model the posterior probability.
+</li><li>The word <i>regression</i> reflects the assumption that the log-likelihood ratio is affine in <span class="math">\(\boldsymbol{x}\)</span>.  This terminology is in contrast with the statistical convention in which "regression'' refers to function approximation, however, here the model is used for classification.
+</li></ul>
+
+</div><p>
+The following problem establishes that the inverse of the logistic function is precisely the logit function, which confirms the consistency of the terminology.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 3.1:</b></div>
+
+Show that <span class="math">\(\mathscr{S}_1^{-1}\)</span> is the logit or log-odds function.
+
+</div><p>
+Logistic regression assumes that the log-likelihood ratio between the two classes is an affine function of the input as given in <a href="#log-likelihood.ratio.linearity.eq">(3.1)</a>. This assumption holds exactly for certain class-conditional distributions. One such distribution is given in the following problem.
+<div class="problem" id="gaussian.justifies.linearity.prob">
+<div class="heading-container"><b class="heading">Problem 3.2 (Gaussian Class-Conditionals Justify Linearity):</b></div><p>
+Consider a binary classification problem with classes <span class="math">\(\mathcal{C}^+\)</span> and <span class="math">\(\mathcal{C}^-\)</span>. 
+Let <span class="math">\(\boldsymbol{X} \in \mathbb{R}^{n_0}\)</span> be a feature vector whose class-conditional distributions are multivariate Gaussian with class means <span class="math">\(\boldsymbol{\mu}^+, \boldsymbol{\mu}^- \in \mathbb{R}^{n_0}\)</span> and a common positive-definite covariance matrix <span class="math">\(\Sigma \in \mathbb{R}^{n_0 \times n_0}\)</span>, that is,
+<div class="math">\[
+\boldsymbol{X} \mid \mathcal{C}^+ \sim \mathcal{N}(\boldsymbol{\mu}^+,\,\Sigma),\qquad
+\boldsymbol{X} \mid \mathcal{C}^- \sim \mathcal{N}(\boldsymbol{\mu}^-,\,\Sigma).
+\]</div>
+Find the augmented weight vector <span class="math">\(\overline{\boldsymbol{w}}\in \mathbb{R}\times \mathbb{R}^{n_0}\)</span> in terms of <span class="math">\(\boldsymbol{\mu}^+\)</span>, <span class="math">\(\boldsymbol{\mu}^-\)</span>, and <span class="math">\(\Sigma\)</span> such that the log-likelihood ratio is given by <a href="#log-likelihood.ratio.linearity.eq">(3.1)</a>,
+<div class="math">\[
+\log\Lambda(\boldsymbol{x}) \;=\; \langle\boldsymbol{w},\boldsymbol{x}\rangle + w_0.
+\]</div>
+Explain what happens when the two Gaussian class-conditional distributions have different covariance matrices.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 3.2:</b></div>
+
+From the above problem, we see that, in the Gaussian equal-covariance setting, logistic regression is exact (not an approximation), and its weight vector <span class="math">\(\boldsymbol{w} = \Sigma^{-1}(\boldsymbol{\mu}^+-\boldsymbol{\mu}^-)\)</span> is the same direction used in Fisher's Linear Discriminant Analysis.
+
+</div><h3 id="logistic.regression.neuron.sec">3.1.2 Single Neuron Interpretation</h3>
+The logistic regression model derived in the previous subsection has a natural interpretation in the language of artificial neurons with the neuron function
+<div class="math">\[
+\text{𝕗}^{(1)}(\boldsymbol{x};\overline{\boldsymbol{w}}^{(1)}) = \mathscr{S}_1 \big( \text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}^{(1)}) \big),
+\]</div>
+for any given input vector <span class="math">\(\boldsymbol{x}\in \mathbb{R}^{n_0}\)</span>, where 
+<div class="math">\[\text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}}^{(1)}) = \langle \boldsymbol{w}, \boldsymbol{x}\rangle + b\]</div> 
+is the affine pre-activation. Thus, logistic regression can be trained as an artificial neuron to approximate the posterior probability of the positive class of a given dataset, so that the output is
+<div class="math">\[
+\hat{p} = \mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}).
+\]</div>
+Hard classification is then obtained during inference by applying a decision rule
+<div class="math">\[
+\hat{y} = \begin{cases}
+1, & \text{if} ~ \hat{p} \ge \hat{p}^*, \\
+0, & \text{otherwise},
+\end{cases}
+\]</div>
+where <span class="math">\(\hat{p}^*\in (0,1)\)</span> is chosen based on the application. For instance, <span class="math">\(\hat{p}^*=0.5\)</span> is a default choice.
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+Logistic regression finds the best linear boundary in a probabilistic sense that provides a measure of confidence. Hard classification is obtained only at the inference stage by applying a decision rule (e.g., thresholding).  Because of this probabilistic formulation, logistic regression can also be applied to datasets that are not linearly separable.
+
+</div><h2 id="training.a.model.sec">3.2 Training Logistic Regression</h2>
+Recall from <a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs" class="internal-link">Subsection 1.4.2</a> that to learn parameters <span class="math">\((b, \boldsymbol{w})\)</span> of a model, we have to choose a suitable cost function.  There is a natural choice of the cost function to train logistic regression, which we discuss in the following subsection.
+<h3 id="cross-entropy.loss.function.subs">3.2.1 Cross-Entropy Cost Function</h3>
+The natural training principle for logistic regression is <b>maximum likelihood estimation</b> (MLE), where the parameters <span class="math">\((b,\boldsymbol{w})\)</span> are chosen to maximize the likelihood of the observed labels given the inputs.
+</p><p>
+For a single training example <span class="math">\((\boldsymbol{x}_i,y_i)\)</span>, the model predicts a probability <span class="math">\(\hat{p}_i = \mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}_i)\)</span>.
+The likelihood of observing the true label <span class="math">\(y_i \in \{0,1\}\)</span> under this prediction is
+<div class="math">\[
+L_i = \hat{p}_i^{\,y_i}\,(1-\hat{p}_i)^{\,1-y_i}.
+\]</div>
+For an entire training dataset <span class="math">\(\mathcal{D}_\text{train} = \big\{(\boldsymbol{x}_i,y_i) \mid i=1,2,\ldots, N_\text{train}\big\}\)</span> having independent samples (examples) from the underlying joint distribution, the joint likelihood is the product
+<div class="math">\[
+L(b, \boldsymbol{w}) = \prod_{i=1}^{N_\text{train}} \hat{p}_i^{y_i} (1 - \hat{p}_i)^{1-y_i}.
+\]</div>
+Rather than maximizing this product directly, it is more convenient to work with the
+<b>log-likelihood</b>
+<div class="math">\[
+\log L(b, \boldsymbol{w})
+= \sum_{i=1}^{N_\text{train}} \Big[ y_i \log \hat{p}_i + (1-y_i)\log(1-\hat{p}_i) \Big].
+\]</div>
+Thus, the MLE for logistic regression is to obtain the parameters <span class="math">\((b,\boldsymbol{w})\)</span> that maximise the log-likelihood. This is equivalent to minimizing the negative log-likelihood, normalised by <span class="math">\(N_\text{train}\)</span>,  given by
+</p><div class="math numbered-math" id="cross.entropy.eq">\begin{eqnarray}
+\mathcal{L}(b, \boldsymbol{w}) = - \frac{1}{N_\text{train}}\sum_{i=1}^{N_\text{train}} \Big[ y_i \log \hat{p}_i + (1-y_i)\log(1-\hat{p}_i) \Big].
+\end{eqnarray}<span class="eq-number">(3.3)</span></div><p>
+The above expression is the <b>cross-entropy cost function</b> for binary labels <span class="math">\(y_i\in\{0,1\}\)</span> under the Bernoulli model. The following definition generalizes this concept to arbitrary probability distributions.
+<div class="definition" id="cross.entropy.entropy.def">
+<div class="heading-container"><b class="heading">Definition 3.1 (Cross-Entropy and Entropy):</b></div>
+
+
+Let <span class="math">\(p\)</span> and <span class="math">\(q\)</span> be two densities (or mass functions) on the same space <span class="math">\(\mathcal{X}\)</span> and let <span class="math">\(\mathbb{E}_p\)</span> be the expectation with respect to <span class="math">\(p\)</span>.  The <b>cross-entropy</b> of <span class="math">\(p\)</span> with respect to <span class="math">\(q\)</span> is denoted by <span class="math">\(\mathfrak{C}(p,q)\)</span> and is defined as
+<div class="math">\[
+\mathfrak{C}(p,q) = \mathbb{E}_p(-\log q).
+\]</div>
+In particular, if <span class="math">\(p=q\)</span>, we call <span class="math">\(\mathfrak{C}(p,p) =: \mathfrak{S}(p)\)</span>, the <b>entropy</b> of <span class="math">\(p\)</span>.
+
+</div><p>
+Entropy is a concept in information theory which measures the uncertainty of a random variable <span class="math">\(X\)</span>.  It quantifies the average amount of information we gain while observing the outcome of <span class="math">\(X\)</span>.  When <span class="math">\(X\)</span> is more predictable, the entropy is low and it takes the value zero if <span class="math">\(X\)</span> is deterministic.  On the other hand, if <span class="math">\(X\)</span> is uniformly distributed over many possible outcomes, then entropy is high.
+<div class="example" id="bernoulli.entropy.example">
+<div class="heading-container"><b class="heading">Example 3.2 (Entropy of the Bernoulli distribution):</b></div>
+
+
+Let <span class="math">\(Y \sim \mathrm{Bernoulli}(r)\)</span>, <span class="math">\(r \in (0,1)\)</span>, so that <span class="math">\(\mathbb{P}(Y=1)=r\)</span> and <span class="math">\(\mathbb{P}(Y=0)=1-r\)</span>.  Applying the discrete case of <a href="Ch03LogisticRegression.html#cross.entropy.entropy.def">Definition 3.1</a> with <span class="math">\(\mathcal{X}=\{0,1\}\)</span> and <span class="math">\(p=q\)</span>,
+<div class="math">\[
+\mathfrak{S}(r) = -r\log r - (1-r)\log(1-r).
+\]</div>
+Three values are instructive:
+<ul><li><span class="math">\(r=0\)</span> or <span class="math">\(r=1\)</span>: the outcome is deterministic, so <span class="math">\(\mathfrak{S}=0\)</span> (using the convention <span class="math">\(0\log 0 = 0\)</span>).
+</li><li><span class="math">\(r=\tfrac{1}{2}\)</span>: both outcomes are equally likely, giving the maximum <span class="math">\(\mathfrak{S}(\tfrac{1}{2}) = \ln 2 \approx 0.693\)</span> nats.
+</li><li>For all other <span class="math">\(r \in (0,1)\)</span>: the entropy is strictly between <span class="math">\(0\)</span> and <span class="math">\(\ln 2\)</span>.
+</li></ul>
+In the logistic regression context, <span class="math">\(\hat{p}_i = \mathscr{S}_1(\langle\boldsymbol{w},\boldsymbol{x}_i\rangle - b)\)</span> is the model's predicted probability of the positive class.  The entropy <span class="math">\(\mathfrak{S}(\hat{p}_i)\)</span> measures the model's uncertainty about prediction <span class="math">\(i\)</span>: it is zero when the model is fully confident (<span class="math">\(\hat{p}_i\)</span> near <span class="math">\(0\)</span> or <span class="math">\(1\)</span>) and maximal when the model is completely uncertain (<span class="math">\(\hat{p}_i = \tfrac{1}{2}\)</span>).  The cross-entropy cost function <a href="#cross.entropy.eq">(3.3)</a> goes further: it penalises not just uncertainty but assigning low probability to the <i>correct</i> label.
+
+</div>
+<div class="example" id="entropy.dice.example">
+<div class="heading-container"><b class="heading">Example 3.3 (Entropy of fair and biased dice):</b></div>
+
+
+Consider two six-faced dice with outcomes <span class="math">\(\{1,2,3,4,5,6\}\)</span>, where Die-1 is fair and Die-2 is biased:
+<ul><li><b>Die-1:</b> <span class="math">\(\mathbb{P}(X=k) = \frac{1}{6},~k=1,2,\ldots,6.\)</span>
+</li><li><b>Die-2:</b> <span class="math">\(\mathbb{P}(X=1) = 0.9,~\mathbb{P}(X=k) = 0.02,~k=2,\ldots,6.\)</span>
+</li></ul>
+Since any outcome in Die-1 is equally likely, there is high randomness, and we expect a larger entropy value.  In Die-2, face-1 dominates with very high probability, so there is less uncertainty.  Let us verify this by computing the entropy of the distribution of Die-k, denoted by <span class="math">\(p_i\)</span>, for <span class="math">\(i=1,2\)</span> to get
+<div class="math">\[
+\mathfrak{S}(p_1) = -\sum_{k=1}^6 \frac{1}{6}\ln\!\left(\frac{1}{6}\right) = \ln 6 \approx 1.792 \text{ nats},
+\]</div>
+<div class="math">\[
+\mathfrak{S}(p_2) = -\!\left(0.9\ln(0.9) + \sum_{k=2}^6 0.02\ln(0.02)\right) \approx 0.486 \text{ nats.}
+\]</div>
+From the above calculations, we see that Die-1 has higher entropy, which confirms a greater uncertainty.
+
+</div>
+<div class="problem" id="entropy.cross.entropy.ineq.pro">
+<div class="heading-container"><b class="heading">Problem 3.3:</b></div>
+
+
+Let <span class="math">\(p\)</span> and <span class="math">\(q\)</span> be two probability densities on <span class="math">\(\mathbb{R}\)</span> such that the integral
+<div class="math">\[\mathfrak{C}(p,q) = -\int\limits_{\mathbb{R}} p(x)\log q(x)\,dx\]</div>
+is well-defined. Show that <span class="math">\(\mathfrak{C}(p,p) \leq \mathfrak{C}(p,q)\)</span>.
+
+</div><p>
+Observe that the entropy <span class="math">\(\mathfrak{S}(p)\)</span> measures the inherent uncertainty of the true distribution <span class="math">\(p\)</span>, whereas the cross-entropy <span class="math">\(\mathfrak{C}(p,q)\)</span> measures the average penalty incurred when using <span class="math">\(q\)</span> to model outcomes drawn from <span class="math">\(p\)</span>.  From the above problem, we see that minimizing cross-entropy is equivalent to making <span class="math">\(q\)</span> as close as possible to the true distribution <span class="math">\(p\)</span>.
+</p><p>
+In logistic regression, <span class="math">\(p_i\)</span> is the point mass at the true label <span class="math">\(y_i \in \{0,1\}\)</span> and <span class="math">\(q_i = \mathrm{Bernoulli}(\hat{p}_i)\)</span> is the model's predicted distribution for sample <span class="math">\(i\)</span>.  Computing the discrete cross-entropy over <span class="math">\(\mathcal{Y}=\{0,1\}\)</span> and averaging over the training set recovers exactly <a href="#cross.entropy.eq">(3.3)</a> as
+<div class="math">\[
+\mathcal{L}(b,\boldsymbol{w}) = \frac{1}{N_\text{train}}\sum_{i=1}^{N_\text{train}}\mathfrak{C}(p_i,q_i).
+\]</div><p>
+There is another important concept in information theory, closely related to
+entropy and cross-entropy, which we define below.
+<div class="definition" id="kl.divergence.def">
+<div class="heading-container"><b class="heading">Definition 3.2 (Kullback--Leibler Divergence):</b></div>
+
+
+Assume that <span class="math">\(p(x)\)</span> is the true distribution and <span class="math">\(q(x)\)</span> is a model approximating it.  The <b>Kullback--Leibler (KL) divergence</b> of <span class="math">\(q\)</span> from <span class="math">\(p\)</span> is defined as
+<div class="math">\[
+\mathcal{C}_{\texttt{KL}}(p\|q) = \mathfrak{C}(p,q) - \mathfrak{S}(p),
+\]</div>
+which is the extra cost incurred by encoding data with <span class="math">\(q\)</span> instead of <span class="math">\(p\)</span>.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+If <span class="math">\(\mathcal{X}\)</span> is continuous, then
+<div class="math">\[
+\mathcal{C}_{\texttt{KL}}(p\|q)  = -\int\limits_{\mathbb{R}} p(x)\ln\frac{q(x)}{p(x)}\,dx.
+ \]</div>
+
+</div>
+From <a href="Ch03LogisticRegression.html#cross.entropy.entropy.def">Definition 3.1</a>, we see that <span class="math">\(\mathcal{C}_{\texttt{KL}}(p\|q)  = 0\)</span> if and only if <span class="math">\(q = p\)</span>.  Since <span class="math">\(\mathfrak{S}(p)\)</span> does not
+involve <span class="math">\(b\)</span> and <span class="math">\(\boldsymbol{w}\)</span>, minimizing the cross-entropy cost is the same as
+minimizing the KL divergence between the true and the predicted distribution.
+</p><p>
+As mentioned in the definition, KL divergence measures the discrepancy between two probability distributions.  It can be used as a cost function in neural networks whenever the network output represents a probability distribution, because minimizing KL encourages the predicted distribution to match the target distribution.
+<div class="problem" id="kl.ce.binary.pro">
+<div class="heading-container"><b class="heading">Problem 3.4:</b></div>
+
+
+In binary classification (logistic regression), let <span class="math">\(p_i\)</span> be the point mass at <span class="math">\(y_i\in\{0,1\}\)</span> and <span class="math">\(q_i=\mathrm{Bernoulli}(\hat{p}_i)\)</span>.  Show that minimizing <span class="math">\(\dfrac{1}{N_\text{train}}\displaystyle\sum_{i=1}^{N_\text{train}}\mathcal{C}_{\texttt{KL}}(p_i\|q_i)\)</span> over <span class="math">\((b,\boldsymbol{w})\)</span> is equivalent to minimizing the cross-entropy cost function <a href="#cross.entropy.eq">(3.3)</a>.
+
+</div><div class="problem" id="kl.properties.pro">
+<div class="heading-container"><b class="heading">Problem 3.5:</b></div>
+<span class="math">\(~\)</span>
+
+<ol class="latex-enumerate"><li>Show that <span class="math">\(\mathcal{C}_{\texttt{KL}}(p\|q) \geq 0\)</span>.
+</li><li>Is <span class="math">\(\mathcal{C}_{\texttt{KL}}(p\|q)\)</span> symmetric?  Justify your answer.
+</li><li>Does the following triangle inequality hold?  Justify your answer.
+<div class="math">\[
+\mathcal{C}_{\texttt{KL}}(p\|q) \leq \mathcal{C}_{\texttt{KL}}(p\|r) + \mathcal{C}_{\texttt{KL}}(r\|q).
+\]</div>
+</li></ol>
+
+</div><h3 id="gradient.descent.algorithm.subs">3.2.2 Gradient Descent Algorithm</h3>
+The cost function <span class="math">\(\mathcal{L}(b, \boldsymbol{w})\)</span> given by <a href="#cross.entropy.eq">(3.3)</a> is smooth and convex,
+but it has no closed-form minimizer. Hence, we must rely on a computational technique to approximate 
+<div class="math">\[
+(b^*, \boldsymbol{w}^*) = \text{argmin}_{(b, \boldsymbol{w})} \mathcal{L}(b, \boldsymbol{w}),
+\]</div>
+if it exists. A commonly used optimization method is gradient descent, which we present here in its simplest form and postpone a detailed discussion to a later chapter.
+</p><p>
+For a given initial guess <span class="math">\((b^{(0)}, \boldsymbol{w}^{(0)})\)</span>, the iterative formula for the gradient descent method is given by
+</p><div class="math numbered-math">\begin{eqnarray}
+b^{(k+1)} &=& b^{(k)} - \eta \frac{\partial \mathcal{L}}{\partial b}(b^{(k)}, \boldsymbol{w}^{(k)}),\\
+\boldsymbol{w}^{(k+1)} &=& \boldsymbol{w}^{(k)} - \eta \nabla_{\boldsymbol{w}} \mathcal{L}(b^{(k)}, \boldsymbol{w}^{(k)}),
+~~k=0,1,\ldots.
+\end{eqnarray}<span class="eq-number">(3.4)</span></div><p>
+Since <span class="math">\(\nabla_{\boldsymbol{w}} s_i = \boldsymbol{x}_i\)</span> and <span class="math">\(\partial s_i/\partial b = 1\)</span>, the chain rule gives
+</p><div class="math numbered-math" id="gradient.cross.entropy.w.eq">\begin{eqnarray}
+\nabla_{\boldsymbol{w}}\,\mathcal{L}(b, \boldsymbol{w}) = \frac{1}{N_\text{train}}\sum_{i=1}^{N_\text{train}} \big(\hat{p}_i - y_i\big)\boldsymbol{x}_i,
+\end{eqnarray}<span class="eq-number">(3.5)</span></div><div class="math numbered-math" id="gradient.cross.entropy.b.eq">\begin{eqnarray}
+\frac{\partial \mathcal{L}}{\partial b}(b, \boldsymbol{w}) = \frac{1}{N_\text{train}}\sum_{i=1}^{N_\text{train}} \big(\hat{p}_i - y_i\big).
+\end{eqnarray}<span class="eq-number">(3.6)</span></div><p>
+Starting from an initial guess <span class="math">\((b^{(0)}, \boldsymbol{w}^{(0)})\)</span>, the parameters are updated iteratively as described in the following algorithm.
+<div class="algorithm" id="gradient.descent.logistic.algo">
+<div class="heading-container"><b class="heading">Algorithm 3.1 (Gradient Descent for Logistic Regression):</b></div><p>
+<b>Input:</b>
+<ul><li>Training dataset <span class="math">\(\mathcal{D}_\text{train} = \big\{(\boldsymbol{x}_i, y_i) \mid i = 1,2,\ldots, N_\text{train}\big\}\)</span>
+</li><li>Initial parameters <span class="math">\((b^{(0)}, \boldsymbol{w}^{(0)})\)</span>, 
+</li><li>learning rate <span class="math">\(\eta > 0\)</span>, and
+</li><li>tolerance <span class="math">\(\varepsilon > 0\)</span>
+</li></ul>
+<b>Processing:</b><br>
+For each <span class="math">\(k = 0, 1, 2, \ldots\)</span>, perform the following steps:
+<ul><li><b>Step 1:</b> Compute:<br> <span class="math">\(\hat{p}_i^{(k)} = \mathscr{S}_1\!\big(\langle \boldsymbol{w}^{(k)}, \boldsymbol{x}_i \rangle + b^{(k)}\big)\)</span>, for each <span class="math">\(i = 1, 2, \ldots, N_\text{train}\)</span>.
+</p><p>
+Also, the gradients <span class="math">\(\nabla_{\boldsymbol{w}}\mathcal{L}\)</span> and <span class="math">\(\frac{\partial\mathcal{L}}{\partial b}\)</span>.
+</li><li><b>Step 2:</b> Check:<br>
+If the condition
+<div class="math">\[\displaystyle\sqrt{\|\nabla_{\boldsymbol{w}}\mathcal{L}\|^2 + \left(\frac{\partial\mathcal{L}}{\partial b}\right)^2} < \varepsilon\]</div>
+is satisfied, then go to the Output step below.
+</p><p>
+Else, go to Step 3. 
+</li><li><b>Step 3:</b> Update:
+<div class="math">\[
+\boldsymbol{w}^{(k+1)} = \boldsymbol{w}^{(k)} - \frac{\eta}{N_\text{train}}\sum_{i=1}^{N_\text{train}} \big(\hat{p}_i^{(k)} - y_i\big)\boldsymbol{x}_i,
+\]</div>
+<div class="math">\[
+b^{(k+1)} = b^{(k)} - \frac{\eta}{N_\text{train}}\sum_{i=1}^{N_\text{train}} \big(\hat{p}_i^{(k)} - y_i\big). 
+\]</div>
+Increment <span class="math">\(k\)</span> and go to Step 1.
+</li></ul>
+<b>Output:</b> Learned parameters <span class="math">\((\hat{b}^*,\, \hat{\boldsymbol{w}}^*) = (b^{(k)}, \boldsymbol{w}^{(k)})\)</span>.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+Since <span class="math">\(\mathcal{L}(b, \boldsymbol{w})\)</span> is smooth and convex, gradient descent converges to the global minimizer <span class="math">\((b^*, \boldsymbol{w}^*)\)</span> for any sufficiently small learning rate <span class="math">\(\eta > 0\)</span>.
+
+</div>
+<div class="code">
+<div class="heading-container"><b class="heading">Code 3.1:</b></div>
+
+Develop a Python code to train a logistic regression model for the problem illustrated in <a href="Ch03LogisticRegression.html#hours.studied.example">Example 3.1</a> by going through the following steps:
+<ul><li> Generate a synthetic dataset <span class="math">\(\mathcal{D}=\{(x_i, y_i)~\mid~i=1,2,\ldots,N\}\)</span> by considering two classes
+<div class="math">\[x \mid \mathcal{C}^- \sim \mathcal{N}(2.5,\, 1.5),\quad
+x \mid \mathcal{C}^+ \sim \mathcal{N}(7.5,\, 1.5),\]</div>
+where <span class="math">\(\mathcal{N}(\mu, \sigma^2)\)</span> denotes the Gaussian distribution with mean <span class="math">\(\mu\)</span> and variance <span class="math">\(\sigma^2\)</span>. Note that <code>numpy.random.normal(mu, sigma)</code> in Python takes the standard deviation <span class="math">\(\sigma\)</span> as its second argument; use <span class="math">\(\sigma = \sqrt{1.5}\)</span>.
+Take <span class="math">\(N = \#(\mathcal{C}^-) + \#(\mathcal{C}^+) = 50 + 50.\)</span>
+</li><li> Choose 70 examples uniformly at random and store them as <span class="math">\(\mathcal{D}_{\rm train}\)</span>. Store the remaining as <span class="math">\(\mathcal{D}_{\rm test}.\)</span>
+</li><li> Train a logistic regression on the training dataset <span class="math">\(\mathcal{D}_{\rm train}\)</span> using <a href="Ch03LogisticRegression.html#gradient.descent.logistic.algo">Algorithm 3.1</a>.
+</li><li> Evaluate the trained model on <span class="math">\(\mathcal{D}_{\rm test}\)</span> by computing
+<ul><li>the misclassification rate:
+<div class="math">\[\text{Error} = \frac{1}{N_{\rm test}}\sum_{i \in \mathcal{D}_{\rm test}} \mathbf{1}[\hat{y}_i \neq y_i],\quad \hat{y}_i = \begin{cases} 1 & \text{if}~\hat{p}_i \geq 0.5,\\ 0 & \text{if}~\hat{p}_i < 0.5, \end{cases}\]</div>
+</li><li>the test cross-entropy loss:
+<div class="math">\[\mathcal{L}_{\rm test} = -\frac{1}{N_{\rm test}}\sum_{i \in \mathcal{D}_{\rm test}} \big[y_i \log \hat{p}_i + (1-y_i)\log(1-\hat{p}_i)\big].\]</div>
+</li></ul>
+Compare <span class="math">\(\mathcal{L}_{\rm test}\)</span> with the training loss <span class="math">\(\mathcal{L}_{\rm train}\)</span> at convergence.
+</li></ul>
+
+</div>
+<h2 id="applications.logistic.regression.sec">3.3 Applications of Logistic Regression</h2>
+Logistic regression is well-suited for binary classification problems in which the log-odds of the outcome are approximately linear in the input features, and the output probability has a direct, interpretable meaning in the application domain.  We illustrate this with five canonical examples drawn from finance, medicine, natural language processing, business analytics, and fraud detection.
+<h3 id="credit.default.subs">3.3.1 Finance: Credit Default Prediction</h3><p>
+A bank maintains a labelled dataset of past borrowers,
+<div class="math">\[
+\mathcal{D} = \big\{(\boldsymbol{x}_i, y_i) \mid i = 1,2,\ldots, N\big\} \subset \mathbb{R}^n \times \{0,1\},
+\]</div>
+where the <b>feature vector</b> <span class="math">\(\boldsymbol{x}_i = (x_{i1}, x_{i2}, \ldots, x_{in})^\top \in \mathbb{R}^n\)</span> records financial attributes of borrower <span class="math">\(i\)</span> such as annual income, debt-to-income ratio, credit score, requested loan amount, and employment tenure, and the label is
+<div class="math">\[
+y_i = \begin{cases} 1, & \text{borrower} i \text{ defaulted on the loan,}\\ 0, & \text{otherwise.}\end{cases}
+\]</div>
+Given a new applicant with profile <span class="math">\(\boldsymbol{x}\)</span>, the aim is to estimate the probability of default
+<div class="math">\[
+\hat{p}(\boldsymbol{x}) = \mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}), \quad \text{where}\ \mathcal{C}^+ = \{\text{default}\}.
+\]</div>
+<h4 id="model-and-training">3.3.1.1 Model and training.</h4>
+From <a href="#logistic-regression.eq">(3.2)</a>, the logistic regression model suggests
+<div class="math">\[
+\mathbb{P}(\mathcal{C}^+ \mid \boldsymbol{x}) = \mathscr{S}_1\!\big(\langle \boldsymbol{w}, \boldsymbol{x} \rangle + b\big),
+\]</div>
+under the assumption that the log-likelihood ratio <span class="math">\(\log \Lambda(\boldsymbol{x})\)</span> is linear in <span class="math">\(\boldsymbol{x}\)</span>.  The parameters <span class="math">\((b, \boldsymbol{w})\)</span> are estimated by minimizing the cross-entropy cost function <a href="#cross.entropy.eq">(3.3)</a>. 
+</p><p>
+We can use  Algorithm 1 to obtain the estimate of <span class="math">\((b, \boldsymbol{w})\)</span>, which is the augmented weight vector <span class="math">\((b^*, \boldsymbol{w}^*)\)</span> to which the algorithm converges.
+<div class="remark" id="credit.default.LR.interpretation.rem">
+<div class="heading-container"><b class="heading">Remark 3.3 (Interpretation):</b></div><p>
+From <a href="#log-likelihood.ratio.linearity.eq">(3.1)</a>, we see that the <span class="math">\(j^{\rm th}\)</span> component <span class="math">\(w^{*}_{j}\)</span> of the fitted weight <span class="math">\(\boldsymbol{w}^{*}\)</span> represents the change in log-odds of default per unit increase in the corresponding feature <span class="math">\(x_j\)</span>, with all other features held fixed.  Equivalently, <span class="math">\(e^{w_j}\)</span> is the multiplicative factor by which the odds of default change per unit increase in <span class="math">\(x_j\)</span>. This is analogous to an odds-ratio interpretation used in classical credit scorecards.
+
+</div>
+<div class="code" id="credit.default.coding.exer">
+<div class="heading-container"><b class="heading">Code 3.2 (Credit Default Prediction from Real Data):</b></div><p>
+
+<b>(a) Downloading the Dataset:</b>
+Download the <b>Default of Credit Card Clients</b> dataset 
+from the 
+</p><p>
+<a href="https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients" target="_blank"><code>UCI Credit Card Default Dataset</code></a>
+</p><p>
+
+The dataset includes <span class="math">\(N = 30000\)</span> credit card holders of a Taiwanese bank, each
+described by <span class="math">\(n = 23\)</span> numerical attributes <span class="math">\(\boldsymbol{x}_i\)</span> (credit limit, age, six
+monthly repayment statuses, six bill amounts, six payment amounts, and three
+coded demographic variables), with <span class="math">\(y_i = 1\)</span> if the holder defaulted in the
+following month and <span class="math">\(y_i = 0\)</span> otherwise.  
+</p><p>
+Compute the empirical default rate 
+<div class="math">\[\hat{\pi} = \frac{1}{N}\sum_{i=1}^{N} y_i,\]</div>
+which estimates the prior <span class="math">\(\mathbb{P}(\mathcal{C}^+)\)</span>.
+</p><p>
+
+<b>(b) Dataset Preparation:</b>
+</p><p>
+Split the index set <span class="math">\(\{1, 2, \ldots, N\}\)</span> in the ratio <span class="math">\(70\!:\!30\)</span> by drawing
+the training indices uniformly at random without replacement, initialising the
+random number generator with a fixed seed.  State the seed you used.  Denote
+the resulting training and test sets by <span class="math">\(\mathcal{D}_{\text{train}}\)</span> and
+<span class="math">\(\mathcal{D}_{\text{test}}\)</span>, of sizes <span class="math">\(N_{\text{train}}\)</span> and
+<span class="math">\(N_{\text{test}}\)</span>.
+</p><p>
+Next standardise each feature,
+<div class="math">\[\tilde{x}_{ij} = \frac{x_{ij}-\mu_j}{\sigma_j},\]</div>
+where <span class="math">\(\mu_j\)</span> and <span class="math">\(\sigma_j\)</span> are the mean and the standard deviation of the
+<span class="math">\(j\)</span>-th feature computed over <span class="math">\(\mathcal{D}_{\text{train}}\)</span> alone.  Apply this
+same transformation to the test points.  
+</p><p>
+Use the standardised features in training the model.
+</p><p>
+Also compute the default rate within <span class="math">\(\mathcal{D}_{\text{train}}\)</span>,
+<div class="math">\[
+\hat{\pi}_{\text{train}} = \frac{1}{N_{\text{train}}}
+\sum_{i \in \mathcal{D}_{\text{train}}} y_i ,
+\]</div>
+and the corresponding rate <span class="math">\(\hat{\pi}_{\text{test}}\)</span> within <span class="math">\(\mathcal{D}_{\text{test}}\)</span>.  Verify that the
+three rates <span class="math">\(\hat{\pi}\)</span>, <span class="math">\(\hat{\pi}_{\text{train}}\)</span> and
+<span class="math">\(\hat{\pi}_{\text{test}}\)</span> agree to within sampling error.
+</p><p>
+
+<b>(c) Training Algorithm:</b>
+Train a logistic regression model on the training dataset <span class="math">\(\mathcal{D}_{\rm train}\)</span> using <a href="Ch03LogisticRegression.html#gradient.descent.logistic.algo">Algorithm 3.1</a>, with
+<span class="math">\((b^{(0)},\boldsymbol{w}^{(0)}) = (0,\boldsymbol{0})\)</span>, <span class="math">\(\eta = 0.1\)</span>, <span class="math">\(\varepsilon = 10^{-5}\)</span>,
+and a cap of <span class="math">\(10^4\)</span> iterations.
+</p><p>
+Verify the identity
+<div class="math">\[
+\frac{1}{N_{\text{train}}}\sum_{i \in \mathcal{D}_{\text{train}}} \hat{p}_i
+= \hat{\pi}_{\text{train}},
+\]</div>
+which follows from <span class="math">\(\partial \mathcal{L}/\partial b = 0\)</span> at the minimum and
+holds up to the tolerance <span class="math">\(\varepsilon\)</span>.
+</p><p>
+
+<b>(d) Observing Convergence:</b>
+Plot <span class="math">\(\mathcal{L}(b^{(k)},\boldsymbol{w}^{(k)})\)</span> against <span class="math">\(k\)</span>.  Repeat with
+<span class="math">\(\eta = 0.001\)</span> and <span class="math">\(\eta = 10\)</span> and plot all three curves together.
+Describe in one or two sentences what each learning rate does.
+</p><p>
+Compare your observations with the sufficient condition for descent,
+<div class="math">\[
+L \le \frac{\|\tilde{X}\|_2^2}{4N_{\text{train}}}
+\]</div> bounds the
+Lipschitz constant of <span class="math">\(\nabla \mathcal{L}\)</span>; note that this condition is
+sufficient but not necessary.
+</p><p>
+
+<b>(e) Testing the Trained Model:</b>
+For every <span class="math">\((\tilde{\boldsymbol{x}}_i, y_i)\in \mathcal{D}_{\text{test}}\)</span>, compute <span class="math">\(\hat{p}(\tilde{\boldsymbol{x}}_i)\)</span> and predict default <span class="math">\(\hat{y}_i\)</span> by defining the hard classification rule as
+<div class="math">\[
+\hat{y}_i = \begin{cases}
+1, & \text{if} ~ \hat{p}(\tilde{\boldsymbol{x}}_i) \ge 0.5, \\
+0, & \text{otherwise},
+\end{cases}
+\]</div>
+Let us define the terminology of <b>classifier performance</b>:
+<ul><li>A test point is a
+<b>true positive</b> if <span class="math">\(\hat{y}_i = y_i = 1\)</span>, denoted by <span class="math">\(N_{\mathrm{TP}}\)</span>;
+</li><li>A test point a <b>false positive</b> if
+<span class="math">\(\hat{y}_i = 1\)</span> but <span class="math">\(y_i = 0\)</span>, denoted by <span class="math">\(N_{\mathrm{FP}}\)</span>;
+</li><li>A test point a <b>true negative</b> if <span class="math">\(\hat{y}_i = y_i = 0\)</span>,
+denoted by <span class="math">\(N_{\mathrm{TN}}\)</span>; and
+</li><li>A test point a <b>false negative</b> if <span class="math">\(\hat{y}_i = 0\)</span> but <span class="math">\(y_i = 1\)</span>, denoted by <span class="math">\(N_{\mathrm{FN}}\)</span>.  
+</li></ul>
+We have
+<div class="math">\[
+N_{\text{test}} = N_{\mathrm{TP}} + N_{\mathrm{FP}}
+                + N_{\mathrm{TN}} + N_{\mathrm{FN}},
+\]</div> 
+False positives are also called <b>type-1</b> errors and false negatives <b>type-2</b>
+errors.  
+</p><p>
+
+The <b>confusion matrix</b> is defined as
+<div class="math">\[
+\begin{array}{c|cc}
+    & \hat{y} = 0 & \hat{y} = 1 \\ \hline
+ y = 0 & N_{\mathrm{TN}} & N_{\mathrm{FP}} \\
+ y = 1 & N_{\mathrm{FN}} & N_{\mathrm{TP}}
+\end{array}
+\]</div>
+<ol class="latex-enumerate"><li>Compute the confusion matrix, together with
+<div class="math">\[
+\text{Accuracy} = \frac{N_{\mathrm{TP}} + N_{\mathrm{TN}}}{N_{\text{test}}},
+\qquad
+\text{Precision} = \frac{N_{\mathrm{TP}}}{N_{\mathrm{TP}} + N_{\mathrm{FP}}},
+\]</div>
+<div class="math">\[
+\text{Recall} = \frac{N_{\mathrm{TP}}}{N_{\mathrm{TP}} + N_{\mathrm{FN}}},
+\text{False positive rate} = \frac{N_{\mathrm{FP}}}{N_{\mathrm{FP}} + N_{\mathrm{TN}}},
+\]</div>
+</li><li>Compute the <b>test error</b>, which is the empirical risk under the <span class="math">\(0\)</span>--<span class="math">\(1\)</span> loss
+      <span class="math">\(\ell_{01}(\hat{y}, y) = \mathbb{1}\{\hat{y} \neq y\}\)</span>, defined as
+      <div class="math">\[
+      \mathcal{E}_{\text{test}}
+      = \frac{1}{N_{\text{test}}}\sum_{i=1}^{N_{\text{test}}}
+        \mathbb{1}\{\hat{y}_i \neq y_i\}
+      \left(= \frac{N_{\mathrm{FP}} + N_{\mathrm{FN}}}{N_{\text{test}}}
+      = 1 - \text{Accuracy}\right).
+      \]</div>
+</li><li>Consider the <b>trivial classifier</b> <span class="math">\(\hat{y}_i^{\,\text{triv}} = 0\)</span> for
+      all <span class="math">\(i\)</span>, which grants every loan and uses none of the features.  Write
+      down its confusion matrix and verify that its accuracy equals
+      <span class="math">\(N_{\mathrm{TN}}/N_{\text{test}}\)</span>, which is <span class="math">\(1-\hat{\pi}\)</span> up to
+      sampling error, and that its recall is <span class="math">\(0\)</span>.  Compute the difference
+      <div class="math">\[
+      \text{gain} = \text{Accuracy}_{\text{model}} - (1-\hat{\pi}),
+      \]</div>
+      and comment on its size.  
+</p><p>
+</li><li>Examine the recall.  Of the borrowers in <span class="math">\(\mathcal{D}_{\text{test}}\)</span> who
+      actually defaulted, what fraction did the model identify?  In which cell
+      of the confusion matrix do most of the model's correct answers lie, and
+      does the trivial rule of (iii) obtain them as well?
+</li><li>Conclude: explain why accuracy is misleading when the two classes are
+      strongly imbalanced, and state which of the quantities in (i) you would
+      report to a credit risk committee instead.
+</li></ol><p>
+
+<b>(f) Further Experiments:</b>
+</p><ol class="latex-enumerate"><li>Lower the threshold from <span class="math">\(1/2\)</span> to <span class="math">\(0.3\)</span> and recompute the confusion
+      matrix.  Which errors increase and which decrease?  Which of the two
+      thresholds should a bank prefer, and why?
+</p><p>
+      Which of <span class="math">\(N_{\mathrm{FP}}\)</span> and <span class="math">\(N_{\mathrm{FN}}\)</span> increases and
+      which decreases?  What happens to the accuracy, and what happens to the
+      recall?  Which of the two thresholds should a bank prefer, given that a
+      type 2 error costs it the unrecovered principal whereas a type 1 error
+      costs it only the interest margin it did not earn?
+</li><li>Rerun (c) <i>without</i> the standardisation of (b), keeping
+      <span class="math">\(\eta = 0.1\)</span>.  What happens, and why?  Use the bound
+      <span class="math">\(L \le \|\tilde{X}\|_2^2 / (4N_{\text{train}})\)</span> of part (d) to explain
+      the observation quantitatively, and find by trial a learning rate for
+      which the unstandardised problem does converge.
+</li></ol>
+
+</div>
+A single logistic regression neuron is typically sufficient for smaller feature dimension, say <span class="math">\(n \le 100\)</span>.  When the feature space is of high-dimansional or when there are significant dependencies between features, then the linearity assumption on the log-odds (through the log-likelihood ratio) is violated. In such situations, a fully connected feedforward network (MLP) with one or two hidden layers provides a flexible nonlinear extension. However, the interpretability (like the one given in <a href="Ch03LogisticRegression.html#credit.default.LR.interpretation.rem">Remark 3.3</a>) of the model is difficult and often impossible.
+</p>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 01-Sep-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

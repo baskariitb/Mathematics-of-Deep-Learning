@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network and Gradient Evaluation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter "><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multiclass.classification.subs">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch03LogisticRegression.html" class="chapter-link">CH 3: Logistic Regression</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch03LogisticRegression.html#logistic.regression.ch">Logistic Regression</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#model.derivation.sec">3.1 The Logistic Regression Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#bayes.derivation.susb">3.1.1 Derivation using Bayes' Formula</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#logistic.regression.neuron.sec">3.1.2 Single Neuron Interpretation</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#training.a.model.sec">3.2 Training Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#cross-entropy.loss.function.subs">3.2.1 Cross-Entropy Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs">3.2.2 Gradient Descent Algorithm</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#applications.logistic.regression.sec">3.3 Applications of Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#credit.default.subs">3.3.1 Finance: Credit Default Prediction</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch03LogisticRegression.html#model-and-training">3.3.1.1 Model and training.</a></div>
+</div></div>
+<div class="toc-chapter current"><a href="Ch04NetworkGradientEvaluation.html" class="chapter-link">CH 4: Network and Gradient Evaluation</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Network and Gradient Evaluation</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec">4.1 Matrix Formulation and Forward Propagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#layer-function-in-matrix-form">4.1.1 Layer Function in Matrix Form</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.subs">4.1.2 Forward Propagation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-batch-form">4.1.2.1 The Batch Form</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.method.sec">4.2 Backpropagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#cost-functions-and-empirical-risk">4.2.1 Cost Functions and Empirical Risk</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#softmax-output-and-multi-class-classification">4.2.2 Softmax Output and Multi-class Classification</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation">4.2.3 Gradient Computation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#the-backpropagation-algorithm">4.2.4 The Backpropagation Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch-form-computational-cost-and-gradient-checking">4.2.5 Batch form, computational cost, and gradient checking</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="network.gradient.evaluation.ch">Chapter 4: Network and Gradient Evaluation</h1>
+In the last two chapters, we have studied models based on single neurons and observed the limitations in their applicability and expressivity.  This clearly motivates the use of an artificial neural network as a model, especially when dealing with high-dimensional datasets involving more complex features.  Our next task is, therefore, to understand the technique of training a multilayer perceptron (MLP).  
+</p><p>
+As mentioned in <a href="Ch01FeedForwardArchitecture.html#learning.network.sec" class="internal-link">Section 1.4</a>, training or learning an MLP means obtaining suitable parameters <span class="math">\(\boldsymbol{\Theta}\)</span> involved in defining the neural network function <span class="math">\({\mathscr{F}_{L,\hat{n}}}(\cdot\,; \boldsymbol{\Theta})\)</span>. The learning needs a suitably chosen cost function that is minimized using a gradient-based optimization method to obtain the parameters. To this end, we need to compute the gradient of the cost function, which uses the quantities generated while evaluating the neural network function at a given feature.
+</p><p>
+Recall from <a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Chapter 1</a> that we have defined an MLP as a composition of layers of affine and activation functions (see <a href="Ch01FeedForwardArchitecture.html#ANN.representation.composition.rem">Remark 1.1</a>).   A convenient and computationally efficient way of evaluating the neural network function at a feature <span class="math">\(\boldsymbol{x}\)</span> is to consider each layer function in matrix form.   The gradients are evaluated following the <b>backpropagation</b> technique. The purpose of this chapter is to set the matrix notation for the neural network function and understand the evaluation of the gradients of a cost function with respect to the parameters using repeated application of the chain rule across the layers.
+</p><p>
+The evaluation of a neural network function at a batch of features, given the set of parameters, is referred to as a <b>batch forward propagation</b> and is detailed in <a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec" class="internal-link">Section 4.1</a>.  The backpropagation method for gradient computation is detailed in <a href="Ch04NetworkGradientEvaluation.html#backpropagation.method.sec" class="internal-link">Section 4.2</a>.
+<h2 id="matrix.formulation.forward.propagation.sec">4.1 Matrix Formulation and Forward Propagation</h2>
+From <a href="Ch01FeedForwardArchitecture.html#artificial.neural.network.def">Definition 1.2</a>, we see that an ANN is defined as a composition of layers, where each layer applies an affine transformation followed by a nonlinear activation function. In this section, we first give matrix form of a neural network function and then discuss the batch forward propagation.
+<h3 id="layer-function-in-matrix-form">4.1.1 Layer Function in Matrix Form</h3>
+In order to keep the notations clear and simple we use a shallow network with one hidden layer, that is, <span class="math">\(L=2\)</span>.
+</p><p>
+Let the network dimensions be <span class="math">\(n_0, n_1, n_2\in \mathbb{N}\)</span>. From <a href="Ch01FeedForwardArchitecture.html#artificial.neural.network.def">Definition 1.2</a>, a shallow network with width <span class="math">\(\hat{n}=n_1\)</span> is a function <span class="math">\({\mathscr{F}_{2,\hat{n}}}:\mathbb{R}^{n_0}\rightarrow \mathbb{R}^{n_2}\)</span> given by
+</p><div class="math numbered-math" id="single.layer.nn.eq">\begin{eqnarray}
+{\mathscr{F}_{2,\hat{n}}} (\boldsymbol{x};\boldsymbol{\Theta}) = \mathfrak{h}^{(2)}\big(\mathfrak{h}^{(1)} (\boldsymbol{x};\overline{W}^{(1)});\overline{W}^{(2)}\big),~\boldsymbol{x}\in \mathbb{R}^{n_0}.
+\end{eqnarray}<span class="eq-number">(4.1)</span></div><p>
+The augmented weight matrices are given by
+</p><div class="math numbered-math" id="augmented.weight.matrix.eq">\begin{eqnarray}
+\overline{W}^{(l)} = \left(\begin{array}{llllcl}
+					b^{(l)}_1&w^{(l)}_{11}&w^{(l)}_{12}&\cdots&w^{(l)}_{1n_{l-1}}\\
+					b^{(l)}_2&w^{(l)}_{21}&w^{(l)}_{22}&\cdots&w^{(l)}_{2n_{l-1}}\\
+					     \vdots &                       &     \vdots       &\ddots&\vdots\\
+					     \vdots &                       &     \vdots       &\ddots&\vdots\\
+					b^{(l)}_{n_{l}}&w^{(l)}_{n_{l}1}&w^{(l)}_{n_{l}2}&\cdots&w^{(l)}_{n_{l}n_{l-1}}\\
+					\end{array}\right), 
+\end{eqnarray}<span class="eq-number">(4.2)</span></div><p>
+for <span class="math">\(l=1,2\)</span>.  We also write 
+</p><div class="math numbered-math" id="split.augmented.weight.matrix.eq">\begin{eqnarray}
+\overline{W}^{(l)} = [\boldsymbol{b}^{(l)}~W^{(l)}], ~ \text{where}~
+\boldsymbol{b}^{(l)}= \left(\begin{array}{l}
+				b^{(l)}_1\\b^{(l)}_2\\ \vdots\\ \vdots \\ b^{(l)}_{n_l}
+				\end{array}\right), ~
+{W}^{(l)} = \left(\begin{array}{lllcl}
+					w^{(l)}_{11}&w^{(l)}_{12}&\cdots&w^{(l)}_{1n_{l-1}}\\
+					w^{(l)}_{21}&w^{(l)}_{22}&\cdots&w^{(l)}_{2n_{l-1}}\\
+					    \vdots &                       &     \vdots       &\ddots&\vdots\\
+					     \vdots &                       &     \vdots       &\ddots&\vdots\\
+					w^{(l)}_{n_{l}1}&w^{(l)}_{n_{l}2}&\cdots&w^{(l)}_{n_{l}n_{l-1}}\\
+					\end{array}\right).
+\end{eqnarray}<span class="eq-number">(4.3)</span></div><p>
+From  <a href="Ch01FeedForwardArchitecture.html#artificial.neuron.def">Definition 1.1</a>, the <span class="math">\(k^{\rm th}\)</span> neuron of the <span class="math">\(l^{\rm th}\)</span> layer is given by 
+<div class="math">\[
+\text{𝕗}^{(l)}_k (\boldsymbol{x}^{(l-1)};\overline{\boldsymbol{w}}^{(l)}_k) = \mathscr{A}^{(l)}\big(\text{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{\boldsymbol{w}}^{(l)}_k) \big),
+~l=1,2,~k=1,2,\ldots, n_{l},
+\]</div>
+where <span class="math">\(\overline{\boldsymbol{w}}^{(l)}_k = (b^{(l)}_k, w^{(l)}_{k1}, w^{(l)}_{k2}, \ldots, w^{(l)}_{kn_{l-1}})^\top\)</span> and <span class="math">\(\overline{\boldsymbol{x}}^{(l-1)} = (1, \boldsymbol{x}^{(l-1)})^\top\)</span> are the augmented weight and input (column) vectors, respectively, <span class="math">\(\text{𝕒}:\{1\}\times \mathbb{R}^{n_{l-1}}\rightarrow \mathbb{R}\)</span> is the affine function given by
+<div class="math">\[\text{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{\boldsymbol{w}}^{(l)}_k) = \big\langle \overline{\boldsymbol{w}}^{(l)}_k, \overline{\boldsymbol{x}}^{(l-1)} \big\rangle,\]</div> 
+ and <span class="math">\(\mathscr{A}^{(l)}: \mathbb{R} \rightarrow \mathbb{R}\)</span> is the nonlinear activation function used in the <span class="math">\(l^{\rm th}\)</span> hidden layer. 
+</p><p>
+ For <span class="math">\(l=1\)</span>, <span class="math">\(\boldsymbol{x}^{(0)} = \boldsymbol{x}\in \mathbb{R}^{n_0}\)</span> is the input vector, and <span class="math">\(\boldsymbol{x}^{(1)}\in \mathbb{R}^{n_1}\)</span> is the output of the first layer given by
+<div class="math">\[\boldsymbol{x}^{(1)} = \mathfrak{h}^{(1)} (\boldsymbol{x}^{(0)};\overline{W}^{(1)}),\]</div>
+which is often referred to as the <b>activation</b> of that layer.  Finally, at the output, we have
+<div class="math">\[ \boldsymbol{y} = \mathfrak{h}^{(2)} (\boldsymbol{x}^{(1)};\overline{W}^{(2)}).\]</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+It is important to note that at each layer, the input is taken without augmentation. Whereas, the augmentation is done only within the affine function, where we take the inner product (which is just a dot product in a finite-dimensional vector space) of the augmented input and weight vectors.
+
+</div>
+For notational convenience, we introduce the vector notation for the affine transformation and the activation function.
+<div class="remark" id="vector.form.activation">
+<div class="heading-container"><b class="heading">Remark 4.1 (Vector form of an activation):</b></div>
+
+
+We define the affine function of the <span class="math">\(l^{\rm th}\)</span> layer as the vector-valued function <span class="math">\(\underline{𝕒}:\{1\}\times \mathbb{R}^{n_{l-1}} \rightarrow \mathbb{R}^{n_l}\)</span> given by
+</p><div class="math numbered-math">\begin{eqnarray}
+\underline{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{W}^{(l)}) &=& \overline{W}^{(l)}\overline{\boldsymbol{x}}^{(l-1)}\\
+&=& W^{(l)}\boldsymbol{x}^{(l-1)} + \boldsymbol{b}^{(l)},
+\end{eqnarray}<span class="eq-number">(4.4)</span></div><p>
+where <span class="math">\(\boldsymbol{x}^{(l-1)}\in \mathbb{R}^{n_{l-1}}\)</span> is the activation of the <span class="math">\((l-1)^{\rm st}\)</span> layer, <span class="math">\(\boldsymbol{b}^{(l)}\in \mathbb{R}^{n_l}\)</span> is the bias vector, and <span class="math">\(W^{(l)}\)</span> is the <span class="math">\(n_l\times n_{l-1}\)</span> weight matrix of the <span class="math">\(l^{\rm th}\)</span> layer.
+</p><p>
+For a given activation function <span class="math">\(\mathscr{A}^{(l)}: \mathbb{R}\rightarrow \mathbb{R}\)</span>, we define the coordinatewise activation <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}:\mathbb{R}^{n_l}\rightarrow \mathbb{R}^{n_l}\)</span> as
+<div class="math">\[
+\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}(\boldsymbol{x}) = \big(\mathscr{A}^{(l)}(x_1), \mathscr{A}^{(l)}(x_2), \ldots, \mathscr{A}^{(l)}(x_{n_l})\big)^\top, ~\boldsymbol{x}\in \mathbb{R}^{n_l},
+\]</div>
+where <span class="math">\(\boldsymbol{x}=(x_1,x_2,\ldots, x_{n_l})^\top.\)</span>
+</p><p>
+Thus, the activation of the <span class="math">\(l^{\rm th}\)</span> hidden layer is the vector <span class="math">\(\boldsymbol{x}^{(l)}\in \mathbb{R}^{n_l}\)</span> given by
+</p><div class="math numbered-math">\begin{eqnarray}
+\boldsymbol{x}^{(l)}
+&=& \mathfrak{h}^{(l)} (\boldsymbol{x}^{(l-1)};\overline{W}^{(l)})\\
+&=& \underset{\overline{~~~~}}{\mathscr{A}}^{(l)}\big( \underline{𝕒}(\overline{\boldsymbol{x}}^{(l-1)};\overline{W}^{(l)})\big).
+\end{eqnarray}<span class="eq-number">(4.5)</span></div><p>
+
+</div>
+<div class="latex-figure" id="single.layer.nn.fig">
+<img src="Figures/Ch04ANNSLrealvector.png" alt="">
+<div class="figure-caption"><p>Figure 4.1: Schematic of single layer neural networks. (a) A real-valued neural network <span class="math">\({\mathscr{F}_{2,3}}:\mathbb{R}^2\rightarrow \mathbb{R}\)</span>; (b) A vector-valued network <span class="math">\({\mathscr{F}_{2,3}}:\mathbb{R}^2\rightarrow \mathbb{R}^2\)</span>.</p></div>
+</div><div class="example">
+<div class="heading-container"><b class="heading">Example 4.1:</b></div>
+
+Illustrations of single-layer neural networks, with scalar-valued and vector-valued outputs, are depicted in <a href="Ch04NetworkGradientEvaluation.html#single.layer.nn.fig">Figure 4.1</a>(a) and <a href="Ch04NetworkGradientEvaluation.html#single.layer.nn.fig">Figure 4.1</a>(b), respectively.
+</p><p>
+Let us write the explicit form of the ANN shown in <a href="Ch04NetworkGradientEvaluation.html#single.layer.nn.fig">Figure 4.1</a>(a).  The input layer has two features, <i>i.e.,</i> <span class="math">\(n_0=2\)</span>. There are two layers with the hidden layer having <span class="math">\(n_1=3\)</span> neurons.  Thus, the depth of the network is 2 and the width is 3. Therefore, the ANN is the function <span class="math">\({\mathscr{F}_{2,3}}:\mathbb{R}^2\rightarrow \mathbb{R}\)</span> with the trainable parameter 
+<div class="math">\[\boldsymbol{\Theta} = \big( \overline{W}^{(1)}, \overline{W}^{(2)} \big),\]</div>
+where 
+<div class="math">\[
+\overline{W}^{(1)} = 
+	\left(\begin{array}{lll}
+		b^{(1)}_1 & w^{(1)}_{11}& w^{(1)}_{12}\\
+		b^{(1)}_2 & w^{(1)}_{21}& w^{(1)}_{22}\\
+		b^{(1)}_3 & w^{(1)}_{31}& w^{(1)}_{32}
+		\end{array}\right),~~
+\overline{W}^{(2)} = 
+	\left(\begin{array}{llll}
+		b^{(2)}_1 & w^{(2)}_{11}& w^{(2)}_{12}& w^{(2)}_{13}
+		\end{array}\right).
+\]</div>
+Thus, the network has 13 trainable parameters.
+</p><p>
+The affine function of the first layer is
+<div class="math">\[
+\underline{𝕒}(\overline{\boldsymbol{x}}^{(0)};\overline{W}^{(1)}) 
+= W^{(1)}\boldsymbol{x}^{(0)} + \boldsymbol{b}^{(1)},
+\]</div>
+Using the notations in <a href="#split.augmented.weight.matrix.eq">(4.3)</a>, we obtain
+</p><div class="math numbered-math">\begin{eqnarray}
+\underline{𝕒}(\overline{\boldsymbol{x}}^{(0)};\overline{W}^{(1)}) &=&
+\left(\begin{array}{ll}
+		 w^{(1)}_{11}& w^{(1)}_{12}\\
+		 w^{(1)}_{21}& w^{(1)}_{22}\\
+		 w^{(1)}_{31}& w^{(1)}_{32}
+		\end{array}\right) 
+		\left(\begin{array}{l}
+		x^{(0)}_1 \\
+		x^{(0)}_2 
+		\end{array}\right)
+		+ \left(\begin{array}{l}
+		b^{(1)}_1 \\
+		b^{(1)}_2 \\
+		b^{(1)}_3 
+		\end{array}\right)\\
+&=& \left(\begin{array}{l}
+		w^{(1)}_{11}x^{(0)}_1 +  w^{(1)}_{12}x^{(0)}_2+ b^{(1)}_1 \\
+		w^{(1)}_{21}x^{(0)}_1 +  w^{(1)}_{22}x^{(0)}_2+ b^{(1)}_2 \\
+		w^{(1)}_{31}x^{(0)}_1 +  w^{(1)}_{32}x^{(0)}_2+ b^{(1)}_3 
+		\end{array}\right).
+\end{eqnarray}<span class="eq-number">(4.6)</span></div><p>
+The activation <span class="math">\(\boldsymbol{x}^{(1)}\)</span> of the hidden layer is now obtained by applying the activation function <span class="math">\(\mathscr{A}^{(1)}\)</span> of the first hidden layer on the above vector coordinatewise to get
+</p><div class="math numbered-math">\begin{eqnarray}
+\boldsymbol{x}^{(1)} 
+&=& \underset{\overline{~~~~}}{\mathscr{A}}^{(1)}\left(W^{(1)}\boldsymbol{x}^{(0)} + \boldsymbol{b}^{(1)}\right)\\
+&=&\left(\begin{array}{c}
+		\mathscr{A}^{(1)}\big( w^{(1)}_{11}x^{(0)}_1 +  w^{(1)}_{12}x^{(0)}_2 + b^{(1)}_1 \big)\\
+		\mathscr{A}^{(1)}\big( w^{(1)}_{21}x^{(0)}_1 +  w^{(1)}_{22}x^{(0)}_2 + b^{(1)}_2 \big)\\
+		\mathscr{A}^{(1)}\big( w^{(1)}_{31}x^{(0)}_1 +  w^{(1)}_{32}x^{(0)}_2 + b^{(1)}_3 \big)
+		\end{array}\right).
+\end{eqnarray}<span class="eq-number">(4.7)</span></div><p>
+Taking <span class="math">\(\boldsymbol{x}^{(1)}\)</span> as the input, the output is then computed at the output layer as
+<div class="math">\[
+y = \mathscr{A}^{(2)} \big(
+			w^{(2)}_{11} x^{(1)}_{1} + w^{(2)}_{12} x^{(1)}_{2} + w^{(2)}_{13} x^{(1)}_{3} + b^{(2)}_1
+			\big).
+\]</div>
+Observe that the right hand side of the above expression is the ANN <span class="math">\({\mathscr{F}_{2,3}}(\cdot\,;\boldsymbol{\Theta})\)</span> of the network depicted in <a href="Ch04NetworkGradientEvaluation.html#single.layer.nn.fig">Figure 4.1</a>(a) given by <a href="#single.layer.nn.eq">(4.1)</a>, and its explicit expression is given by
+</p><div class="math numbered-math">\begin{eqnarray}
+{\mathscr{F}_{2,3}}(\boldsymbol{x}^{(0)};\boldsymbol{\Theta}) =
+  \mathscr{A}^{(2)}\Big(
+  	w^{(2)}_{11}\mathscr{A}^{(1)}\big( w^{(1)}_{11}x^{(0)}_1 +  w^{(1)}_{12}x^{(0)}_2 + b^{(1)}_1 \big)\\
+  	+ w^{(2)}_{12}\mathscr{A}^{(1)}\big( w^{(1)}_{21}x^{(0)}_1 +  w^{(1)}_{22}x^{(0)}_2 + b^{(1)}_2 \big)\\
+	+  w^{(2)}_{13} \mathscr{A}^{(1)}\big( w^{(1)}_{31}x^{(0)}_1 +  w^{(1)}_{32}x^{(0)}_2 + b^{(1)}_3 \big) + b^{(2)}_1
+	\Big),
+\end{eqnarray}<span class="eq-number">(4.8)</span></div><p>
+for every input vector <span class="math">\( \boldsymbol{x}^{(0)}\in \mathbb{R}^{2}\)</span>. 
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 4.1:</b></div>
+
+Derive the explicit expression for the ANN <span class="math">\({\mathscr{F}_{2,3}}(\boldsymbol{x}^{(0)};\boldsymbol{\Theta})\)</span> of the network depicted in <a href="Ch04NetworkGradientEvaluation.html#single.layer.nn.fig">Figure 4.1</a>(b) and give all the trainable parameters of this network.
+
+</div><h3 id="batch.forward.propagation.subs">4.1.2 Forward Propagation</h3>
+The shallow network computations described in the previous subsection can be generalized to neural networks of arbitrary depth. 
+</p><p>
+For fixed parameters <span class="math">\(\boldsymbol{\Theta}\)</span>, the network function <span class="math">\({\mathscr{F}_{L,\hat{n}}}:\mathbb{R}^{n_0}\rightarrow \mathbb{R}^{n_L}\)</span> is well-defined. For every input vector <span class="math">\(\boldsymbol{x}\in\mathbb{R}^{n_0}\)</span>, the final output <span class="math">\(\boldsymbol{y}={\mathscr{F}_{L,\hat{n}}}(\boldsymbol{x}; \boldsymbol{\Theta})\)</span> is evaluated recursively by taking the output of the <span class="math">\((l-1)^{\rm st}\)</span> layer as the input to the <span class="math">\(l^{\rm th}\)</span>  layer, and computing
+<div class="math">\[
+\boldsymbol{x}^{(l)} = \mathfrak{h}^{(l)} \big( \boldsymbol{x}^{(l-1)};\overline{W}^{(l)} \big),~l = 1,2,\ldots, L,
+\]</div>
+where <span class="math">\(\boldsymbol{x}^{(l)}\)</span> is called the <b>activation</b> of the <span class="math">\(l^{\rm th}\)</span> layer.  This recursive evaluation procedure is referred to as the <b>forward propagation</b> of the activations.
+<h4 id="the-batch-form">4.1.2.1 The Batch Form</h4>
+Given a dataset 
+<div class="math">\[\mathcal{D} = \big\{(\boldsymbol{x}_k, \boldsymbol{y}_{k}) \mid k=1,2,\ldots, N\big\}\subset \mathbb{R}^{n_0}\times \mathbb{R}^{n_L},\]</div>
+arrange the input vectors in the <span class="math">\(n_0\times N\)</span> matrix form as
+<div class="math">\[
+{A}^{(0)}:= [ \boldsymbol{x}_1~\boldsymbol{x}_2~\cdots~\boldsymbol{x}_N]
+= \left(\begin{array}{lllcl}
+					x^{(0)}_{11}&x^{(0)}_{12}&\cdots&x^{(0)}_{1N}\\
+					x^{(0)}_{21}&x^{(0)}_{22}&\cdots&x^{(0)}_{2N}\\
+					     \ldots &\cdots    &\cdots        &     \cdots \\
+					     \ldots &\cdots    &\cdots              &     \cdots \\
+					x^{(0)}_{n_01}&x^{(0)}_{n_02}&\cdots&x^{(0)}_{n_0N}\\
+					\end{array}\right),
+\]</div>
+where each column corresponds to one sample.
+</p><p>
+To gain computational efficiency, it is preferable to perform forward propagation on the entire dataset in matrix form, rather than evaluating the ANN separately for each input vector. 
+</p><p>
+Then the affine function takes the form
+<div class="math">\[
+\underline{𝕒}(\overline{A}^{(0)}; \overline{W}^{(1)}) = \overline{W}^{(1)}\overline{A}^{(0)},
+\]</div>
+where <span class="math">\(\overline{A}^{(0)}\)</span> is the augmented input matrix, the affine function is applied columnwise, and the right hand side is a <span class="math">\(n_1\times N\)</span> matrix. For notational convenience, we use
+<div class="math">\[
+Z^{(l)} := \overline{W}^{(l)}\overline{A}^{(l-1)},~~l=1,2,\ldots, L.
+\]</div><p>
+Apply the activation function <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(1)}\)</span> to get the activation matrix of the first layer as
+<div class="math">\[
+A^{(1)}
+=\underset{\overline{~~~~}}{\mathscr{A}}^{(1)}\big(Z^{(1)}\big).
+\]</div>
+Taking the activation <span class="math">\(A^{(1)}\)</span> of the first layer as the input to the second layer, the activation of the second layer is computed using the formula
+<div class="math">\[
+A^{(2)}
+=\underset{\overline{~~~~}}{\mathscr{A}}^{(2)}\big({Z}^{(2)}\big).
+\]</div>
+Proceed recursively as
+<div class="math">\[
+A^{(l)} = \underset{\overline{~~~~}}{\mathscr{A}}^{(l)}\big({Z}^{(l)}\big), \quad l=1,2,\ldots,L-1,
+\]</div>
+for all the hidden layers.
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 4.2 (Activation at the Output Layer):</b></div><p>
+The choice of the activation functions at the output layer depends on the purpose of the neural network. If the network is used for regression or function approximation, then the activation function at each neuron of the output layer is the identity map and hence <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(L)}\)</span> denotes the componentwise identity activation.
+</p><p>
+On the other hand, if the neural network has a multi-class classification, then the activation function at the output layer is a softmax function <span class="math">\(\texttt{sm}\)</span> introduced in <a href="Ch01FeedForwardArchitecture.html#multiclass.classification.subs" class="internal-link">Subsection 1.3.6</a>. In this case, the notation <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(L)}\)</span> should not be taken as an activation function applied componentwise, rather it is a vector valued softmax function.
+
+</div>
+In general, we have the following algorithm:
+<div class="algorithm" id="batch.forward.propagation.algo">
+<div class="heading-container"><b class="heading">Algorithm 4.1 (Batch Forward Propagation):</b></div><p>
+<b>Input:</b> 
+<ul><li>Given the trainable parameters 
+<div class="math">\[\boldsymbol{\Theta} = \big( \overline{W}^{(1)}, \overline{W}^{(2)}, \cdots, \overline{W}^{(L)} \big)\]</div>
+</li><li>Given the dataset in the form of a <span class="math">\(n_0\times N\)</span> matrix 
+<span class="math">\(
+A^{(0)}.
+\)</span>
+</li></ul>
+<b>Processing:</b><br>
+For each layer <span class="math">\(l=1,2,\ldots, L\)</span>, perform the following computation:
+<ul><li>Augment the activation <span class="math">\(A^{(l-1)}\)</span> matrix to obtain <span class="math">\(\overline{A}^{(l-1)}\)</span>.
+</li><li>Perform the matrix multiplication
+<div class="math">\[
+Z^{(l)} = \overline{W}^{(l)}\,\overline{A}^{(l-1)}
+\]</div>
+</li><li>Apply the activation function to each element of the matrix <span class="math">\(Z^{(l)}\)</span> as follows:<br>
+For <span class="math">\(i=1,2,\ldots, n_l\)</span><br>
+<span class="math">\(~~~~~~\)</span>For <span class="math">\(j=1, 2, \ldots, N\)</span><br>
+<span class="math">\(~~~~~~~~~~~~A^{(l)}_{ij} = \mathscr{A}^{(l)}(Z^{(l)}_{ij}).\)</span>
+</li></ul>
+<b>Output:</b> <span class="math">\(Y = A^{(L)},\)</span> which is a <span class="math">\(n_L\times N\)</span> matrix
+
+</div>
+A visualization of the above algorithm is shown in <a href="Ch04NetworkGradientEvaluation.html#Forward.Propagation.fig">Figure 4.2</a>
+<div class="latex-figure" id="Forward.Propagation.fig">
+<img src="Figures/Ch04ForwardPropogation.png" alt="">
+<div class="figure-caption"><p>Figure 4.2: Visualization of batch forward propagation in a feedforward neural network, showing how the input passes through hidden layers to generate the final output.
+</p></div>
+</div>
+<div class="remark" id="ANN.representation.rem">
+<div class="heading-container"><b class="heading">Remark 4.3:</b></div>
+
+An artificial neural network can be completely specified by the tuple 
+<div class="math">\[
+\big( \boldsymbol{\Theta}, \underset{\overline{~~~~}}{\mathscr{A}} \big) := \Big((\overline{W}^{(1)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(1)}_{n_1}), (\overline{W}^{(2)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(2)}_{n_2}),\ldots, (\overline{W}^{(L)}, \underset{\overline{~~~~}}{\mathscr{A}}^{(L)}_{n_L})\Big),
+\]</div>
+where <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}_{n_l}\)</span> denotes the activation function of the <span class="math">\(l^{\rm th}\)</span> layer with the indication of the width of the layer as the suffix.
+
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The augmented form used in <a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.algo">Algorithm 4.1</a> is only for a 
+notational convenience in the theoretical discussions.  It is not the form used by the deep learning libraries such as TensorFlow and PyTorch.   These libraries keep the bias separate from the weight matrix rather than 
+augmenting.  
+
+</div><div class="code">
+<div class="heading-container"><b class="heading">Code 4.1 (TensorFlow and PyTorch Implementations):</b></div>
+<span class="math">\(~\)</span>
+<ol class="latex-enumerate"><li>Understand the following Python code implementing the above forward propagation algorithm
+</p><p>
+<a href="https://colab.research.google.com/drive/1aSYMIfEiMuU7jaIMRhQ9KUHPgQ8TqNUV?usp=sharing" target="_blank"><code>BatchForwardPropagationDirectImplementation</code></a>
+</p><p>
+</li><li>Understand the following Python code that implements forward propagation using TensorFlow-Keras 
+</p><p>
+<a href="https://colab.research.google.com/drive/1VGBq4by1CM1g8prTiHXdt3aVoVl1Lss4?usp=sharing" target="_blank"><code>BatchForwardPropagationTensorFlow-Keras</code></a>
+</p><p>
+</li><li>In the TensorFlow-Keras implementation of a feedforward neural network, the weights, biases, and batch input <span class="math">\(A^{(0)}\)</span> are handled differently from the augmented matrix format used in the theoretical formulation.
+<ol class="latex-enumerate"><li>Describe how Keras stores the weight matrices and bias vectors for each layer, and compare this with the augmented weight matrix format <span class="math">\(\overline{W}^{(l)}\)</span> we used in theory.
+</li><li>Explain the difference between the batch input format of <span class="math">\(A^{(0)}\)</span> in Keras 
+(<i>i.e.,</i> NumPy/TensorFlow arrays) and the format we used in the theoretical framework (column-wise arrangement of samples) as well as in the first code above.
+</li></ol>
+</li><li>Understand the following Python code that implements forward propagation using PyTorch 
+</p><p>
+<a href="https://colab.research.google.com/drive/1YB21nW5dO0KfVoUF7CyBhJhPa4Kr0UJp?usp=sharing" target="_blank"><code>BatchForwardPropagationPyTorch</code></a>
+</p><p>
+</li><li>State the shape of the weight and bias attributes of PyTorch. Determine whether the stored weight array agrees with <span class="math">\(W^{(l)}\)</span> or with its transpose, and compare your answer with the Keras case of Question 3.
+</li></ol>
+
+</div><p>
+Observe that, at each layer, <a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.algo">Algorithm 4.1</a> generates two matrices, namely, the pre-activation matrix <span class="math">\(Z^{(l)}\)</span> and the activation matrix <span class="math">\(A^{(l)}\)</span>. Only the last activation <span class="math">\(A^{(L)}\)</span> is required for evaluating the value of the network function. However, the intermediate matrices <span class="math">\(Z^{(l)}\)</span> and <span class="math">\(A^{(l)}\)</span>, <span class="math">\(l=1,2,\ldots,L-1\)</span>, are needed for the evaluation of the gradient of the cost function as we see in the next section.  For this reason, the intermediate quantities computed in the forward propagation algorithm have to be retained in memory.
+</p>
+
+ <span style="color: red; font-weight: bold; font-size: 24px;">
+  Chapter to be continued ...
+</span>
+
+<h2 id="backpropagation.method.sec">4.2 Backpropagation</h2>
+<h3 id="cost-functions-and-empirical-risk">4.2.1 Cost Functions and Empirical Risk</h3>
+<h3 id="softmax-output-and-multi-class-classification">4.2.2 Softmax Output and Multi-class Classification</h3>
+<h3 id="gradient-computation">4.2.3 Gradient Computation</h3>
+<h3 id="the-backpropagation-algorithm">4.2.4 The Backpropagation Algorithm</h3>
+<h3 id="batch-form-computational-cost-and-gradient-checking">4.2.5 Batch form, computational cost, and gradient checking</h3>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 05-Sep-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

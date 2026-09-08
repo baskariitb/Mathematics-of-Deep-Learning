@@ -73,11 +73,10 @@
 <div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.subs">4.1.2 Forward Propagation</a></div>
 <div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-batch-form">4.1.2.1 The Batch Form</a></div>
 <div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.method.sec">4.2 Backpropagation</a></div>
-<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#cost-functions-and-empirical-risk">4.2.1 Cost Functions and Empirical Risk</a></div>
-<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#softmax-output-and-multi-class-classification">4.2.2 Softmax Output and Multi-class Classification</a></div>
-<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation">4.2.3 Gradient Computation</a></div>
-<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#the-backpropagation-algorithm">4.2.4 The Backpropagation Algorithm</a></div>
-<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch-form-computational-cost-and-gradient-checking">4.2.5 Batch form, computational cost, and gradient checking</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation">4.2.1 Gradient Computation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation-for-neurons">4.2.1.1 Gradient Computation for Neurons</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#propagation-for-shallow-networks">4.2.1.2 Propagation for Shallow Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.algorithm.subs">4.2.2 The Backpropagation Algorithm</a></div>
 </div></div>
 </div>
     </div>
@@ -310,7 +309,7 @@ The choice of the activation functions at the output layer depends on the purpos
 On the other hand, if the neural network has a multi-class classification, then the activation function at the output layer is a softmax function <span class="math">\(\texttt{sm}\)</span> introduced in <a href="Ch01FeedForwardArchitecture.html#multiclass.classification.subs" class="internal-link">Subsection 1.3.6</a>. In this case, the notation <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(L)}\)</span> should not be taken as an activation function applied componentwise, rather it is a vector valued softmax function.
 
 </div>
-In general, we have the following algorithm:
+The following algorithm gives the computational procedure of the batch forward propagation: 
 <div class="algorithm" id="batch.forward.propagation.algo">
 <div class="heading-container"><b class="heading">Algorithm 4.1 (Batch Forward Propagation):</b></div><p>
 <b>Input:</b> 
@@ -334,6 +333,13 @@ For <span class="math">\(i=1,2,\ldots, n_l\)</span><br>
 <span class="math">\(~~~~~~~~~~~~A^{(l)}_{ij} = \mathscr{A}^{(l)}(Z^{(l)}_{ij}).\)</span>
 </li></ul>
 <b>Output:</b> <span class="math">\(Y = A^{(L)},\)</span> which is a <span class="math">\(n_L\times N\)</span> matrix
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The above algorithm is written for the case where the activation of the output layer is
+applied componentwise.  If the output layer uses the softmax function, then the activation of the output layer should be replaced by the vector-valued activation of the above remark, applied to each column of <span class="math">\(Z^{(L)}\)</span>.
 
 </div>
 A visualization of the above algorithm is shown in <a href="Ch04NetworkGradientEvaluation.html#Forward.Propagation.fig">Figure 4.2</a>
@@ -382,21 +388,127 @@ augmenting.
 </li></ol>
 
 </div><p>
-Observe that, at each layer, <a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.algo">Algorithm 4.1</a> generates two matrices, namely, the pre-activation matrix <span class="math">\(Z^{(l)}\)</span> and the activation matrix <span class="math">\(A^{(l)}\)</span>. Only the last activation <span class="math">\(A^{(L)}\)</span> is required for evaluating the value of the network function. However, the intermediate matrices <span class="math">\(Z^{(l)}\)</span> and <span class="math">\(A^{(l)}\)</span>, <span class="math">\(l=1,2,\ldots,L-1\)</span>, are needed for the evaluation of the gradient of the cost function as we see in the next section.  For this reason, the intermediate quantities computed in the forward propagation algorithm have to be retained in memory.
-</p>
-
- <span style="color: red; font-weight: bold; font-size: 24px;">
-  Chapter to be continued ...
-</span>
-
+Observe that, at each layer, <a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.algo">Algorithm 4.1</a> generates two matrices, namely, the pre-activation matrix <span class="math">\(Z^{(l)}\)</span> and the activation matrix <span class="math">\(A^{(l)}\)</span>. Only the last activation <span class="math">\(A^{(L)}\)</span> is required for evaluating the value of the network function. However, the matrices <span class="math">\(Z^{(l)}\)</span> and <span class="math">\(A^{(l)}\)</span>, <span class="math">\(l=1,2,\ldots,L\)</span>, are needed for the evaluation of the gradient of the cost function, as we see in the next section.  For this reason, the intermediate quantities computed in the forward propagation algorithm have to be retained in memory.
 <h2 id="backpropagation.method.sec">4.2 Backpropagation</h2>
-<h3 id="cost-functions-and-empirical-risk">4.2.1 Cost Functions and Empirical Risk</h3>
-<h3 id="softmax-output-and-multi-class-classification">4.2.2 Softmax Output and Multi-class Classification</h3>
-<h3 id="gradient-computation">4.2.3 Gradient Computation</h3>
-<h3 id="the-backpropagation-algorithm">4.2.4 The Backpropagation Algorithm</h3>
-<h3 id="batch-form-computational-cost-and-gradient-checking">4.2.5 Batch form, computational cost, and gradient checking</h3>
+Training a neural network amounts to minimizing a cost function <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span>, defined over the space of all trainable parameters <span class="math">\(\boldsymbol{\Theta}\)</span>. In order to proceed towards the minimum faster, we need to determine the direction in the parameter space along which <span class="math">\(\mathcal{C}\)</span> decreases most rapidly. This direction is given by the gradient of <span class="math">\(\mathcal{C}\)</span> with respect to the weights and the biases. <b>Backpropagation</b> provides us with an efficient method to compute these gradients using the chain rule.
+</p><p>
+For a single neuron with the bias <span class="math">\(b\)</span> and the weight vector <span class="math">\(\boldsymbol{w} = (w_1, w_2, \ldots, w_n)\)</span>, the gradient of a cost function <span class="math">\(\mathcal{C}\)</span> is given by
+<div class="math">\[
+\nabla \mathcal{C} = \left(\frac{\partial \mathcal{C}}{\partial b}, \nabla_{\boldsymbol{w}} \mathcal{C} \right)
+=\left(\frac{\partial \mathcal{C}}{\partial b},~\left(\frac{\partial \mathcal{C}}{\partial w_1}, \frac{\partial \mathcal{C}}{\partial w_2}, \ldots, \frac{\partial \mathcal{C}}{\partial w_n}\right)~\right).
+\]</div>
+<h3 id="gradient-computation">4.2.1 Gradient Computation</h3>
+In this subsection, we discuss the application of the chain rule to compute the gradient of a cost function.  To keep the discussions clear, we first introduce the procedure for a single neuron and then extend it to shallow networks. The extention to a general network is taken up in <a href="Ch04NetworkGradientEvaluation.html#backpropagation.algorithm.subs" class="internal-link">Subsection 4.2.2</a>.
+<h4 id="gradient-computation-for-neurons">4.2.1.1 Gradient Computation for Neurons</h4>
+Let us first consider a single neuron with the neuron function <span class="math">\(\text{𝕗}\)</span>. Then the output is given by <span class="math">\(\tilde{y} = \text{𝕗}(\boldsymbol{x};\overline{\boldsymbol{w}}) = \mathscr{A}\circ \text{𝕒}(\overline{\boldsymbol{x}};\overline{\boldsymbol{w}})\)</span>. Since <span class="math">\(\mathcal{C}\)</span> measures the proximity between the true label <span class="math">\(y\)</span> and the model predicted value <span class="math">\(\tilde{y}\)</span>, it depends on the weights and the bias only through the affine function <span class="math">\(\text{𝕒}\)</span>. Therefore, we have
+<div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b} = \frac{\partial \mathcal{C}}{\partial \text{𝕒}} \frac{\partial \text{𝕒}}{\partial b} = \delta
+~~\text{and}~~
+\frac{\partial \mathcal{C}}{\partial w_k} = \frac{\partial \mathcal{C}}{\partial \text{𝕒}} \frac{\partial \text{𝕒}}{\partial w_k} = \delta\, x_k,~k=1,2,\ldots, n,
+\]</div>
+where
+<div class="math">\[\delta = \frac{\partial \mathcal{C}}{\partial \text{𝕒}} = \mathcal{C}'(\tilde{y})\, \mathscr{A}'(\text{𝕒}). \]</div>
+Recall, we have computed the gradient of the cross-ratio loss function in <a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs" class="internal-link">Subsection 3.2.2</a>
+<h4 id="propagation-for-shallow-networks">4.2.1.2 Propagation for Shallow Networks</h4>
+We now discuss the gradient of the cost function associated with a single hidden layer neural network. Since the cost function depends on the trainable parameters only through the model predicted output vector <span class="math">\(\tilde{\boldsymbol{y}} = \boldsymbol{x}^{(2)}\)</span> (here we have taken <span class="math">\(L=2\)</span>), we have to start the gradient calculation from the output layer and progress towards the first hidden layer by applying the chain rule backwards through the layers to obtain all the required derivatives. This procedure is known as <b>backpropagation</b>.
+</p><p>
+<b>Layer <span class="math">\(l=2\)</span></b>:<br>
+Following the gradient calculation at the neuron level given above, for the <span class="math">\(i^{\rm th}\)</span> neuron of the output layer <span class="math">\(l=2\)</span>, we have
+<div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b^{(2)}_i} = \delta^{(2)}_i,~~
+\frac{\partial \mathcal{C}}{\partial w^{(2)}_{ij}} = \delta^{(2)}_i x^{(1)}_j,
+~~i=1,2,\ldots, n_2,~j=1,2,\ldots,n_1,
+\]</div>
+where
+<div class="math">\[
+\delta^{(2)}_i = \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(2)}_i}
+~~\text{with}~~ \text{𝕒}^{(2)}_i = \big\langle \overline{\boldsymbol{w}}^{(2)}_{i}, \overline{\boldsymbol{x}}^{(1)}\big\rangle.
+\]</div>
+<b>Layer <span class="math">\(l=1\)</span></b>:<br>
+Now for the <span class="math">\(i^{\rm th}\)</span> neuron of the layer <span class="math">\(l=1\)</span>, we have
+<div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b^{(1)}_i} = \delta^{(1)}_i,~~
+\frac{\partial \mathcal{C}}{\partial w^{(1)}_{ij}} = \delta^{(1)}_i x^{(0)}_j,
+~~i=1,2,\ldots, n_1,~j=1,2,\ldots,n_0,
+\]</div>
+where
+<div class="math">\[
+\delta^{(1)}_i = \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(1)}_i}
+~~\text{with}~~ \text{𝕒}^{(1)}_i(\overline{\boldsymbol{x}}^{(0)}) = \big\langle \overline{\boldsymbol{w}}^{(1)}_{i}, \overline{\boldsymbol{x}}^{(0)}\big\rangle.
+\]</div>
+Observe that to obtain the gradient of <span class="math">\(\mathcal{C}\)</span>, we only need to calculate the <span class="math">\(\delta\)</span>'s, which are given layerwise.
+</p><p>
+<b>Delta Calculation:</b><br>
+We still have to obtain the formulae for the <span class="math">\(\delta\)</span>'s that involve the derivatives of the activation functions, just as we obtained for a single neuron above. We get these by noting that <span class="math">\(\text{𝕒}^{(1)}_i\)</span> affects <span class="math">\(\mathcal{C}\)</span> through <span class="math">\(\text{𝕒}^{(2)}\)</span>. Therefore, we write
+</p><div class="math numbered-math">\begin{eqnarray}
+\delta^{(1)}_i 
+&=& \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(1)}_i}\\
+&=& \sum_{j=1}^{n_2}\frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(2)}_j}\frac{\partial \text{𝕒}^{(2)}_j}{\partial \text{𝕒}^{(1)}_i}\\
+&=&\sum_{j=1}^{n_2}\delta^{(2)}_j \frac{\partial }{\partial \text{𝕒}^{(1)}_i} \big\langle \overline{\boldsymbol{w}}^{(2)}_{j}, \overline{\boldsymbol{x}}^{(1)}\big\rangle\\
+&=&\sum_{j=1}^{n_2} \delta^{(2)}_j \frac{\partial }{\partial \text{𝕒}^{(1)}_i} \left(\sum_{k=1}^{n_1}w^{(2)}_{jk} \mathscr{A}^{(1)}(\text{𝕒}^{(1)}_k) + b^{(2)}_{j}\right)\\
+&=&\sum_{j=1}^{n_2} \delta^{(2)}_j w^{(2)}_{ji}\mathscr{A}^{(1)'}(\text{𝕒}^{(1)}_i)\\
+&=&\mathscr{A}^{(1)'}(\text{𝕒}^{(1)}_i)\sum_{j=1}^{n_2} \delta^{(2)}_j w^{(2)}_{ji}.
+\end{eqnarray}<span class="eq-number">(4.9)</span></div><div class="problem">
+<div class="heading-container"><b class="heading">Problem 4.2:</b></div>
+
+Consider an ANN with <span class="math">\(L=2\)</span> with the logistic activation function and the binary cross-entropy cost function
+<div class="math">\[
+\mathcal{C}(\boldsymbol{y}, \tilde{\boldsymbol{y}}) = -\sum_{k=1}^{n_L} y_k \ln \tilde{y}_k - \sum_{k=1}^{n_L} (1-y_k) \ln (1-\tilde{y}_k).
+\]</div>
+Find the expression for <span class="math">\(\delta_i^{(1)}\)</span>. 
+
+</div><h3 id="backpropagation.algorithm.subs">4.2.2 The Backpropagation Algorithm</h3>
+In the previous subsection, we have discussed how the chain rule is used in the backpropagation process to calculate the gradients of the cost function <span class="math">\(\mathcal{C}\)</span> with respect to the trainable parameters.  In this subsection, we discuss the <b>backpropagation algorithm</b> to compute the gradients of a given cost function <span class="math">\(\mathcal{C}\)</span> in all the layers of a general feedforward network of depth <span class="math">\(L\)</span>.
+<div class="algorithm" id="backpropagation.algo">
+<div class="heading-container"><b class="heading">Algorithm 4.2 (Backpropagation Algorithm):</b></div><p>
+<b>Input:</b> 
+<ul><li>Choose an input vector <span class="math">\(\boldsymbol{x}\)</span> and its corresponding true label vector <span class="math">\(\boldsymbol{y}\)</span>.
+</li><li>Choose values for the trainable parameters in <span class="math">\(\boldsymbol{\Theta}\)</span>. 
+</li></ul>
+<b>Processing:</b>
+<ol class="latex-enumerate"><li>  Perform the forward propagation to obtain the activations as follows:
+</p><p>
+<b>Forward propagation:</b> For <span class="math">\(l=1,2,\ldots, L\)</span>, compute
+<div class="math">\[
+x^{(l)}_j = \mathscr{A}^{(l)}\left(
+					\sum_{k=1}^{n_{l-1}} w_{jk}^{(l)} x_{k}^{(l-1)} + b_{j}^{(l)}\right),~j=1,2,\ldots, n_l,
+\]</div>
+and take the model predicted output as <span class="math">\(\tilde{\boldsymbol{y}} = \boldsymbol{x}^{(L)}\)</span>.
+</li><li>  Calculate the <span class="math">\(\delta\)</span>'s at the output layer <span class="math">\(L\)</span> using the following formula:
+</p><div class="math numbered-math">\begin{eqnarray}
+\delta^{(L)}_j &=& \frac{\partial \mathcal{C}}{\partial \text{𝕒}^{(L)}_j}(\boldsymbol{y}, \tilde{\boldsymbol{y}})\\
+&=& \frac{\partial \mathcal{C}}{\partial x^{(L)}_j}(\boldsymbol{y}, \tilde{\boldsymbol{y}})\,\mathscr{A}^{(L)'}(\text{𝕒}^{(L)}_j),~~j=1,2,\ldots, n_L,
+\end{eqnarray}<span class="eq-number">(4.10)</span></div><p>
+where <span class="math">\(\text{𝕒}^{(L)}_j=\big\langle \overline{\boldsymbol{w}}^{(L)}_j, \overline{\boldsymbol{x}}^{(L-1)}\big\rangle.\)</span>
+</li><li>  Next perform the backpropagation for calculating the deltas in each hidden layer using the following formula:
+</p><p>
+<b>Backpropagation for deltas:</b> For <span class="math">\(l=L-1,L-2,\ldots, 1\)</span>, compute
+</p><div class="math numbered-math">\begin{eqnarray}
+\delta^{(l)}_i &=& \mathscr{A}^{(l)'}(\text{𝕒}^{(l)}_i)\sum_{j=1}^{n_{l+1}} \delta^{(l+1)}_j w^{(l+1)}_{ji},~~i=1,2,\ldots, n_l.
+\end{eqnarray}<span class="eq-number">(4.11)</span></div><p>
+</li><li> Compute the components of the gradient of <span class="math">\(\mathcal{C}\)</span> as follows:<br>
+For <span class="math">\(l=L,L-1,\ldots, 1\)</span>,
+<div class="math">\[
+\frac{\partial \mathcal{C}}{\partial b^{(l)}_i} = \delta^{(l)}_i,~~
+\frac{\partial \mathcal{C}}{\partial w^{(l)}_{ij}} = \delta^{(l)}_i x^{(l-1)}_j,
+~~i=1,2,\ldots,n_{l},~ j=1,2,\ldots,n_{l-1},
+\]</div>
+</li></ol>
+<b>Output:</b> All the gradient components
+<div class="math">\[\nabla_{\boldsymbol{\Theta}} \mathcal{C}
+=\Big(
+	\big(\nabla_{\boldsymbol{b}^{(l)}} \mathcal{C}, \nabla_{W^{(l)}}\mathcal{C}\big)
+	\Big)_{l=1}^L.\]</div>
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+PyTorch and TensorFlow use reverse-mode automatic differentiation, which is an efficient way of implementing the backpropagation.  We omit the details in this course. Interested readers can refer to  <a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" target="_blank">Bishop and Bishop (2024)</a>, section 8.2 on page 244 for the details on this approach.
+
+</div>
     </div>
-    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 05-Sep-2026</footer>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 08-Sep-2026</footer>
     <script>
     document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
     document.addEventListener("keydown", function(e) {

@@ -283,10 +283,12 @@ Then the affine function takes the form
 <div class="math">\[
 \underline{𝕒}(\overline{A}^{(0)}; \overline{W}^{(1)}) = \overline{W}^{(1)}\overline{A}^{(0)},
 \]</div>
-where <span class="math">\(\overline{A}^{(0)}\)</span> is the augmented input matrix, the affine function is applied columnwise, and the right hand side is a <span class="math">\(n_1\times N\)</span> matrix. For notational convenience, we use
+where <span class="math">\(\overline{A}^{(0)}\)</span> is the augmented input matrix, the affine function is applied columnwise, and the right hand side is a <span class="math">\(n_1\times N\)</span> matrix. For notational convenience, we write
 <div class="math">\[
 Z^{(l)} := \overline{W}^{(l)}\overline{A}^{(l-1)},~~l=1,2,\ldots, L.
-\]</div><p>
+\]</div>
+and call this matrix as the <b>pre-activation matrix</b> of the <span class="math">\(l^{\rm th}\)</span> layer.
+<p>
 Apply the activation function <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(1)}\)</span> to get the activation matrix of the first layer as
 <div class="math">\[
 A^{(1)}

@@ -509,6 +509,123 @@ For <span class="math">\(l=L,L-1,\ldots, 1\)</span>,
 PyTorch and TensorFlow use reverse-mode automatic differentiation, which is an efficient way of implementing the backpropagation.  We omit the details in this course. Interested readers can refer to  <a href="https://link.springer.com/book/10.1007/978-3-031-45468-4" target="_blank">Bishop and Bishop (2024)</a>, section 8.2 on page 244 for the details on this approach.
 
 </div>
+<h3 id="batch.backpropagation.subs">4.2.3 Batch Form, Computational Cost, and Gradient Checking</h3>
+<a href="Ch04NetworkGradientEvaluation.html#backpropagation.algo">Algorithm 4.2</a> computes the gradient of a cost function with respect to the trainable parameters for a single input vector <span class="math">\(\boldsymbol{x}\)</span>. For computational efficiency, we need the gradient to be computed for a batch of inputs, where the computation is performed in the matrix form introduced in <a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec" class="internal-link">Section 4.1</a>. 
+</p><p>
+It is convenient to separate the comparison of one prediction with one label from the aggregation of these comparisons over the dataset.
+<div class="definition" id="loss.cost.function.def">
+<div class="heading-container"><b class="heading">Definition 4.1 (Loss Function and Cost Function):</b></div>
+
+
+A <b>loss function</b> is a function
+<div class="math">\[
+\ell: \mathbb{R}^{n_L}\times \mathbb{R}^{n_L} \rightarrow [0,\infty),
+\]</div>
+where <span class="math">\(\ell(\boldsymbol{y}, \tilde{\boldsymbol{y}})\)</span> measures the discrepancy between a label <span class="math">\(\boldsymbol{y}\)</span> and the corresponding prediction <span class="math">\(\tilde{\boldsymbol{y}}\)</span>. Given a dataset <span class="math">\(\mathcal{D}\)</span> with <span class="math">\(N\)</span> samples, the associated <b>cost function</b> is the average
+</p><div class="math numbered-math" id="cost.as.average.eq">\begin{eqnarray}
+\mathcal{C}(\boldsymbol{\Theta}) = \frac{1}{N} \sum_{k=1}^{N} \mathcal{C}_k(\boldsymbol{\Theta}),
+\end{eqnarray}<span class="eq-number">(4.12)</span></div><p>
+where 
+<span class="math">\(
+\mathcal{C}_k(\boldsymbol{\Theta}) := \ell\big(\boldsymbol{y}_k, \tilde{\boldsymbol{y}}_k\big)
+\)</span> 
+is called the <b>per-sample cost</b>.
+
+</div>
+Recall from <a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec" class="internal-link">Section 4.1</a> that <span class="math">\(A^{(L)}\)</span>  is the activation matrix of the output layer whose <span class="math">\(k^{\rm th}\)</span> column is the network prediction <span class="math">\(\tilde{\boldsymbol{y}}_k\)</span> of the true label <span class="math">\(\tilde{\boldsymbol{y}}_k\)</span>.  We write the labels of the dataset as the <span class="math">\(n_L\times N\)</span> matrix
+<div class="math">\[
+Y := [\,\boldsymbol{y}_1~\boldsymbol{y}_2~\cdots~\boldsymbol{y}_N\,],
+\]</div>
+so that the <span class="math">\(k^{\rm th}\)</span> column of <span class="math">\(Y\)</span> is the label of the <span class="math">\(k^{\rm th}\)</span> sample. 
+</p><p>
+Similarly, for <span class="math">\(l=1,2,\ldots, L\)</span>, we write the <span class="math">\(n_l\times N\)</span> activation matrix <span class="math">\(A^{(l)}\)</span> of the <span class="math">\(l^{\rm th}\)</span> layer as
+<div class="math">\[A^{(l)} = [\, \boldsymbol{x}^{(l)}_1~\boldsymbol{x}^{(l)}_2~\cdots~\boldsymbol{x}^{(l)}_N],\]</div>
+so that <span class="math">\(\tilde{\boldsymbol{y}} = \boldsymbol{x}^{(L)}_k\)</span> is the prediction of the network for the <span class="math">\(k^{\rm th}\)</span> sample.
+</p><p>
+Observe that the per-sample cost <span class="math">\(\mathcal{C}_k\)</span> depends on the trainable parameters only through the <span class="math">\(k^{\rm th}\)</span> column of the activation matrix <span class="math">\(A^{(L)}\)</span> of the output layer . 
+<h4 id="the-delta-matrices">4.2.3.1 The Delta Matrices</h4><p>
+Define the <span class="math">\(n_l \times N\)</span> <b>delta matrix</b> <span class="math">\(\Delta^{(l)}\)</span> for the <span class="math">\(l^{\rm th}\)</span> layer  as
+</p><div class="math numbered-math" id="delta.matrix.eq">\begin{eqnarray}
+\Delta^{(l)}_{ik} := \frac{\partial \mathcal{C}_k}{\partial Z^{(l)}_{ik}},
+~~i=1,2,\ldots, n_l,~k=1,2,\ldots,N.
+\end{eqnarray}<span class="eq-number">(4.13)</span></div><p>
+The <span class="math">\(k^{\rm th}\)</span> column of <span class="math">\(\Delta^{(l)}\)</span> is the vector of the quantities <span class="math">\(\delta^{(l)}_i\)</span> of the previous subsection, computed for the <span class="math">\(k^{\rm th}\)</span> sample. Note that the cost of the <span class="math">\(k^{\rm th}\)</span> sample does not depend on the pre-activations of any other sample, and therefore the columns of <span class="math">\(\Delta^{(l)}\)</span> are computed independently of each other.
+<h4 id="backward-recursion-in-matrix-form">4.2.3.2 Backward Recursion in Matrix Form</h4>
+We first record the derivative of a coordinatewise activation function in matrix form. For a given activation function <span class="math">\(\mathscr{A}^{(l)}:\mathbb{R}\rightarrow \mathbb{R}\)</span> and a matrix <span class="math">\(Z\)</span> of size <span class="math">\(n_l\times N\)</span>, we use the notation <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)'}(Z)\)</span> for the <span class="math">\(n_l\times N\)</span> matrix whose <span class="math">\((i,k)^{\rm th}\)</span> entry is <span class="math">\(\mathscr{A}^{(l)'}(Z_{ik})\)</span>. We also use the notation <span class="math">\(\odot\)</span> for the entrywise product, called the <b>Hadamard product</b>, of two matrices of the same size.
+</p><p>
+<b>Output layer:</b> Assume that the activation of the output layer is applied coordinatewise. Since <span class="math">\(\mathcal{C}_k\)</span> depends on <span class="math">\(Z^{(L)}_{ik}\)</span> only through <span class="math">\(A^{(L)}_{ik} = \mathscr{A}^{(L)}(Z^{(L)}_{ik})\)</span>, the chain rule gives
+<div class="math">\[
+\Delta^{(L)}_{ik} = \frac{\partial \mathcal{C}_k}{\partial A^{(L)}_{ik}}\, \mathscr{A}^{(L)'}\big(Z^{(L)}_{ik}\big),
+\]</div>
+which in matrix form reads
+</p><div class="math numbered-math" id="output.delta.matrix.eq">\begin{eqnarray}
+\Delta^{(L)} = \frac{\partial \mathcal{C}}{\partial A^{(L)}} \odot \underset{\overline{~~~~}}{\mathscr{A}}^{(L)'}\big(Z^{(L)}\big),
+\end{eqnarray}<span class="eq-number">(4.14)</span></div><p>
+where <span class="math">\(\dfrac{\partial \mathcal{C}}{\partial A^{(L)}}\)</span> denotes the <span class="math">\(n_L\times N\)</span> matrix with entries <span class="math">\(\dfrac{\partial \mathcal{C}_k}{\partial A^{(L)}_{ik}}\)</span>.
+</p><p>
+<b>Hidden layers:</b> For <span class="math">\(l = L-1, L-2, \ldots, 1\)</span>, the pre-activation of the <span class="math">\((l+1)^{\rm st}\)</span> layer is
+<div class="math">\[
+Z^{(l+1)}_{ik} = \sum_{j=1}^{n_l} W^{(l+1)}_{ij} A^{(l)}_{jk} + b^{(l+1)}_i,
+~~\text{with}~~ A^{(l)}_{jk} = \mathscr{A}^{(l)}\big(Z^{(l)}_{jk}\big).
+\]</div>
+Hence <span class="math">\(Z^{(l)}_{jk}\)</span> influences <span class="math">\(\mathcal{C}_k\)</span> only through the entries <span class="math">\(Z^{(l+1)}_{ik}\)</span>, <span class="math">\(i=1,2,\ldots, n_{l+1}\)</span>, of the same column. The chain rule therefore gives
+</p><div class="math numbered-math">\begin{eqnarray}
+\Delta^{(l)}_{ik} 
+&=& \sum_{j=1}^{n_{l+1}} \frac{\partial \mathcal{C}_k}{\partial Z^{(l+1)}_{jk}} \frac{\partial Z^{(l+1)}_{jk}}{\partial Z^{(l)}_{ik}}\\
+&=& \left(\sum_{j=1}^{n_{l+1}} W^{(l+1)}_{ji}\,\Delta^{(l+1)}_{jk} \right) \mathscr{A}^{(l)'}\big(Z^{(l)}_{ik}\big)\\
+&=& \Big[\big(W^{(l+1)}\big)^\top \Delta^{(l+1)}\Big]_{ik}\, \mathscr{A}^{(l)'}\big(Z^{(l)}_{ik}\big),
+\end{eqnarray}<span class="eq-number">(4.15)</span></div><p>
+that is,
+</p><div class="math numbered-math" id="delta.recursion.matrix.eq">\begin{eqnarray}
+\Delta^{(l)} = \Big[\big(W^{(l+1)}\big)^\top \Delta^{(l+1)}\Big] \odot \underset{\overline{~~~~}}{\mathscr{A}}^{(l)'}\big(Z^{(l)}\big),
+~~l=L-1, L-2,\ldots, 1.
+\end{eqnarray}<span class="eq-number">(4.16)</span></div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+Observe that the matrix appearing in <a href="#delta.recursion.matrix.eq">(4.16)</a> is the weight matrix <span class="math">\(W^{(l+1)}\)</span> and not the augmented weight matrix <span class="math">\(\overline{W}^{(l+1)}\)</span>. The bias does not depend on the activation of the previous layer, and therefore the first column of <span class="math">\(\overline{W}^{(l+1)}\)</span> has to be removed before transposing. 
+
+</div>
+<b>Cost Gradients:</b> Since <span class="math">\(Z^{(l)}_{ik} = \sum_{j} \overline{W}^{(l)}_{ij}\,\overline{A}^{(l-1)}_{jk}\)</span>, we have
+<div class="math">\[
+\frac{\partial \mathcal{C}}{\partial \overline{W}^{(l)}_{ij}}
+= \frac{1}{N}\sum_{k=1}^{N} \frac{\partial \mathcal{C}_k}{\partial Z^{(l)}_{ik}}\, \overline{A}^{(l-1)}_{jk}
+= \frac{1}{N}\Big[\Delta^{(l)}\big(\overline{A}^{(l-1)}\big)^\top\Big]_{ij},
+\]</div>
+and therefore
+</p><div class="math numbered-math" id="gradient.matrix.eq">\begin{eqnarray}
+\frac{\partial \mathcal{C}}{\partial \overline{W}^{(l)}}
+= \frac{1}{N}\, \Delta^{(l)}\big(\overline{A}^{(l-1)}\big)^\top,
+~~l=1,2,\ldots, L,
+\end{eqnarray}<span class="eq-number">(4.17)</span></div><p>
+which is a matrix of size <span class="math">\(n_l\times (n_{l-1}+1)\)</span>, of the same size as <span class="math">\(\overline{W}^{(l)}\)</span>. Since the first row of <span class="math">\(\overline{A}^{(l-1)}\)</span> consists of ones, the first column of <a href="#gradient.matrix.eq">(4.17)</a> is
+<div class="math">\[
+\frac{\partial \mathcal{C}}{\partial \boldsymbol{b}^{(l)}} = \frac{1}{N}\, \Delta^{(l)} \mathbf{1}_N,
+\]</div>
+where <span class="math">\(\mathbf{1}_N\in \mathbb{R}^N\)</span> is the column vector of ones, and the remaining columns give the derivatives with respect to <span class="math">\(W^{(l)}\)</span>. Thus, the augmented form <a href="#gradient.matrix.eq">(4.17)</a> gives the derivatives of the cost function with respect to the weights and the bias in a single matrix product.
+</p><p>
+The above computations are collected in the following backpropagation algorithm applicable for a network whose output activation is applied coordinatewise.
+<div class="algorithm" id="batch.backpropagation.algo">
+<div class="heading-container"><b class="heading">Algorithm 4.3 (Batch Backpropagation):</b></div><p>
+<b>Input:</b> 
+<ul><li>The trainable parameters <span class="math">\(\boldsymbol{\Theta} = \big( \overline{W}^{(1)}, \overline{W}^{(2)}, \cdots, \overline{W}^{(L)} \big)\)</span>.
+</li><li>The input matrix <span class="math">\(A^{(0)}\)</span> of size <span class="math">\(n_0\times N\)</span> and the label matrix <span class="math">\(Y\)</span> of size <span class="math">\(n_L\times N\)</span>.
+</li></ul>
+<b>Processing:</b>
+<ol class="latex-enumerate"><li> Run <a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.algo">Algorithm 4.1</a> and retain the matrices <span class="math">\(Z^{(l)}\)</span>, <span class="math">\(l=1,2,\ldots,L\)</span>, and <span class="math">\(A^{(l)}\)</span>, <span class="math">\(l=0,1,\ldots,L\)</span>.
+</li><li> Compute the delta matrix of the output layer using <a href="#output.delta.matrix.eq">(4.14)</a>.
+</li><li> For <span class="math">\(l=L-1, L-2, \ldots, 1\)</span>, compute
+<div class="math">\[
+\Delta^{(l)} = \Big[\big(W^{(l+1)}\big)^\top \Delta^{(l+1)}\Big] \odot \underset{\overline{~~~~}}{\mathscr{A}}^{(l)'}\big(Z^{(l)}\big).
+\]</div>
+</li><li> For <span class="math">\(l=1,2,\ldots, L\)</span>, compute
+<div class="math">\[
+\frac{\partial \mathcal{C}}{\partial \overline{W}^{(l)}}
+= \frac{1}{N}\, \Delta^{(l)}\big(\overline{A}^{(l-1)}\big)^\top.
+\]</div>
+</li></ol>
+<b>Output:</b> The matrices <span class="math">\(\dfrac{\partial \mathcal{C}}{\partial \overline{W}^{(l)}}\)</span>, <span class="math">\(l=1,2,\ldots, L\)</span>.
+
+</div>
     </div>
     <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 08-Sep-2026</footer>
     <script>

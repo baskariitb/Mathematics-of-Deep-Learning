@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimization Algorithms</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter "><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multiclass.classification.subs">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch03LogisticRegression.html" class="chapter-link">CH 3: Logistic Regression</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch03LogisticRegression.html#logistic.regression.ch">Logistic Regression</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#model.derivation.sec">3.1 The Logistic Regression Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#bayes.derivation.susb">3.1.1 Derivation using Bayes' Formula</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#logistic.regression.neuron.sec">3.1.2 Single Neuron Interpretation</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#training.a.model.sec">3.2 Training Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#cross-entropy.loss.function.subs">3.2.1 Cross-Entropy Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs">3.2.2 Gradient Descent Algorithm</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#applications.logistic.regression.sec">3.3 Applications of Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#credit.default.subs">3.3.1 Finance: Credit Default Prediction</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch03LogisticRegression.html#model-and-training">3.3.1.1 Model and training.</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch04NetworkGradientEvaluation.html" class="chapter-link">CH 4: Network and Gradient Evaluation</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Network and Gradient Evaluation</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec">4.1 Matrix Formulation and Forward Propagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#layer-function-in-matrix-form">4.1.1 Layer Function in Matrix Form</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.subs">4.1.2 Forward Propagation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-batch-form">4.1.2.1 The Batch Form</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.method.sec">4.2 Backpropagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation">4.2.1 Gradient Computation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation-for-neurons">4.2.1.1 Gradient Computation for Neurons</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#propagation-for-shallow-networks">4.2.1.2 Propagation for Shallow Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.algorithm.subs">4.2.2 The Backpropagation Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.backpropagation.subs">4.2.3 Batch Form, Computational Cost, and Gradient Checking</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-delta-matrices">4.2.3.1 The Delta Matrices</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#backward-recursion-in-matrix-form">4.2.3.2 Backward Recursion in Matrix Form</a></div>
+</div></div>
+<div class="toc-chapter current"><a href="Ch05OptimizationAlgorithms.html" class="chapter-link">CH 5: Optimization Algorithms</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Optimization Algorithms</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#gradient.descent.methods.sec">5.1 Gradient Descent Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#batch-gradient-descent-method">5.1.1 Batch Gradient Descent Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#stochastic-gradient-descent-sgd">5.1.2 Stochastic Gradient Descent (SGD)</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#mini.batch.gd.subs">5.1.3 Mini-batch Gradient Descent</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#momentum.adaptive.GD.sec">5.2 Momentum and Adaptive Gradient Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#momentum-method">5.2.1 Momentum Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#nesterov-accelerated-gd-method">5.2.2 Nesterov Accelerated GD Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-step-size-methods">5.2.3 Adaptive Step Size Methods</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adagrad">5.2.3.1 AdaGrad.</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#root-mean-square-propagation-rmsprop">5.2.3.2 Root Mean Square Propagation (RMSProp)</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-moments-adam">5.2.3.3 Adaptive Moments (Adam).</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adamw">5.2.3.4 AdamW</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="optimization.algorithms.ch">Chapter 5: Optimization Algorithms</h1><p>
+An artificial neural network (ANN) consists of several parameters, which can be broadly categorized into two types, namely, trainable (or learnable) parameters and hyperparameters. Training a neural network is the process of determining appropriate values of the trainable parameters (weights and biases) such that the ANN function (defined in <a href="Ch01FeedForwardArchitecture.html#artificial.neural.network.def">Definition 1.2</a>) approximates the required input-output mapping. Often, such mappings are implicitly represented in training data and the trainable parameters of the network are iteratively updated to minimize the error between the predicted outputs and the true outputs. The error is quantified by an appropriately chosen <b>loss function</b>, and when averaged over the entire dataset, it is referred to as a <b>cost function</b> (see <a href="Ch04NetworkGradientEvaluation.html#loss.cost.function.def">Definition 4.1</a>).
+</p><p>
+The minimization of a cost function depends on the knowledge of how the changes in the network parameters affect the cost.  This requires the computation of the gradient of the cost function with respect to the parameters. The backpropagation algorithm discussed in the previous chapter can be used to efficiently compute these gradients by propagating errors backward through the network, starting from the output layer to the first hidden layer. Once gradients are available, the parameters are updated using gradient-based optimization algorithms. The most basic method is the gradient descent method (GD), where parameters are iteratively updated in the direction opposite to the gradient in order to reduce the cost. We also have some important variants of the GD method, such as the stochastic gradient descent (SGD) method and the SGD method with momentum to improve training efficiency and stability.
+</p><p>
+In this chapter, we discuss the GD method and some of its variants.  We first introduce the fundamental idea of the GD method in <a href="Ch05OptimizationAlgorithms.html#gradient.descent.methods.sec" class="internal-link">Section 5.1</a> and give three ways to implement this method, namely, the batch GD method, the SGD method, and the mini-batch GD method. In <a href="Ch05OptimizationAlgorithms.html#momentum.adaptive.GD.sec" class="internal-link">Section 5.2</a>, we discuss some important modifications of the mini-batch GD method mainly to accelerate the convergence. 
+</p><h2 id="gradient.descent.methods.sec">5.1 Gradient Descent Methods</h2>
+Consider a cost function <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span> as given in <a href="Ch04NetworkGradientEvaluation.html#loss.cost.function.def">Definition 4.1</a>. The aim is to obtain a <span class="math">\(\boldsymbol{\Theta}^*\)</span> 
+such that
+<div class="math">\[\boldsymbol{\Theta}^* = \text{argmin}_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}).\]</div>
+In simple cases (like linear regression), we can obtain <span class="math">\(\boldsymbol{\Theta}^*\)</span> analytically. But in deep learning, <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span> is nonlinear and has a large number of parameters. Hence, we need an efficient method to obtain (at least approximately) <span class="math">\(\boldsymbol{\Theta}^*\)</span>. 
+</p><p>
+To iteratively minimize the cost function, we need to know in which direction to move <span class="math">\(\boldsymbol{\Theta}\)</span> to decrease the cost most efficiently.  This direction is determined by the gradient <span class="math">\(\nabla_{\boldsymbol{\Theta}}\mathcal{C}\)</span>.
+</p><h3 id="batch-gradient-descent-method">5.1.1 Batch Gradient Descent Method</h3>
+Let us consider a simple case of <span class="math">\(\boldsymbol{\Theta}=(w_1, w_2, \ldots, w_n)\in \mathbb{R}^n\)</span> to motivate why we update the weights in the gradient direction <span class="math">\(\nabla_{\boldsymbol{\Theta}}\mathcal{C}\)</span>.  
+</p><p>
+Let us start with an arbitrarily chosen vector <span class="math">\(\boldsymbol{w}_0\in \mathbb{R}^n\)</span>. We want to move to a new vector 
+<div class="math">\[\boldsymbol{w}_1 = \boldsymbol{w}_0 + \eta \boldsymbol{v},\]</div> 
+for a small step size <span class="math">\(\eta>0\)</span>, where the direction <span class="math">\(\boldsymbol{v}\)</span> is chosen such that <span class="math">\(\mathcal{C}(\boldsymbol{w}_1) < \mathcal{C}(\boldsymbol{w}_0)\)</span>. 
+</p><p>
+Using the first-order Taylor expansion, we have
+</p><div class="math numbered-math">\begin{eqnarray}
+\mathcal{C}(\boldsymbol{w}_1) = \mathcal{C}(\boldsymbol{w}_0) + \eta \, \langle \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0), \boldsymbol{v} \rangle + O(\eta^2).
+\end{eqnarray}<span class="eq-number">(5.1)</span></div><p>
+Neglecting higher-order terms of <span class="math">\(O(\eta^2)\)</span>, the change in the cost function is approximately
+<div class="math">\[
+\mathcal{C}(\boldsymbol{w}_1) - \mathcal{C}(\boldsymbol{w}_0) \approx  \eta \, \langle \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0), \boldsymbol{v} \rangle.
+\]</div>
+To achieve a rapid decrease, we need to choose the direction vector <span class="math">\(\boldsymbol{v}\)</span> such that <span class="math">\(\mathcal{C}(\boldsymbol{w}_1) - \mathcal{C}(\boldsymbol{w}_0)\)</span> gives the largest decrease in the linear approximation (neglecting <span class="math">\(O(\eta^2)\)</span> terms).
+</p><p>
+Using the Cauchy-Schwarz inequality, we get
+<div class="math">\[
+\langle \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0), \boldsymbol{v} \rangle \ge -\| \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0)\| \, \|\boldsymbol{v}\|,
+\]</div>
+and equality occurs when
+<div class="math">\[\boldsymbol{v} = -\nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0).\]</div>
+Thus, the direction of <b>steepest descent</b> is the negative gradient, and the update rule becomes
+<div class="math">\[
+\boldsymbol{w}_1 = \boldsymbol{w}_0 - \eta \, \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_0).
+\]</div>
+In general, we may not reach the optimal vector <span class="math">\(\boldsymbol{w}^*\)</span> in a single step. So, we need to apply the update rule repeatedly in order to move step by step in the direction of the negative gradient, until the cost function stops decreasing significantly.
+This leads to the general iterative <b>gradient descent method</b> (GDM), given by
+</p><div class="math numbered-math" id="batchGD.eq">\begin{eqnarray}
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_{k} - \eta \, \nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}_{k}), 
+\quad k = 0,1,2,\dots,
+\end{eqnarray}<span class="eq-number">(5.2)</span></div><p>
+where <span class="math">\(\eta > 0\)</span> is the <b>learning rate</b> and <span class="math">\(\boldsymbol{\Theta}_{0}\)</span> is an initial guess.
+</p><div class="remark" id="gradient.system.rem">
+<div class="heading-container"><b class="heading">Remark 5.1 (Gradient System):</b></div>
+
+
+Again, for the sake of simplicity, let us consider <span class="math">\(\boldsymbol{\Theta} = \boldsymbol{w} \in \mathbb{R}^n\)</span>, an <span class="math">\(n\)</span>-dimensional vector. 
+The gradient descent iteration <a href="#batchGD.eq">(5.2)</a> can be written as 
+<div class="math">\[
+\frac{\boldsymbol{w}_{k+1} - \boldsymbol{w}_{k}}{\eta} = - \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}_{k}), 
+\quad k = 0,1,2,\dots
+\]</div>
+with step size <span class="math">\(\eta>0\)</span>.
+</p><p>
+Interpreting <span class="math">\(t_k=k\eta\)</span> as a discrete time, the above scheme is the explicit (forward) Euler discretization of the system of ordinary differential equations
+<div class="math">\[
+\dot{\boldsymbol{w}} = - \nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}).
+\]</div>
+Such a system is called a <b>gradient system</b>.  Thus, the gradient descent update rule can be viewed as an approximation  of the gradient system or the <b>gradient flow</b>.
+</p><p>
+Further, assume that <span class="math">\(\mathcal{C}\in C^2(\mathbb{R}^n)\)</span> and the Hessian <span class="math">\(\nabla_{\boldsymbol{w}}^2 \mathcal{C}\)</span> is bounded (the gradient <span class="math">\(\nabla_{\boldsymbol{w}}\mathcal{C}\)</span> is Lipschitz) in a neighborhood of a nondegenerate local minimum <span class="math">\(\boldsymbol{w}^*\)</span> (strict minimum). Then, by choosing <span class="math">\(\boldsymbol{w}_0\)</span> in this neighborhood, the piecewise linearly interpolated trajectory computed using the above Euler scheme converges (uniformly on any compact time interval) to the  solution of the above gradient system as <span class="math">\(\eta \rightarrow 0\)</span>.
+</p><p>
+As a consequence, a minimizer of a <span class="math">\(C^2\)</span> cost function can be viewed as an equilibrium point of the above gradient system in the parameter space. It is known that strict (nondegenerate) minima of <span class="math">\(\mathcal{C}\)</span> are asymptotically stable equilibrium points of the above gradient system.
+</p><p>
+
+</div><div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.1:</b></div>
+
+Consider the gradient flow
+<div class="math">\[
+\dot{\boldsymbol{w}}(t) \;=\; -\,\nabla_{\boldsymbol{w}} \mathcal{C}(\boldsymbol{w}(t)), 
+\qquad \boldsymbol{w}(0)=\boldsymbol{w}_0,
+\]</div>
+associated with a cost function <span class="math">\(\mathcal{C}:\mathbb{R}^n \to \mathbb{R}\)</span>. Show that the cost function is non-increasing along the trajectories of this gradient system, i.e.
+<div class="math">\[
+\frac{d}{dt}\,\mathcal{C}(\boldsymbol{w}(t)) \;\leq\; 0, \qquad t\ge0.
+\]</div>
+
+</div><div class="algorithm">
+<div class="heading-container"><b class="heading">Algorithm 5.1 (Batch Gradient Descent Method):</b></div><p>
+<b>Input:</b> 
+<ol class="latex-enumerate"><li>Initial guess <span class="math">\(\boldsymbol{\Theta}_0 \in \mathbb{R}^n\)</span>;
+</li><li>Learning rate (step size) <span class="math">\(\eta>0\)</span>;
+</li><li>Maximum iterations <span class="math">\(K\)</span>.
+</li></ol>
+<b>Processing:</b><br>
+For <span class="math">\(k = 0,1,2,\dots,K-1\)</span><br>
+<ul><li> 
+    	Compute the gradient 
+<span class="math">\(\boldsymbol{g}_k = \nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}_k)\)</span><br>
+(using the backpropagation algorithm for the neural network).
+    </li><li>  Update the parameter:
+    <div class="math">\[
+    \boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_k - \eta \, \boldsymbol{g}_k.
+    \]</div>
+</li></ul>
+<b>Output:</b> Approximate minimizer <span class="math">\(\boldsymbol{\Theta}_K\)</span>.
+</p><p>
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The gradient descent method is also called as the <b>steepest descent method</b>.  Since the cost function includes the loss function evaluated at all the examples of a dataset, the method in the above algorithm is also called the <b>batch gradient descent method</b> or <b>batch steepest descent method</b>.
+
+</div>
+<h3 id="stochastic-gradient-descent-sgd">5.1.2 Stochastic Gradient Descent (SGD)</h3>
+Recall, from <a href="Ch04NetworkGradientEvaluation.html#loss.cost.function.def">Definition 4.1</a>, that the cost function is defined as
+<div class="math">\[
+\mathcal{C}(\boldsymbol{\Theta}) = \frac{1}{N}\sum_{i=1}^N \ell_i(\boldsymbol{\Theta}),~~ \ell_i(\boldsymbol{\Theta}) = \ell\big(\boldsymbol{y}_i,\tilde{\boldsymbol{y}}_i;\boldsymbol{\Theta}\big),
+\]</div>
+where <span class="math">\(\ell\)</span> is the loss corresponding to a single example <span class="math">\((\boldsymbol{x}_i, \boldsymbol{y}_i)\)</span> of the dataset <span class="math">\(\mathcal{D}\)</span>, and <span class="math">\(\tilde{\boldsymbol{y}}_i\)</span>(<span class="math">\(=\tilde{\boldsymbol{y}}_i(\boldsymbol{\Theta})\)</span>) is the network prediction for the input <span class="math">\(\boldsymbol{x}_i\)</span>. The gradient is therefore given by
+<div class="math">\[
+\nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta})
+= \frac{1}{N}\sum_{i=1}^N \nabla_{\boldsymbol{\Theta}} \ell\big(\boldsymbol{y}_i,\tilde{\boldsymbol{y}}_i;\boldsymbol{\Theta}\big).
+\]</div><p>
+Since, for each iteration of GDM, the gradient has to be computed using the entire dataset of size <span class="math">\(N\)</span>, the computational cost of evaluating <a href="#batchGD.eq">(5.2)</a> per iteration grows linearly with <span class="math">\(N\)</span>. Since deep learning often involves large-scale datasets, the batch gradient descent method becomes prohibitively expensive.
+</p><p>
+An alternate approach is the <b>stochastic gradient descent</b> method (SGD) which replaces the gradient  of the cost function by the gradient of the per-sample cost <span class="math">\(\ell_{i_k}(\boldsymbol{\Theta})\)</span> for a randomly chosen sample <span class="math">\((\boldsymbol{x}_{i_k},\boldsymbol{y}_{i_k})\)</span>. For an initial choice <span class="math">\(\boldsymbol{\Theta}_{0}\)</span>, the update rule for each iteration is
+</p><div class="math numbered-math" id="SGD">\begin{eqnarray}
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_k - \eta \, \nabla_{\boldsymbol{\Theta}} \ell_{i_k}(\boldsymbol{\Theta}_k),
+\end{eqnarray}<span class="eq-number">(5.3)</span></div><p>
+where  <span class="math">\(i_k \sim
+\operatorname{Uniform}\{1,\ldots,N\}\)</span> (i.i.d.), for each <span class="math">\(k=0,1,2, \ldots.\)</span>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.2:</b></div>
+
+Write the algorithm for the stochastic gradient descent method.
+
+</div><p>
+Since <span class="math">\(i_k\)</span> is uniformly sampled, we have
+<div class="math">\[
+\mathbb{E}\!\left[\nabla_{\boldsymbol{\Theta}} \ell_{i_k}(\boldsymbol{\Theta}_k)\, | \, \boldsymbol{\Theta}_k \right]
+= \nabla_{\boldsymbol{\Theta}} \mathcal{C}(\boldsymbol{\Theta}_k).
+\]</div>
+and therefore, <span class="math">\(\nabla_{\boldsymbol{\Theta}} \ell_{i_k}(\boldsymbol{\Theta}_k)\)</span> is an unbiased estimator of the cost gradient.
+</p><p>
+
+Thus, SGD can be viewed as a noisy discretization of the gradient system. The  stochasticity introduced by the procedure often helps in escaping saddle points and shallow local minima. However, it causes fluctuations in the trajectory and leads to slow convergence.
+</p><div class="latex-figure" id="LossVsCost.fig">
+<img src="Figures/Ch05LossVsCost.png" alt="">
+<div class="figure-caption"><p>Figure 5.1: The two individual loss surfaces <span class="math">\(\ell_1\)</span> and <span class="math">\(\ell_2\)</span> corresponding to two training examples, and their average, the cost function <span class="math">\(\mathcal{C}\)</span> given in <a href="Ch05OptimizationAlgorithms.html#LossVsCost.ex">Example 5.1</a> is depicted. Each individual loss is a parabolic cylinder with an infinitely extended valley, whereas their average is an elliptic paraboloid with a unique minimum.</p></div>
+</div><div class="example" id="LossVsCost.ex">
+<div class="heading-container"><b class="heading">Example 5.1:</b></div><p>
+Consider a linear model 
+<div class="math">\[ \widehat{y}=w_1x+w_2 \]</div> 
+and a training dataset with two examples 
+<div class="math">\[\mathcal{D} = \big\{ (x_1,y_1)=(-1,1),~ (x_2,y_2)=(1,2) \big\}. \]</div> 
+Using the squared-error loss 
+<div class="math">\[ \ell_i(w_1,w_2) = \frac{1}{2}\left(y_i-\widehat{y}_i\right)^2, ~i=1,2,\]</div> 
+the losses corresponding to the two examples are 
+<div class="math">\[\begin{array}{rcl} 
+\ell_1(w_1,w_2) &=& \frac12(1+w_1-w_2)^2, \\
+\ell_2(w_1,w_2) &=& \frac12(2-w_1-w_2)^2. 
+\end{array}\]</div>
+The cost function is given by
+<div class="math">\[\begin{array}{rcl} 
+\mathcal{C}(w_1,w_2) &=& \dfrac{\ell_1(w_1,w_2)+\ell_2(w_1,w_2)}{2} \\ 
+&=& \dfrac14\left[(1+w_1-w_2)^2 +(2-w_1-w_2)^2\right]. 
+\end{array}\]</div>
+Geometrically, each individual loss is a parabolic cylinder, as depicted in <a href="Ch05OptimizationAlgorithms.html#LossVsCost.fig">Figure 5.1</a>, where there is a whole line along which the loss remains zero. Thus, each individual loss surface has a valley that is infinitely extended in one direction. In contrast, the cost function surface is an elliptic paraboloid with a unique minimum, as observed in <a href="Ch05OptimizationAlgorithms.html#LossVsCost.fig">Figure 5.1</a>. 
+
+</div><p>
+We observed that the mean-square cost function in the above example has a unique minimum. However, this is not always the case, even for linear models.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.3:</b></div>
+
+Consider a linear model
+<div class="math">\[
+\widehat{y}_i=\mathbf{x}_i^{T}\mathbf{w},
+\qquad i=1,\ldots,N,
+\]</div>
+and the squared-error cost function
+<div class="math">\[
+\mathcal{C}(\mathbf{w})
+=
+\frac{1}{2N}\sum_{i=1}^{N}
+\left(y_i-\mathbf{x}_i^{T}\mathbf{w}\right)^2.
+\]</div>
+Suppose that the Hessian matrix
+<div class="math">\[
+H=\nabla^2\mathcal{C}(\mathbf{w})
+\]</div>
+is positive definite. Prove that the cost function <span class="math">\(\mathcal{C}\)</span> has a unique minimum.
+</p><p>
+
+</div><p>
+The uniqueness of the minimizer <span class="math">\(\boldsymbol{w}^*\)</span> established above is a consequence of the cost function <span class="math">\(\mathcal{C}\)</span> being <b>strict convexity</b>. 
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.4:</b></div>
+
+With the assumptions of the above problem, show that the cost function <span class="math">\(\mathcal{C}\)</span> is strictly convex.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 5.2 (Global versus Local Convexity):</b></div><p>
+For the linear model considered above, the Hessian
+<div class="math">\[
+\nabla^2\mathcal{C}(\boldsymbol{w})=H=\frac{1}{N}X^TX
+\]</div>
+is independent of <span class="math">\(\boldsymbol{w}\)</span>, and it is positive definite at <i>every</i> point of <span class="math">\(\mathbb{R}^n\)</span> whenever <span class="math">\(X\)</span> has full column rank. Consequently, <span class="math">\(\mathcal{C}\)</span> is strictly convex on the whole of <span class="math">\(\mathbb{R}^n\)</span>. Hence <span class="math">\(\boldsymbol{w}^*\)</span> is the global minimizer.
+</p><p>
+For a genuinely nonlinear model, the Hessian of <span class="math">\(\mathcal{C}\)</span> typically varies with <span class="math">\(\boldsymbol{w}\)</span>, and hence need not be positive definite everywhere. Consequently, <span class="math">\(\mathcal{C}\)</span> need not be globally convex.  Therefore, as in <a href="Ch05OptimizationAlgorithms.html#gradient.system.rem">Remark 5.1</a>, the positive definiteness of the Hessian near a nondegenerate critical point <span class="math">\(\boldsymbol{w}^*\)</span> gives strict convextiy of <span class="math">\(\mathcal{C}\)</span> only locally, in a small neighborhood of <span class="math">\(\boldsymbol{w}^*\)</span>. So, we can only expect <span class="math">\(\boldsymbol{w}^*\)</span> to be a local minimizer.
+
+</div>
+<h3 id="mini.batch.gd.subs">5.1.3 Mini-batch Gradient Descent</h3>
+The batch GD method uses the gradient of the cost surface, which is the average of the gradient of the loss function evaluated at all the training examples.  This results in a path that smoothly descends towards the minimum, but it is computationally expensive. On the other hand, the stochastic GD method uses the gradient corresponding to a randomly selected training example at each iteration. This improves computational efficiency, but its path is more irregular. <a href="Ch05OptimizationAlgorithms.html#BatchVsStocGD.fig">Figure 5.2</a> depicts a visual illustration of the typical paths followed by the batch GD and stochastic GD methods.
+</p><div class="latex-figure" id="BatchVsStocGD.fig">
+<img src="Figures/Ch05BatchVsStochastic.png" alt="">
+<div class="figure-caption"><p>Figure 5.2: Typical paths followed by batch GD and stochastic GD from the same starting point. The ellipses represent level curves of the cost function, with the innermost curve surrounding its minimum.</p></div>
+</div><p>
+A compromise between batch GD and SGD is to average the gradients over a small randomly chosen subset (mini-batch) <span class="math">\(\mathcal{B}_k\subset \{1,\dots,N\}\)</span> with <span class="math">\(|\mathcal{B}_k|=M\ll N\)</span>. The update reads
+</p><div class="math numbered-math" id="miniGD">\begin{eqnarray}
+\boldsymbol{\Theta}_{k+1}
+= \boldsymbol{\Theta}_k -  \eta \nabla_{\boldsymbol{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\boldsymbol{\Theta}_k) ,
+\end{eqnarray}<span class="eq-number">(5.4)</span></div><p>
+where
+<div class="math">\[
+\mathcal{C}_{\mathcal{B}_k}(\boldsymbol{\Theta}_k) = \frac{1}{M}\sum_{i\in \mathcal{B}_k}
+\ell_i(\boldsymbol{\Theta}_k).
+\]</div>
+This method is called the <b>mini-batch gradient descent method</b>.
+Mini-batches reduce the variance of the stochastic gradient and provide a better computational efficiency than GD method. In practice, batch sizes such as <span class="math">\(32\)</span>, <span class="math">\(64\)</span>, or <span class="math">\(128\)</span> are widely used.
+</p><p>
+Another approach in mini-batch gradient descent method, which is common in practice, is the epoch-wise training. Here, in each epoch, the entire training dataset is first randomly shuffled and then divided into mini-batches of size <span class="math">\(M\ll N\)</span>.  This results in at least <span class="math">\(N/M\)</span> mini-batches, which are used to update <span class="math">\(\boldsymbol{\Theta}\)</span> sequentially within that epoch.  If <span class="math">\(N\)</span> is not exactly divisible by <span class="math">\(M\)</span>, then the last mini-batch of the epoch contains the remaining number of examples.  Thus, each mini-batch produces one parameter update, and one epoch corresponds to a complete pass over the training dataset, where all mini-batches are processed once. 
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.5:</b></div>
+
+Write the algorithm for the epoch-wise training of a mini-batch gradient descent method.
+
+</div><div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.6:</b></div>
+
+Consider the mini-batch gradient estimator
+<div class="math">\[
+\boldsymbol{g}_{\mathcal{B}_k}(\boldsymbol{\Theta}) = \frac{1}{M}\sum_{i\in \mathcal{B}_k} \boldsymbol{g}_i(\boldsymbol{\Theta}), \qquad \boldsymbol{g}_i(\boldsymbol{\Theta}) := \nabla_{\boldsymbol{\Theta}} \ell_i(\boldsymbol{\Theta}),
+\]</div>
+where the indices in <span class="math">\(\mathcal{B}_k\subset\{1,\ldots,N\}\)</span>, with <span class="math">\(|\mathcal{B}_k|=M\)</span>, are drawn independently and uniformly from <span class="math">\(\{1,\ldots,N\}\)</span>, as in the SGD sampling scheme. Let
+<div class="math">\[
+\sigma^2(\boldsymbol{\Theta}) := \mathbb{E}\left[\|\boldsymbol{g}_{i_k}(\boldsymbol{\Theta}) - \nabla_{\boldsymbol{\Theta}}\mathcal{C}(\boldsymbol{\Theta})\|^2 \,|\, \boldsymbol{\Theta}\right]
+\]</div>
+denote the variance of the single-sample SGD gradient estimator. Show that
+<div class="math">\[
+\mathbb{E}\left[\|\boldsymbol{g}_{\mathcal{B}_k}(\boldsymbol{\Theta}) - \nabla_{\boldsymbol{\Theta}}\mathcal{C}(\boldsymbol{\Theta})\|^2 \,|\, \boldsymbol{\Theta}\right] = \frac{\sigma^2(\boldsymbol{\Theta})}{M}.
+\]</div>
+
+</div><h2 id="momentum.adaptive.GD.sec">5.2 Momentum and Adaptive Gradient Methods</h2>
+In this section, we discuss some variants of the GD method discussed in the previous section.  These variants are proposed to accelerate the convergence of the GD method.
+<h3 id="momentum-method">5.2.1 Momentum Method</h3>
+Recall, in physics, the momentum of a moving particle is defined as the product of mass and velocity of the particle. Taking the physical motivation, we add an extra term <span class="math">\(\mu \boldsymbol{v}\)</span> to the mini-batch SGD method to get
+</p><div class="math numbered-math" id="mbSGD.momentum.eq">\begin{eqnarray}
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_{k} - \eta \nabla_{\boldsymbol{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\boldsymbol{\Theta}_k) + \mu \boldsymbol{v}_k,~k=1,2,\ldots,
+\end{eqnarray}<span class="eq-number">(5.5)</span></div><p>
+is the mini-batch cost function, <span class="math">\(\mu\in [0, 1)\)</span> is the <b>momentum parameter</b>, and
+<div class="math">\[
+\boldsymbol{v}_k = \boldsymbol{\Theta}_{k} - \boldsymbol{\Theta}_{k-1},
+\]</div>
+which carries the memory of the previous update direction into the future updates. As will be seen from the physical derivation below, <span class="math">\(\mu\)</span> plays the role of a friction (damping) coefficient, while <span class="math">\(\boldsymbol{v}_k\)</span> resembles the velocity of a moving particle.
+</p><p>
+By taking <span class="math">\(\boldsymbol{v}_0=\boldsymbol{0}\)</span>, the iterative formula <a href="#mbSGD.momentum.eq">(5.5)</a> can be rewritten as
+</p><div class="math numbered-math" id="momentum.formula.eq">\begin{eqnarray}
+\left.\begin{array}{lcl}
+\boldsymbol{v}_{k+1} &=& \mu \boldsymbol{v}_k - \eta \nabla_{\boldsymbol{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\boldsymbol{\Theta}_k), \\
+\boldsymbol{\Theta}_{k+1} &=& \boldsymbol{\Theta}_k + \boldsymbol{v}_{k+1}, ~k=1,2,\ldots,
+\end{array}\right\}
+\end{eqnarray}<span class="eq-number">(5.6)</span></div><p>
+and is referred to as the <b>momentum method</b>.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.7:</b></div>
+
+Recall, the Newton's second law states 
+</p><p>
+mass <span class="math">\(\times\)</span> acceleration = force
+</p><p>
+For a particle moving on the cost surface, we have
+<div class="math">\[\begin{array}{rcl}
+\text{force} &=& \text{frictional force}\\
+&&~~ + \text{gravitational force driving the particle towards regions of lower cost}
+\end{array}\]</div>
+Mathematically, the Newton's second law can be written as
+<div class="math">\[
+m \ddot{\boldsymbol{\Theta}} =
+ - m\gamma\dot{\mathbf{\Theta}}  -\nabla \mathcal{C}_{\mathcal{B}_k}(\mathbf{\Theta}),
+\]</div>
+where <span class="math">\(\gamma>0\)</span> is the damping coefficient and <span class="math">\(m>0\)</span> is the mass of the particle.
+</p><p>
+Considering the approximations
+<div class="math">\[
+\ddot{\boldsymbol{\Theta}} \approx \frac{ \mathbf{\Theta}_{k+1} -2\mathbf{\Theta}_k +\mathbf{\Theta}_{k-1} }{h^2}
+~\text{and}~
+\dot{\mathbf{\Theta}} \approx \frac{\mathbf{\Theta}_k-\mathbf{\Theta}_{k-1}}{h},
+\]</div>
+for some sufficiently small <span class="math">\(h>0\)</span>, find the learning rate <span class="math">\(\eta\)</span> and the momentum parameter <span class="math">\(\mu\)</span>, such that the Newton's second law reduces to the iterative formula <a href="#momentum.formula.eq">(5.6)</a> of the momentum method.
+
+</div><p>
+The momentum term can also be interpreted from a control-theoretic perspective. 
+Treating <span class="math">\(\boldsymbol{v}_k\)</span> as a control input, the term <span class="math">\(\mu \boldsymbol{v}_k\)</span> acts as a feedback term with <span class="math">\(\mu\)</span> playing the role of a <b>feedback gain</b>. 
+This feedback regulates how strongly past velocity influences the current update, smoothing oscillations and accelerating convergence along consistent descent directions.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.8:</b></div>
+
+Let <span class="math">\(\{\boldsymbol{\Theta}_k\}\)</span> be computed using the momentum method, and suppose the gradient <span class="math">\(\nabla_{\boldsymbol{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\boldsymbol{\Theta}_k) \approx \boldsymbol{g}\)</span>, for every <span class="math">\(k\)</span>, where <span class="math">\(\boldsymbol{g}\)</span> is a constant vector. Show that 
+<div class="math">\[
+\lim_{k\to \infty} \boldsymbol{v}_k \approx -\frac{\eta}{1-\mu}\,\boldsymbol{g}.
+\]</div>
+In other words, show that the momentum method reduces to the mini-batch gradient descent method with an effective learning rate <span class="math">\(\eta/(1-\mu)\)</span> in regions of low curvature.
+
+</div><h3 id="nesterov-accelerated-gd-method">5.2.2 Nesterov Accelerated GD Method</h3>
+The momentum method discussed in the above subsection evaluates the gradient of the cost function at the current iteration value <span class="math">\(\boldsymbol{\Theta}_k\)</span> while updating the next iteration. Since the momentum is in the direction <span class="math">\(\mu \boldsymbol{v}_k\)</span>, the convergence can be further improved by evaluating the cost gradient at the <b>look-ahead</b> point
+<div class="math">\[\widetilde{\boldsymbol{\Theta}}_k = \boldsymbol{\Theta}_k + \mu \boldsymbol{v}_k.\]</div>
+This method is called the <b>Nesterov Accelerated Gradient Descent</b> (NAGD) method, and is given by
+</p><div class="math numbered-math" id="NAGD.formula.eq">\begin{eqnarray}
+\left.\begin{array}{lcl}
+\boldsymbol{v}_{k+1} &=& \mu \boldsymbol{v}_k - \eta \nabla_{\boldsymbol{\Theta}}
+\mathcal{C}_{\mathcal{B}_k}(\widetilde{\boldsymbol{\Theta}}_k), \\
+\boldsymbol{\Theta}_{k+1} &=& \boldsymbol{\Theta}_k + \boldsymbol{v}_{k+1}, ~k=1,2,\ldots,
+\end{array}\right\}
+\end{eqnarray}<span class="eq-number">(5.7)</span></div><div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.9:</b></div>
+
+Let <span class="math">\(\Theta \in \mathbb{R}\)</span> and consider the quadratic cost <span class="math">\(\mathcal{C}(\Theta) = \frac12 a \Theta^2\)</span>, <span class="math">\(a>0\)</span>. Let <span class="math">\((\Theta_k, v_k)\)</span> be obtained using the Nesterov update rule <a href="#NAGD.formula.eq">(5.7)</a>.
+<ol class="latex-enumerate"><li>Show that <span class="math">\((\Theta_k, v_k)\)</span> satisfies the linear recursion
+<div class="math">\[
+\begin{pmatrix}\Theta_{k+1}\\ v_{k+1}\end{pmatrix}
+= M_{\mathrm{NAG}} \begin{pmatrix}\Theta_{k}\\ v_{k}\end{pmatrix}, \qquad
+M_{\mathrm{NAG}} = \begin{pmatrix}1-\eta a & \mu(1-\eta a)\\ -\eta a & \mu(1-\eta a)\end{pmatrix}.
+\]</div>
+</li><li>Compare <span class="math">\(M_{\mathrm{NAG}}\)</span> with the matrix <span class="math">\(M\)</span> obtained for the classical momentum method on the same quadratic cost. Identify the extra factor contributed by the look-ahead point.
+</li><li>Fix <span class="math">\(a=1\)</span>, <span class="math">\(\eta=0.1\)</span>, and <span class="math">\(\mu=0.9\)</span>. Compute the eigenvalues and the spectral radius of both <span class="math">\(M\)</span> and <span class="math">\(M_{\mathrm{NAG}}\)</span> for these values, and verify that <span class="math">\(\rho(M_{\mathrm{NAG}}) < \rho(M)\)</span>, where <span class="math">\(\rho(M)\)</span> is the spectral radius of the matrix M defined as
+<div class="math">\[
+\rho(M) := \max\{ |\lambda| : \lambda \text{ is an eigenvalue of } M \}.
+\]</div>
+</li></ol>
+
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+For any iterative method of the form
+<div class="math">\[
+\boldsymbol{x}_{k+1} = M \boldsymbol{x}_k, \qquad k=0,1,2,\ldots,
+\]</div>
+where <span class="math">\(M\)</span> is the iteration matrix. Let <span class="math">\(\lambda\)</span> be an eigenvalue of <span class="math">\(M\)</span> with <span class="math">\(|\lambda|=\rho(M)\)</span>. If <span class="math">\(\boldsymbol{x}_0\)</span> has a nonzero component along the eigenspace of <span class="math">\(\lambda\)</span>, then
+<div class="math">\[
+\|\boldsymbol{x}_k\| \approx C\, \rho(M)^k,
+\]</div>
+for large values of <span class="math">\(k\)</span>, for some constant <span class="math">\(C>0\)</span> depending on <span class="math">\(\boldsymbol{x}_0\)</span>. If <span class="math">\(\boldsymbol{x}_0\)</span> has zero component along this eigenspace, the same asymptotic form holds with <span class="math">\(\rho(M)\)</span> replaced by the largest <span class="math">\(|\lambda'|\)</span> among the eigenvalues <span class="math">\(\lambda'\)</span> for which <span class="math">\(\boldsymbol{x}_0\)</span> has a nonzero component.
+</p><p>
+The following statement, however, holds for every initial vector <span class="math">\(\boldsymbol{x}_0\)</span>, with no such qualification: <span class="math">\(\boldsymbol{x}_k \to \boldsymbol{0}\)</span> as <span class="math">\(k\to\infty\)</span> if and only if <span class="math">\(\rho(M) < 1\)</span>. Further, whenever the geometric estimate above applies, a smaller spectral radius means a faster rate of convergence, and <span class="math">\(\rho(M)\)</span> is the number that governs this rate.
+
+</div>
+<h3 id="adaptive-step-size-methods">5.2.3 Adaptive Step Size Methods</h3>
+So far, we have kept the learning rate <span class="math">\(\eta\)</span> constant for all the parameters and across all the iterations.  This is the simplest form of a GD method, whereas the learning rate can depend on the iteration as
+<div class="math">\[
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_k  - \eta_k \nabla_{\boldsymbol{\Theta}}
+\mathcal{C}(\boldsymbol{\Theta}_k), k=0,1,2,\ldots.
+\]</div>
+In fact, it has been proved (omitted for this course) that the stochastic GD method
+<div class="math">\[
+\boldsymbol{\Theta}_{k+1} = \boldsymbol{\Theta}_k  - \eta_k\, \nabla_{\boldsymbol{\Theta}} \ell_{i_k}(\boldsymbol{\Theta}_k), k=0,1,2,\ldots.
+\]</div>
+converges if the sequence <span class="math">\(\{\eta_k\}\)</span> satisfies the <b>Robbins–Monro conditions</b>
+<div class="math">\[
+\sum_{k=0}^\infty \eta_k = \infty,~~\sum_{k=0}^\infty \eta_k^2 < \infty.
+\]</div>
+For instance, the sequence of learning rate
+<div class="math">\[\eta_k = \frac{C_0}{C_1+k},\]</div>
+for some positive constants <span class="math">\(C_0\)</span> and <span class="math">\(C_1\)</span>, satisfies the above two conditions.
+</p><p>
+Further, to accelerate the convergence, it is also possible to vary the learning rate across parameters. In this subsection, we present some of the important such methods.
+<h4 id="adagrad">5.2.3.1 AdaGrad.</h4>
+Each parameter <span class="math">\(\Theta_j\)</span> has its own effective learning rate scaled by the accumulated squared gradients given by
+<div class="math">\[
+\Theta_{j,k+1} = \Theta_{j,k} - \frac{\eta}{\sqrt{G_{j,k} + \epsilon}} \, g_{j,k},
+\]</div>
+where <span class="math">\(g_{j,k}\)</span> is the <span class="math">\(j\)</span>th component of the gradient <span class="math">\(\boldsymbol{g}_k = \nabla_\Theta \mathcal{C}(\Theta_k)\)</span> at step <span class="math">\(k\)</span>, 
+<div class="math">\[
+G_{j,k} = \sum_{i=0}^k g_{j,i}^2,
+\]</div>
+and <span class="math">\(\epsilon>0\)</span> is a small constant added to avoid blow-up of the learning rate.
+</p><p>
+The main advantage of AdaGrad is its ability to assign a different effective learning rate to each parameter based on its gradients of the past iterations. Thus, parameters with large gradients in the past receive smaller learning rates while parameters with smaller gradients retain larger updates. This is particularly important for sparse-gradient problems.  However, the disadvantage is that the accumulation <span class="math">\(G_{j,k}\)</span> only increases and consequently, the learning rate only decreases.
+<h4 id="root-mean-square-propagation-rmsprop">5.2.3.2 Root Mean Square Propagation (RMSProp)</h4>
+In order to address AdaGrad’s disadvantage of decay in learning rate, RMSProp uses an exponential moving average of squared gradients given by
+<div class="math">\[
+G_{j,k} = \rho G_{j,k-1} + (1-\rho) g_{j,k}^2,
+\]</div>
+where <span class="math">\(0<\rho<1\)</span>. In this update, the effective learning rate depends more strongly on the gradients of the recent iterations, whereas the older ones get less weightage.
+</p><h4 id="adaptive-moments-adam">5.2.3.3 Adaptive Moments (Adam).</h4>
+We have seen that the AdaGrad updates the effective learning rates through cummulative history, whereas the RMSProp updates with a decaying memory.
+</p><p>
+The <b>Adam</b> method combines RMSProp with momentum by including the exponentially weighted moving averages of both gradients and squared gradients. The update rule for the <b>Adam method</b> is given by
+<div class="math">\[\begin{array}{rcl}
+m_{j,k} &=& \beta_1 m_{j,k-1} + (1-\beta_1) g_{j,k}, \\
+v_{j,k} &=& \beta_2 v_{j,k-1} + (1-\beta_2) g_{j,k}^2, \\
+\Theta_{j,k+1} &=& \Theta_{j,k} - \frac{\eta}{\sqrt{\widehat{v}_{j,k}}+\epsilon}\, \widehat{m}_{j,k},~~k=0,1,2,\ldots,
+\end{array}\]</div>
+for <span class="math">\(\beta_1, \beta_2\in (0,1)\)</span>, and
+<div class="math">\[
+m_{j,0} = 0,~~v_{j,0} = 0,
+\]</div>
+where <span class="math">\(\widehat{m}_{j,k}\)</span> and <span class="math">\(\widehat{v}_{j,k}\)</span> are <b>bias-corrected estimates</b> given by
+<div class="math">\[
+\widehat{m}_{j,k} = \frac{m_{j,k}}{1-\beta_1^{k+1}},~~\widehat{v}_{j,k} = \frac{v_{j,k}}{1-\beta_2^{k+1}}.
+\]</div> 
+Adam is the most widely used optimizer in deep learning practice.
+</p><p>
+The following problem clarifies the role of <span class="math">\(\widehat{m}\)</span> and <span class="math">\(\widehat{v}\)</span> through the concept of bias correction in statistical estimation.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 5.10:</b></div>
+
+Let <span class="math">\(X\)</span> be a random variable with mean <span class="math">\(\mu\)</span> and let <span class="math">\(\{X_1,X_2,\ldots, X_N\}\)</span> be independent and identically distributed samples from <span class="math">\(X\)</span>. Consider the exponential moving average 
+<div class="math">\[
+\mu_0=0,~~\mu_{k} = \beta \mu_{k-1} + (1-\beta) X_{k},~~k=1,2,\ldots, N,
+\]</div>
+where <span class="math">\(0< \beta < 1\)</span>.  Also define
+<div class="math">\[
+\widehat{\mu}_k = \frac{\mu_k}{1-\beta^k}.
+\]</div>
+<ol class="latex-enumerate"><li>Show that <span class="math">\(\mu_k\)</span> is a biased estimator of <span class="math">\(\mu\)</span>. 
+</li><li>Show that <span class="math">\(\widehat{\mu}_k\)</span> is an unbiased estimator of <span class="math">\(\mu\)</span>.
+</li></ol>
+
+</div><h4 id="adamw">5.2.3.4 AdamW</h4>
+A commonly used variant of Adam is <b>AdamW</b>, which incorporates an
+<span class="math">\(L^2\)</span> penalty through a decoupled weight-decay term. Formally, one may
+consider the regularized cost
+<div class="math">\[
+\mathcal{C}_\lambda(\boldsymbol{\Theta})
+=
+\mathcal{C}(\boldsymbol{\Theta})
++
+\frac{\lambda}{2}
+\sum_j \Theta_j^2.
+\]</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The details and motivation for the <span class="math">\(L^2\)</span> penalty will be discussed in the
+next chapter.
+
+</div>
+In AdamW, the weight-decay term is applied separately from the adaptive
+gradient update. In componentwise form, the update is
+<div class="math">\[
+\Theta_{j,k+1}
+=
+\Theta_{j,k}
+-
+\eta\,
+\frac{\widehat m_{j,k}}
+{\sqrt{\widehat v_{j,k}}+\epsilon}
+-
+\eta\lambda\Theta_{j,k},
+\]</div>
+where the bias-corrected estimates are obtained as in Adam, with the gradients computed without the penalty term.
+</p><p>
+AdamW is widely used in the training of Transformer-based models and large language models. In particular, it is the default optimizer in the current (at the time of writing this notes) Hugging Face Transformers training framework.</p>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 29-Sep-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generalization and Regularization</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter "><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multiclass.classification.subs">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch03LogisticRegression.html" class="chapter-link">CH 3: Logistic Regression</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch03LogisticRegression.html#logistic.regression.ch">Logistic Regression</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#model.derivation.sec">3.1 The Logistic Regression Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#bayes.derivation.susb">3.1.1 Derivation using Bayes' Formula</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#logistic.regression.neuron.sec">3.1.2 Single Neuron Interpretation</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#training.a.model.sec">3.2 Training Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#cross-entropy.loss.function.subs">3.2.1 Cross-Entropy Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs">3.2.2 Gradient Descent Algorithm</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#applications.logistic.regression.sec">3.3 Applications of Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#credit.default.subs">3.3.1 Finance: Credit Default Prediction</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch03LogisticRegression.html#model-and-training">3.3.1.1 Model and training.</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch04NetworkGradientEvaluation.html" class="chapter-link">CH 4: Network and Gradient Evaluation</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Network and Gradient Evaluation</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec">4.1 Matrix Formulation and Forward Propagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#layer-function-in-matrix-form">4.1.1 Layer Function in Matrix Form</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.subs">4.1.2 Forward Propagation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-batch-form">4.1.2.1 The Batch Form</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.method.sec">4.2 Backpropagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation">4.2.1 Gradient Computation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation-for-neurons">4.2.1.1 Gradient Computation for Neurons</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#propagation-for-shallow-networks">4.2.1.2 Propagation for Shallow Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.algorithm.subs">4.2.2 The Backpropagation Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.backpropagation.subs">4.2.3 Batch Form, Computational Cost, and Gradient Checking</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-delta-matrices">4.2.3.1 The Delta Matrices</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#backward-recursion-in-matrix-form">4.2.3.2 Backward Recursion in Matrix Form</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch05OptimizationAlgorithms.html" class="chapter-link">CH 5: Optimization Algorithms</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Optimization Algorithms</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#gradient.descent.methods.sec">5.1 Gradient Descent Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#batch-gradient-descent-method">5.1.1 Batch Gradient Descent Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#stochastic-gradient-descent-sgd">5.1.2 Stochastic Gradient Descent (SGD)</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#mini.batch.gd.subs">5.1.3 Mini-batch Gradient Descent</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#momentum.adaptive.GD.sec">5.2 Momentum and Adaptive Gradient Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#momentum-method">5.2.1 Momentum Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#nesterov-accelerated-gd-method">5.2.2 Nesterov Accelerated GD Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-step-size-methods">5.2.3 Adaptive Step Size Methods</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adagrad">5.2.3.1 AdaGrad.</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#root-mean-square-propagation-rmsprop">5.2.3.2 Root Mean Square Propagation (RMSProp)</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-moments-adam">5.2.3.3 Adaptive Moments (Adam).</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adamw">5.2.3.4 AdamW</a></div>
+</div></div>
+<div class="toc-chapter current"><a href="Ch06GeneralizationRegularization.html" class="chapter-link">CH 6: Generalization and Regularization</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch06GeneralizationRegularization.html#generalization.regularization.ch">Generalization and Regularization</a></div>
+<div class="toc-item toc-section"><a href="Ch06GeneralizationRegularization.html#evaluation.model.behaviour.sec">6.1 Evaluation of Model Behaviour</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#underfitting.overfitting.sec">6.1.1 Underfitting and Overfitting</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#generalization.bounds.subs">6.1.2 Generalization Bounds</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#error-decomposition">6.1.2.1 Error Decomposition</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#generalization.bounds.summary.subs">6.1.2.2 Generalization Bounds for a Finite Hypothesis Set</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#extension-to-general-hypothesis-sets">6.1.2.3 Extension to General Hypothesis Sets</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#bias-variance.tradeoff.subs">6.1.3 Bias-Variance Tradeoff</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#double.descent.subs">6.1.4 Overparameterization and Double Descent</a></div>
+<div class="toc-item toc-section"><a href="Ch06GeneralizationRegularization.html#regularization.techniques.sec">6.2 Regularization Techniques</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#parameter.based.regularization.sec">6.2.1 Parameter-based Regularization</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#regularized-cost-function">6.2.1.1 Regularized Cost Function</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="generalization.regularization.ch">Chapter 6: Generalization and Regularization</h1><p>
+As a part of training a neural network, the model parameters <span class="math">\(\boldsymbol{\Theta}\)</span> are determined by minimizing a cost function over the training dataset <span class="math">\(\mathcal{D}_{\text{train}}\)</span>. An accurate minimizer makes the model fit the training dataset accurately.  However, tuning the parameters too precisely to fit <span class="math">\(\mathcal{D}_{\text{train}}\)</span> has the risk of <b>overfitting</b> the data. In such cases, the model represents the training dataset very well (often referred to as memorizing the data) but fails to perform equally well on unseen data, such as the test dataset <span class="math">\(\mathcal{D}_{\text{test}}\)</span>. This behavior is particularly prominent when the source of the data is noisy.
+</p><p>
+On the other hand, if the parameters are not tuned adequately, the model may suffer from <b>underfitting</b>, where it fails to capture even the underlying patterns in the training dataset, and this again leads to poor performance on unseen data.  Hence, a balance must be achieved between underfitting and overfitting so that the model represents the training dataset reasonably well and at the same time performs satisfactorily on unseen data.
+</p><p>
+The ability of a trained model to perform well on unseen data is referred to as <b>generalization</b>. If a model performs well on the test dataset, we say that the model generalizes well. Training a model with good accuracy on the training dataset while also achieving good generalization is the goal of <b>regularization</b>.  In neural networks, regularization refers to a set of techniques applied during training, in which certain constraints are applied to the learning process in order to reduce overfitting so as to improve the model generalization.
+</p><p>
+In this chapter, we first discuss the concept of generalization in <a href="Ch06GeneralizationRegularization.html#evaluation.model.behaviour.sec" class="internal-link">Section 6.1</a>, starting with the fundamental idea of underfitting and overfitting. We then discuss parameter-based and process-based regularization techniques in <a href="Ch06GeneralizationRegularization.html#regularization.techniques.sec" class="internal-link">Section 6.2</a>.
+<h2 id="evaluation.model.behaviour.sec">6.1 Evaluation of Model Behaviour</h2>
+A deep neural network is trained on a portion of the dataset, the training dataset. The model works sufficiently well on this data as the cost function is minimized to a required extent. However, this does not guarantee that the model will perform equally well on unseen data.  Therefore, we have to evaluate the model performance on the test dataset before deploying it in practice. 
+</p><p>
+We start with building intuition for underfitting and overfitting in <a href="Ch06GeneralizationRegularization.html#underfitting.overfitting.sec" class="internal-link">Subsection 6.1.1</a> and obgain a generalization bound in <a href="Ch06GeneralizationRegularization.html#generalization.bounds.subs" class="internal-link">Subsection 6.1.2</a>.  Further, we discuss a classical statistical tool, the bias-variance tradeoff, in <a href="Ch06GeneralizationRegularization.html#bias-variance.tradeoff.subs" class="internal-link">Subsection 6.1.3</a> to identify the limitations of the model performance, and we extend our discussion to the modern deep double descent phenomenon, which is discussed in <a href="Ch06GeneralizationRegularization.html#double.descent.subs" class="internal-link">Subsection 6.1.4</a> and is more specific to deep learning models.
+<h3 id="underfitting.overfitting.sec">6.1.1 Underfitting and Overfitting</h3>
+<b>Underfitting</b> occurs when the model is too simple to capture the underlying patterns in the data.  In such cases, the model performs poorly on both the training and test datasets.  <a href="Ch06GeneralizationRegularization.html#underfit-overfit.fig">Figure 6.1</a>(a) illustrates a binary classification model that underfits a complex dataset.
+</p><p>
+<b>Overfitting</b> occurs when the model is too complex relative to the amount of noise level of the data. In such cases, the model fits the training data very accurately (including its noise) but fails to generalize to unseen data.  <a href="Ch06GeneralizationRegularization.html#underfit-overfit.fig">Figure 6.1</a>(b) illustrates a binary classification model that overfits a complex dataset.
+<div class="latex-figure" id="underfit-overfit.fig">
+<img src="Figures/Ch06UnderOverFits.png" alt="">
+<div class="figure-caption"><p>Figure 6.1: (a) Underfitting model illustration, where linear model is used for a complex dataset, which failed to capture the underlying pattern. (b) Overfitting illustration, where the model is fine tuned to capture the underlying pattern of the training dataset more closely.</p></div>
+</div><p>
+Both underfitting and overfitting are undesirable in a trained model.  The cost function can be used to characterize these behaviors as follows:
+<ol class="latex-enumerate"><li>If both <span class="math">\(\mathcal{C}_{\text{test}}(\boldsymbol{\Theta}^*)\)</span> and <span class="math">\(\mathcal{C}_{\text{train}}(\boldsymbol{\Theta}^*)\)</span> are high, then the model is said to be underfitted.
+</li><li>If <span class="math">\(\mathcal{C}_{\text{test}}(\boldsymbol{\Theta}^*)\)</span> is high and <span class="math">\(\mathcal{C}_{\text{train}}(\boldsymbol{\Theta}^*)\)</span> is low, then the model is said to be overfitted,
+</li></ol>
+where <span class="math">\(\mathcal{C}\)</span> is the cost (or loss) function used in training the model and <span class="math">\(\boldsymbol{\Theta}^*\)</span> denotes the parameters of the trained model.  Here, the cost function value <span class="math">\(\mathcal{C}_\text{train}(\boldsymbol{\Theta}^*)\)</span>, computed on the training dataset is called the <b>training error</b>, whereas the cost function value
+<span class="math">\(\mathcal{C}_\text{test}(\boldsymbol{\Theta}^*)\)</span>, computed on the test dataset is called the <b>test error</b> or <b>generalization error</b>.
+</p><p>
+In most of the practical situations (if not always), we have
+<div class="math">\[
+\mathcal{C}_\text{train}(\boldsymbol{\Theta}) \le \mathcal{C}_\text{test}(\boldsymbol{\Theta}).
+\]</div>
+and the <b>generalization gap</b> is defined as
+</p><div class="math numbered-math" id="generalization.gap.eq">\begin{eqnarray}
+\mathcal{G}\big({\mathscr{F}_{L,\hat{n}}}(\cdot;\boldsymbol{\Theta}) \big) = \mathcal{C}_{\text{test}}(\boldsymbol{\Theta}) - \mathcal{C}_{\text{train}}(\boldsymbol{\Theta}).
+\end{eqnarray}<span class="eq-number">(6.1)</span></div><p>
+An illustrative sketch showing the underfitting, optimal, and overfitting regions is presented in <a href="Ch06GeneralizationRegularization.html#train-test-cost.fig">Figure 6.2</a>.
+<div class="latex-figure" id="train-test-cost.fig">
+<img src="Figures/Ch06UnderOverFitsRegions.png" alt="">
+<div class="figure-caption"><p>Figure 6.2: Variation of training cost <span class="math">\(\mathcal{C}_{\text{train}}\)</span> and test cost <span class="math">\(\mathcal{C}_{\text{test}}\)</span>
+with model complexity, illustrating underfitting, overfitting, and optimal generalization.</p></div>
+</div>
+Given the above scenario, if the generalization gap satisfies the inequality
+<div class="math">\[\mathcal{G}\big({\mathscr{F}_{L,\hat{n}}}(\cdot;\boldsymbol{\Theta}) \big) < \epsilon,\]</div>
+for some pre-assigned number <span class="math">\(\epsilon>0\)</span> and the model achieves a reasonably small training error,  then the model is said to <b>generalize</b> well.
+In this case, the model is expected to perform well on unseen data. This is the desired scenario in deep learning. In this case, we say that the model has learned the underlying patterns in the data rather than memorizing the training examples, which may include noise.
+</p><h3 id="generalization.bounds.subs">6.1.2 Generalization Bounds</h3>
+In the previous subsection, the generalization gap was defined in terms of the training and test errors, which are computed on finite datasets. To establish theoretical generalization bounds, we need a measure of performance that averages the loss over all input-label pairs, weighted by the unknown distribution from which both the training and the test examples are drawn. Unlike in the previous subsection, we define this measure on functions rather than on parameters. This is because a trained model is compared with the best possible predictor, which need not be representable by any fixed architecture.
+</p><p>
+Throughout this subsection, we use the notation <span class="math">\(\mathcal{D}_x \subseteq \mathbb{R}^{n_0}\)</span> to denote the set of all input vectors, called the <b>feature space</b>, and <span class="math">\(\mathcal{D}_y\subseteq \mathbb{R}^{n_L}\)</span> to denote the set of all labels, called the <b>label space</b>. Therefore, the set of all possible examples can be written as <span class="math">\(\mathcal{D}_x \times \mathcal{D}_y\)</span>.
+</p><p>
+We further assume that the input vectors and their labels are related through an unknown probability distribution <span class="math">\(\mathcal{P}\)</span> on <span class="math">\(\mathcal{D}_x \times \mathcal{D}_y\)</span>, called the <b>data distribution</b>.  Every example <span class="math">\((\boldsymbol{x},\boldsymbol{y})\)</span>, including the examples in the training dataset and test dataset, is assumed to be drawn from <span class="math">\(\mathcal{P}\)</span>.
+</p><p>
+A labeled dataset of <span class="math">\(N\)</span> examples
+<div class="math">\[
+\mathcal{D} = \big\{ (\boldsymbol{x}_k, \boldsymbol{y}_k)\in \mathcal{D}_x \times \mathcal{D}_y~|~ k = 1,2,\ldots, N\big\}
+\]</div>
+is said to be drawn i.i.d. from <span class="math">\(\mathcal{P}\)</span> if the <span class="math">\(N\)</span> pairs <span class="math">\((\boldsymbol{x}_k, \boldsymbol{y}_k)\)</span> are independent random vectors and each pair has the distribution <span class="math">\(\mathcal{P}\)</span>. We write this as <span class="math">\(\mathcal{D} \sim \mathcal{P}^N\)</span>.
+</p><p>
+We denote the set of all measurable functions from <span class="math">\(\mathcal{D}_x\)</span> to <span class="math">\(\mathcal{D}_y\)</span> by
+<div class="math">\[
+\mathcal{M} := \big\{
+				h:\mathcal{D}_x \rightarrow \mathcal{D}_y ~|~
+					h~\text{is measurable}\big\}.
+\]</div>
+We first define the population risk and its computable counterpart, the empirical risk.
+<div class="definition" id="risk.empirical.risk.def">
+<div class="heading-container"><b class="heading">Definition 6.1 (Population and Empirical Risks):</b></div><p>
+Let <span class="math">\(\ell:\mathbb{R}^{n_L}\times\mathbb{R}^{n_L}\rightarrow[0,\infty)\)</span> denote a loss function, let <span class="math">\(\mathcal{P}\)</span> be a data distribution on <span class="math">\(\mathcal{D}_x \times \mathcal{D}_y\)</span>, and let <span class="math">\(h\in \mathcal{M}\)</span>.
+<ol class="latex-enumerate"><li>The <b>population risk</b> of <span class="math">\(h\)</span> is defined as
+</p><div class="math numbered-math" id="risk.eq">\begin{eqnarray}
+\mathcal{R}(h) = \mathbb{E}_{(\boldsymbol{x},\boldsymbol{y})\sim\mathcal{P}}\Big[\ell\big(\boldsymbol{y},h(\boldsymbol{x})\big)\Big].
+\end{eqnarray}<span class="eq-number">(6.2)</span></div><p>
+</li><li>Given a dataset <span class="math">\(\mathcal{D}\)</span> of <span class="math">\(N\)</span> examples, the <b>empirical risk</b> of <span class="math">\(h\)</span> is defined as
+</p><div class="math numbered-math" id="empirical.risk.eq">\begin{eqnarray}
+\widehat{\mathcal{R}}_{\mathcal{D}}(h) = \frac{1}{N}\sum_{k=1}^N \ell\big(\boldsymbol{y}_k,h(\boldsymbol{x}_k)\big).
+\end{eqnarray}<span class="eq-number">(6.3)</span></div><p>
+</li></ol>
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+For a neural network <span class="math">\(h = {\mathscr{F}_{L,\hat{n}}}(\,\cdot\,;\boldsymbol{\Theta})\)</span>, the empirical risk on <span class="math">\(\mathcal{D}\)</span> is exactly the cost function <span class="math">\(\mathcal{C}(\boldsymbol{\Theta})\)</span> of <a href="Ch04NetworkGradientEvaluation.html#loss.cost.function.def">Definition 4.1</a>.
+
+</div>
+The smallest possible population risk over all measurable functions is called the <b>Bayes risk</b>, and is defined as
+</p><div class="math numbered-math" id="bayes.risk.eq">\begin{eqnarray}
+\mathcal{R}^* = \inf_{h\in \mathcal{M}} \mathcal{R}(h).
+\end{eqnarray}<span class="eq-number">(6.4)</span></div><p>
+A function in <span class="math">\(\mathcal{M}\)</span> that attains this infimum, if it exists, is a best possible predictor.
+</p><p>
+Our next task is to find a function <span class="math">\(h\in \mathcal{M}\)</span> whose risk is close to the Bayes risk. However, one challenge is that we cannot evaluate <span class="math">\(\mathcal{R}(h)\)</span> since the distribution <span class="math">\(\mathcal{P}\)</span> is unknown. Therefore, we approximate the population risk by the empirical risk <span class="math">\(\widehat{\mathcal{R}}_{\mathcal{D}}(h)\)</span>.  Another challenge is that we cannot search over all measurable functions.  To address this difficulty, we restrict the search to a fixed set of functions, called the <b>hypothesis set</b> and denoted by <span class="math">\(\mathcal{H} \subseteq \mathcal{M}\)</span>.
+</p><p>
+In deep learning, <span class="math">\(\mathcal{H}\)</span> is a set of neural networks.  For instance, for a fixed architecture and a fixed set <span class="math">\(\mathcal{W}\)</span> of admissible parameters, we take
+<div class="math">\[
+\mathcal{H} = \big\{{\mathscr{F}_{L,\hat{n}}}(\,\cdot\,;\boldsymbol{\Theta})~|~\boldsymbol{\Theta}\in\mathcal{W}\big\}.
+\]</div>
+We have the following proposition as a justification for approximating the population risk by the empirical risk.
+<div class="lemma" id="empirical.risk.unbiased.prop">
+<div class="heading-container"><b class="heading">Lemma 6.1 (Consistency of the Empirical Risk):</b></div><p>
+Let <span class="math">\(h \in \mathcal{M}\)</span> be a given function with <span class="math">\(\mathcal{R}(h)<\infty\)</span>, and let <span class="math">\(\mathcal{D}\sim\mathcal{P}^N\)</span>.  Then
+<ol class="latex-enumerate"><li><span class="math">\(\widehat{\mathcal{R}}_{\mathcal{D}}(h)\)</span> is an unbiased estimator of <span class="math">\(\mathcal{R}(h)\)</span>, that is,
+<div class="math">\[
+\mathbb{E}_{\mathcal{D}\sim\mathcal{P}^N}\big[\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big] = \mathcal{R}(h).
+\]</div>
+</li><li>If, in addition, <span class="math">\(\sigma_h^2 := \mathrm{Var}\big[\ell\big(\boldsymbol{y},h(\boldsymbol{x})\big)\big]<\infty\)</span> for <span class="math">\((\boldsymbol{x},\boldsymbol{y})\sim\mathcal{P}\)</span>, then for every <span class="math">\(\epsilon>0\)</span>
+<div class="math">\[
+\mathbb{P}\Big(\big|\widehat{\mathcal{R}}_{\mathcal{D}}(h)-\mathcal{R}(h)\big|\ge\epsilon\Big) \le \frac{\sigma_h^2}{N\epsilon^2}.
+\]</div>
+In particular, <span class="math">\(\widehat{\mathcal{R}}_{\mathcal{D}}(h)\rightarrow\mathcal{R}(h)\)</span> in probability as <span class="math">\(N\rightarrow\infty\)</span>.
+</li></ol>
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div><p>
+For <span class="math">\(k=1,2,\ldots,N,\)</span> define the random variable
+<div class="math">\[
+Z_k = \ell\big(\boldsymbol{y}_k,h(\boldsymbol{x}_k)\big).
+\]</div>
+Since the examples of <span class="math">\(\mathcal{D}\)</span> are i.i.d. and each <span class="math">\(Z_k\)</span> depends only on the <span class="math">\(k^{\rm th}\)</span> example, the random variables <span class="math">\(Z_1,Z_2,\ldots,Z_N\)</span> are i.i.d.  By <a href="#risk.eq">(6.2)</a>, each of them has the mean <span class="math">\(\mathbb{E}[Z_k]=\mathcal{R}(h)\)</span>.
+</p><ol class="latex-enumerate"><li>The proof is left as an exercise.<br>
+</p><p>
+</li><li>Since <span class="math">\(Z_1,Z_2,\ldots,Z_N\)</span> are independent, we have
+<div class="math">\[
+\mathrm{Var}\big[\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big]  = \frac{\sigma_h^2}{N}.
+\]</div>
+The result now follows by Chebyshev's inequality and part 1 (complete the proof).
+</li></ol>
+
+</div><p>
+In view of the above lemma, we replace the population risk by the empirical risk and minimize it over the hypothesis set. This leads to the following definition.
+<div class="definition" id="empirical.risk.minimizer.def">
+<div class="heading-container"><b class="heading">Definition 6.2 (Empirical Risk Minimizer):</b></div><p>
+Let <span class="math">\(\mathcal{H}\)</span> be a hypothesis set, let <span class="math">\(\ell\)</span> be a loss function, and let <span class="math">\(\mathcal{D}\)</span> be a dataset of <span class="math">\(N\)</span> examples.  A function <span class="math">\(h_{\mathcal{D}}\in\mathcal{H}\)</span> satisfying
+<div class="math">\[
+\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}}) = \inf_{h\in\mathcal{H}} \widehat{\mathcal{R}}_{\mathcal{D}}(h)
+\]</div>
+is called an <b>empirical risk minimizer</b>.  The procedure of choosing <span class="math">\(h_{\mathcal{D}}\)</span> is called <b>empirical risk minimization</b> (ERM).
+
+</div>
+The following problem shows that, for a set of neural networks of a fixed architecture, ERM is the same as minimizing the cost function over the admissible parameters, that is, training the network.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 6.1:</b></div>
+
+Let <span class="math">\(\mathcal{H} = \{{\mathscr{F}_{L,\hat{n}}}(\,\cdot\,;\boldsymbol{\Theta})~|~\boldsymbol{\Theta}\in\mathcal{W}\}\)</span>, and let <span class="math">\(\boldsymbol{\Theta}^*\in\mathcal{W}\)</span> minimize the cost function <span class="math">\(\mathcal{C}\)</span>, computed on <span class="math">\(\mathcal{D}\)</span>, over <span class="math">\(\mathcal{W}\)</span>. Show that
+<div class="math">\[h_{\mathcal{D}} = {\mathscr{F}_{L,\hat{n}}}(\,\cdot\,;\boldsymbol{\Theta}^*)\]</div>
+is an empirical risk minimizer.
+
+</div><p>
+The above problem assumes that a minimizer <span class="math">\(\boldsymbol{\Theta}^*\in \mathcal{W}\)</span> of <span class="math">\(\mathcal{C}\)</span> exists.  It is important to note that such a minimizer need not exist in <span class="math">\(\mathcal{W}\)</span>, and consequently an ERM may fail to exist in <span class="math">\(\mathcal{H}\)</span>.  The following problem gives a sufficient condition for the existence of an ERM.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 6.2:</b></div>
+
+Let <span class="math">\(\mathcal{D}\)</span> be a dataset, and let <span class="math">\(\mathcal{H} = \{{\mathscr{F}_{L,\hat{n}}}(\,\cdot\,;\boldsymbol{\Theta})~|~\boldsymbol{\Theta}\in\mathcal{W}\}\)</span> be a hypothesis set of networks of a fixed architecture with a continuous activation function.  Let the loss function <span class="math">\(\ell\)</span> be continuous. Show that if the parameter set <span class="math">\(\mathcal{W}\)</span> is nonempty and compact, then ERM <span class="math">\(h_{\mathcal{D}}\in \mathcal{H}\)</span> exists.
+
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+<span class="math">\(~\)</span>
+<ol class="latex-enumerate"><li>Throughout this section, we assume that an ERM <span class="math">\(h_{\mathcal{D}}\)</span> exists for every dataset <span class="math">\(\mathcal{D}\)</span>.
+</li><li>In practice, an optimization algorithm of <a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Chapter 5</a> only approximates <span class="math">\(\boldsymbol{\Theta}^*\)</span>.  The analysis below ignores this optimization error.
+</li></ol>
+
+</div>
+<h4 id="error-decomposition">6.1.2.1 Error Decomposition</h4>
+Fix the architecture and the parameter set <span class="math">\(\mathcal{W}\)</span>, and therefore the hypothesis set <span class="math">\(\mathcal{H}\)</span>.  Assume that <span class="math">\(\mathcal{R}(h)<\infty\)</span> for all <span class="math">\(h\in \mathcal{H}\)</span>.
+</p><p>
+Define the following two quantities:
+</p><div class="math numbered-math" id="generalization.approximation.errors.eq">\begin{eqnarray}
+\varepsilon_\text{gen} = \sup_{h\in\mathcal{H}} \big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big|,
+~~
+\varepsilon_\text{approx} = \inf_{g\in\mathcal{H}} \mathcal{R}(g) - \mathcal{R}^*.
+
+\end{eqnarray}<span class="eq-number">(6.5)</span></div><p>
+The number <span class="math">\(\varepsilon_\text{gen}\)</span> is called the <b>uniform generalization gap</b> of <span class="math">\(\mathcal{H}\)</span> for the dataset <span class="math">\(\mathcal{D}\)</span>.  The number <span class="math">\(\varepsilon_\text{approx}\)</span> is called the <b>approximation error</b> of <span class="math">\(\mathcal{H}\)</span>.  
+</p><p>
+Note that <span class="math">\(\varepsilon_\text{gen}\)</span> depends on the dataset <span class="math">\(\mathcal{D}\)</span>, and hence is a random variable.  The number <span class="math">\(\varepsilon_\text{approx}\)</span> depends only on <span class="math">\(\mathcal{H}\)</span>, <span class="math">\(\ell\)</span> and <span class="math">\(\mathcal{P}\)</span>, and does not depend on <span class="math">\(\mathcal{D}\)</span>.  Since <span class="math">\(\mathcal{R}^*\le\mathcal{R}(g)\)</span> for every <span class="math">\(g\in\mathcal{H}\)</span>, we have <span class="math">\(\varepsilon_\text{approx}\ge 0\)</span>.
+<div class="theorem" id="error.decomposition.thm">
+<div class="heading-container"><b class="heading">Theorem 6.1 (Error Decomposition):</b></div><p>
+Let <span class="math">\(\mathcal{H}\)</span> be a hypothesis set with <span class="math">\(\mathcal{R}(h)<\infty\)</span> for all <span class="math">\(h\in\mathcal{H}\)</span>.  Let <span class="math">\(\mathcal{D}\)</span> be a dataset, and let <span class="math">\(h_{\mathcal{D}}\)</span> be an empirical risk minimizer.  Then
+</p><div class="math numbered-math" id="error.decomposition.eq">\begin{eqnarray}
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2\,\varepsilon_\text{gen} + \varepsilon_\text{approx},
+\end{eqnarray}<span class="eq-number">(6.6)</span></div><p>
+and
+</p><div class="math numbered-math" id="risk.training.error.eq">\begin{eqnarray}
+\mathcal{R}(h_{\mathcal{D}}) \le \varepsilon_\text{gen} + \varepsilon_\text{int},
+\qquad\text{where}~~
+\varepsilon_\text{int} = \inf_{g\in\mathcal{H}} \widehat{\mathcal{R}}_{\mathcal{D}}(g).
+\end{eqnarray}<span class="eq-number">(6.7)</span></div><p>
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+<b>Proof of <a href="#error.decomposition.eq">(6.6)</a>:</b><br>  
+Let <span class="math">\(g\in\mathcal{H}\)</span> be arbitrary.  First, show that 
+<div class="math">\[
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2\,\varepsilon_\text{gen} + \mathcal{R}(g) - \mathcal{R}^*.
+\]</div>
+Since the above inequality holds for every <span class="math">\(g\in\mathcal{H}\)</span>, taking the infimum over <span class="math">\(g\in\mathcal{H}\)</span> on both sides, and noting that the left hand side does not depend on <span class="math">\(g\)</span>, we get
+<div class="math">\[
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2\,\varepsilon_\text{gen} + \inf_{g\in\mathcal{H}}\mathcal{R}(g) - \mathcal{R}^* = 2\,\varepsilon_\text{gen} + \varepsilon_\text{approx}.
+\]</div><p>
+<b>Proof of <a href="#risk.training.error.eq">(6.7)</a>:</b>  Left as an exercise.
+
+</div><p>
+The number <span class="math">\(\varepsilon_\text{int}\)</span> defined in the above theorem is the training error of the empirical risk minimizer.  If there exists an <span class="math">\(h\in\mathcal{H}\)</span> that fits all the examples of <span class="math">\(\mathcal{D}\)</span> exactly (with a loss satisfying <span class="math">\(\ell(\boldsymbol{y},\boldsymbol{y})=0\)</span> for all <span class="math">\(\boldsymbol{y}\in\mathcal{D}_y\)</span>), then we have <span class="math">\(\varepsilon_\text{int}=0\)</span>. For this reason, <span class="math">\(\varepsilon_\text{int}\)</span> is also called the <b>interpolation error</b>.
+<div class="remark" id="generalization.gap.rem">
+<div class="heading-container"><b class="heading">Remark 6.1 (Generalization Gap):</b></div><p>
+The generalization gap <a href="#generalization.gap.eq">(6.1)</a> given by
+<div class="math">\[\mathcal{G}\big({\mathscr{F}_{L,\hat{n}}}(\cdot;\boldsymbol{\Theta}^*)\big) = \mathcal{C}_\text{test}(\boldsymbol{\Theta}^*) - \mathcal{C}_\text{train}(\boldsymbol{\Theta}^*)\]</div> 
+is related to <span class="math">\(\varepsilon_\text{gen}\)</span> as follows:
+</p><p>
+Take <span class="math">\(\mathcal{D}=\mathcal{D}_\text{train}\)</span>, and <span class="math">\(h_{\mathcal{D}}={\mathscr{F}_{L,\hat{n}}}(\,\cdot\,;\boldsymbol{\Theta}^*)\)</span> is the trained network.    If <span class="math">\(\mathcal{D}_\text{test}\)</span> is drawn independently of <span class="math">\(\mathcal{D}_\text{train}\)</span>, then the trained network is a fixed function with respect to <span class="math">\(\mathcal{D}_\text{test}\)</span>.  Hence, by <a href="Ch06GeneralizationRegularization.html#empirical.risk.unbiased.prop">Lemma 6.1</a>, <span class="math">\(\mathcal{C}_\text{test}(\boldsymbol{\Theta}^*)\)</span> is an unbiased estimator of <span class="math">\(\mathcal{R}(h_{\mathcal{D}})\)</span>.  Also, the training cost is exactly the empirical risk <span class="math">\(\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}})\)</span> of the trained network.
+</p><p>
+Therefore, <span class="math">\(\mathcal{G}\)</span> is an estimate of <span class="math">\(\mathcal{R}(h_{\mathcal{D}})-\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}})\)</span>, and we have
+<div class="math">\[
+\big|\mathcal{R}(h_{\mathcal{D}})-\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}})\big|
+\le \sup_{h\in\mathcal{H}}\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big|
+= \varepsilon_\text{gen}.
+\]</div>
+From here, we see that
+<div class="math">\[
+|\mathcal{G}| \le \varepsilon_\text{gen} + \big|\mathcal{C}_\text{test}(\boldsymbol{\Theta}^*)-\mathcal{R}(h_{\mathcal{D}})\big|.
+\]</div>
+<a href="Ch06GeneralizationRegularization.html#empirical.risk.unbiased.prop">Lemma 6.1</a> (2) shows that the second term on the right is small with high probability when the test set is large.
+
+</div><div class="remark" id="under.over.fitting.interpretation.rem">
+<div class="heading-container"><b class="heading">Remark 6.2 (Underfitting and Overfitting Interpretation):</b></div><p>
+<a href="Ch06GeneralizationRegularization.html#error.decomposition.thm">Theorem 6.1</a> shows that a small risk of the trained model requires two things.
+<ol class="latex-enumerate"><li>The approximation error <span class="math">\(\varepsilon_\text{approx}\)</span> (or the interpolation error <span class="math">\(\varepsilon_\text{int}\)</span>) must be small.  This requires <span class="math">\(\mathcal{H}\)</span> to be rich enough.  For neural networks, this is a question about the expressivity of the architecture discussed in the next chapter.
+</li><li>The uniform generalization gap <span class="math">\(\varepsilon_\text{gen}\)</span> must be small.  This requires <span class="math">\(\mathcal{H}\)</span> not to be too rich compared with the number <span class="math">\(N\)</span> of examples.
+</li></ol>
+The above two requirements conflict with each other.  For a fixed dataset, enlarging <span class="math">\(\mathcal{H}\)</span> cannot increase <span class="math">\(\varepsilon_\text{approx}\)</span>, but it can increase <span class="math">\(\varepsilon_\text{gen}\)</span>, since the supremum is taken over a larger set.  This is the mathematical form of the balance between underfitting and overfitting discussed in <a href="Ch06GeneralizationRegularization.html#underfitting.overfitting.sec" class="internal-link">Subsection 6.1.1</a>.
+</p><p>
+
+</div>
+<h4 id="generalization.bounds.summary.subs">6.1.2.2 Generalization Bounds for a Finite Hypothesis Set</h4>
+We state a generalization bound for a finite hypothesis set and then explain how the bound is extended to infinite hypothesis sets.  We omit the proofs in this course.
+</p><p>
+Assume that a hypothesis set <span class="math">\(\mathcal{H}\subseteq\mathcal{M}\)</span> has finitely many elements, say <span class="math">\(M=\#(\mathcal{H})\)</span>.
+Also, assume that the loss function <span class="math">\(\ell\)</span> satisfies
+<div class="math">\[
+c_1 \le \ell(\boldsymbol{y},\tilde{\boldsymbol{y}}) \le c_2, \quad\text{for all}~\boldsymbol{y},\tilde{\boldsymbol{y}}\in\mathcal{D}_y,
+\]</div>
+for some constants <span class="math">\(0\le c_1 < c_2\)</span>.  We write <span class="math">\(C = c_2-c_1\)</span>.
+</p><p>
+The generalization bound is stated in the following theorem.
+<div class="theorem" id="finite.hypothesis.bound.summary.thm">
+<div class="heading-container"><b class="heading">Theorem 6.2 (Generalization Bound for a Finite Hypothesis Set):</b></div><p>
+Let <span class="math">\(\mathcal{H}\)</span> be a finite hypothesis set with <span class="math">\(M=\#(\mathcal{H})\)</span> elements, and let <span class="math">\(\ell\)</span> be a loss function with values in <span class="math">\([c_1,c_2]\)</span> on <span class="math">\(\mathcal{D}_y\times\mathcal{D}_y\)</span> and <span class="math">\(C=c_2-c_1\)</span>.  Then, for every data distribution <span class="math">\(\mathcal{P}\)</span> on <span class="math">\(\mathcal{D}_x \times \mathcal{D}_y\)</span>, every <span class="math">\(N\in\mathbb{N}\)</span> and every <span class="math">\(\delta\in(0,1)\)</span>, we have
+</p><div class="math numbered-math" id="generalization.bound.eq">\begin{eqnarray}
+\mathbb{P}_{\mathcal{D}\sim\mathcal{P}^N}\Big(\sup_{h\in\mathcal{H}}\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big| \le \kappa(\delta,N)\Big) \ge 1-\delta,
+\end{eqnarray}<span class="eq-number">(6.8)</span></div><p>
+where
+<div class="math">\[
+\kappa(\delta,N) = C\sqrt{\frac{\ln M + \ln(2/\delta)}{2N}}
+\]</div>
+ is called a <b>generalization bound</b> for <span class="math">\(\mathcal{H}\)</span>.
+
+</div>
+The proof combines Hoeffding's inequality with a union bound over the <span class="math">\(M\)</span> elements of <span class="math">\(\mathcal{H}\)</span>.  The proof of the above theorem is omitted for this course.
+<div class="remark" id="finite.hypothesis.bound.rem">
+<div class="heading-container"><b class="heading">Remark 6.3 (Bound for the Risk of an Empirical Risk Minimizer):</b></div><p>
+Since an empirical risk minimizer <span class="math">\(h_{\mathcal{D}}\)</span> belongs to <span class="math">\(\mathcal{H}\)</span>, the above theorem gives, with probability at least <span class="math">\(1-\delta\)</span>,
+<div class="math">\[
+\mathcal{R}(h_{\mathcal{D}}) \le \widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}}) + C\sqrt{\frac{\ln M + \ln(2/\delta)}{2N}}.
+\]</div>
+Thus, we have the following observations:
+<ol class="latex-enumerate"><li>The population risk of the trained model is at most its training error plus the generalization bound that decays like <span class="math">\(1/\sqrt{N}\)</span>.
+</li><li>The bound grows only like <span class="math">\(\sqrt{\ln M}\)</span> as the size of the hypothesis set increases.  Thus, a very large finite hypothesis set can still generalize, provided <span class="math">\(N\)</span> is large compared with <span class="math">\(\ln M\)</span> (as illustrated in <a href="Ch06GeneralizationRegularization.html#finite.precision.networks.prob">Problem 6.3</a>).
+</li><li>The generalization bound requires the loss function to be bounded.  The <span class="math">\(0\)</span>--<span class="math">\(1\)</span> loss satisfies this with <span class="math">\(C=1\)</span>.  The square loss satisfies this when the labels and the predictions lie in a bounded set.  The cross-entropy loss is unbounded, and the theorem does not apply to it directly.
+</li></ol>
+
+</div><p>
+The following problem illustrates a case where the hypothesis set is finite.
+<div class="problem" id="finite.precision.networks.prob">
+<div class="heading-container"><b class="heading">Problem 6.3 (Networks with Finite-Precision Parameters):</b></div>
+
+Consider a binary classification problem with <span class="math">\(\mathcal{D}_y=\{0,1\}\)</span> and the <span class="math">\(0\)</span>--<span class="math">\(1\)</span> loss given by
+<div class="math">\[
+\ell(y,\tilde{y}) = \left\{\begin{array}{ll}
+1, & \text{if}~ y\ne \tilde{y},\\
+0, & \text{if}~ y=\tilde{y}.
+\end{array}\right.
+\]</div>
+Fix a network architecture with <span class="math">\(m\)</span> trainable parameters, whose output is passed through a threshold to produce a label in <span class="math">\(\{0,1\}\)</span>.  On a computer, each parameter is stored in a <span class="math">\(b\)</span>-bit floating-point format.  Let <span class="math">\(\mathcal{H}\)</span> be the set of all classifiers obtained from this architecture with parameters representable in the <span class="math">\(b\)</span>-bit floating-point format.
+<ol class="latex-enumerate"><li>Show that <span class="math">\(\#(\mathcal{H})\le 2^{bm}\)</span>.
+</li><li>Deduce that, for every data distribution <span class="math">\(\mathcal{P}\)</span>, every <span class="math">\(N\in\mathbb{N}\)</span> and every <span class="math">\(\delta\in(0,1)\)</span>,
+<div class="math">\[
+\mathbb{P}_{\mathcal{D}\sim\mathcal{P}^N}\left(\sup_{h\in\mathcal{H}}\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big| \le \sqrt{\frac{bm\ln 2 + \ln(2/\delta)}{2N}}\,\right) \ge 1-\delta.
+\]</div>
+</li><li>Let <span class="math">\(m=10^5\)</span>, <span class="math">\(b=32\)</span>, <span class="math">\(\delta=0.01\)</span> and <span class="math">\(\epsilon=0.05\)</span>.  Find the smallest number of examples <span class="math">\(N\)</span> that guarantees that the generalization bound in part 2 is at most <span class="math">\(\epsilon\)</span>.
+</li></ol>
+
+</div><div class="problem" id="finite.hypothesis.erm.cor">
+<div class="heading-container"><b class="heading">Problem 6.4 (Risk Bound for Empirical Risk Minimization):</b></div><p>
+Let <span class="math">\(\mathcal{H}\)</span>, <span class="math">\(\ell\)</span> and <span class="math">\(C\)</span> be as in <a href="Ch06GeneralizationRegularization.html#finite.hypothesis.bound.summary.thm">Theorem 6.2</a>, and let <span class="math">\(h_{\mathcal{D}}\)</span> be an empirical risk minimizer.  Then, show that, for every data distribution <span class="math">\(\mathcal{P}\)</span>, every <span class="math">\(N\in\mathbb{N}\)</span> and every <span class="math">\(\delta\in(0,1)\)</span>, with probability at least <span class="math">\(1-\delta\)</span> over <span class="math">\(\mathcal{D}\sim\mathcal{P}^N\)</span>, we have
+<div class="math">\[
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2C\sqrt{\frac{\ln M + \ln(2/\delta)}{2N}} + \varepsilon_\text{approx}.
+\]</div>
+
+</div><h4 id="extension-to-general-hypothesis-sets">6.1.2.3 Extension to General Hypothesis Sets</h4>
+In general, a hypothesis set of neural networks with real-valued parameters is uncountable, and therefore <span class="math">\(M=\#(\mathcal{H})\)</span> is infinite. Consequently, <a href="Ch06GeneralizationRegularization.html#finite.hypothesis.bound.summary.thm">Theorem 6.2</a> is not applicable.  
+</p><p>
+The finite bound is nevertheless the basic step for infinite hypothesis sets.  The idea consists of the following steps:  
+<ol class="latex-enumerate"><li>We cover <span class="math">\(\mathcal{H}\)</span> by finitely many balls of a small radius <span class="math">\(r\)</span> in the supremum norm, assuming that such a finite cover exists.  
+</li><li>We apply the finite bound to the centers of these balls, which form a finite set.  Every <span class="math">\(h\in\mathcal{H}\)</span> lies within distance <span class="math">\(r\)</span> of some center.  Hence the deviation between its two risks exceeds that of the center by at most a term proportional to <span class="math">\(r\)</span>.  
+</li><li>In the resulting bound, the number of elements <span class="math">\(M\)</span> is replaced by the number of balls needed to cover <span class="math">\(\mathcal{H}\)</span>.
+</li></ol>
+We need to assume that the loss is Lipschitz continuous in the prediction.  Under this assumption, we can see that two functions that are uniformly close have close population risks and close empirical risks. 
+<div class="definition" id="covering.number.def">
+<div class="heading-container"><b class="heading">Definition 6.3 (Covering Number):</b></div><p>
+Let <span class="math">\(\mathcal{H}\subseteq\mathcal{M}\)</span> and <span class="math">\(r>0\)</span>.  The <b>covering number</b> <span class="math">\(\mathscr{C}(\mathcal{H},r)\)</span> is the smallest <span class="math">\(n\in\mathbb{N}\)</span> for which there exist functions <span class="math">\(g_1,g_2,\ldots,g_n:\mathcal{D}_x\rightarrow \mathcal{D}_y\)</span> such that, for every <span class="math">\(h\in\mathcal{H}\)</span>, there is an index <span class="math">\(i\in\{1,2,\ldots,n\}\)</span> with
+<div class="math">\[
+\sup_{\boldsymbol{x}\in\mathcal{D}_x}\big\|h(\boldsymbol{x})-g_i(\boldsymbol{x})\big\| \le r.
+\]</div>
+If no such <span class="math">\(n\)</span> exists, we set <span class="math">\(\mathscr{C}(\mathcal{H},r)=\infty\)</span>.
+
+</div>
+We now state a generalization bound for a general hypothesis set. The proof of this theorem is omitted for this course.
+<div class="theorem" id="covering.number.bound.thm">
+<div class="heading-container"><b class="heading">Theorem 6.3 (Generalization Bound via Covering Numbers):</b></div><p>
+Let <span class="math">\(n_L=1\)</span>, let <span class="math">\(\mathcal{H}\subseteq\mathcal{M}\)</span>, and <span class="math">\(\mathcal{D}_y\subseteq[-C_Y,C_Y]\)</span> for some <span class="math">\(C_Y>0\)</span>.  Let <span class="math">\(\alpha>0\)</span>.  Let the loss function <span class="math">\(\ell\)</span> be Lipschitz continuous in the prediction with constant <span class="math">\(C_L>0\)</span>, that is,
+<div class="math">\[
+\big|\ell(y,\tilde{y})-\ell(y,z)\big| \le C_L\,|\tilde{y}-z|, \quad\text{for all}~y,\tilde{y},z\in\mathcal{D}_y.
+\]</div>
+Then, for every data distribution <span class="math">\(\mathcal{P}\)</span>, every <span class="math">\(N\in\mathbb{N}\)</span> and every <span class="math">\(\delta\in(0,1)\)</span>, with probability at least <span class="math">\(1-\delta\)</span> over <span class="math">\(\mathcal{D}\sim\mathcal{P}^N\)</span>, we have
+<div class="math">\[
+\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big| \le 4C_YC_L\sqrt{\frac{\ln\mathscr{C}(\mathcal{H},N^{-\alpha}) + \ln(2/\delta)}{N}} + \frac{2C_L}{N^{\alpha}}, \quad\text{for all}~h\in\mathcal{H}.
+\]</div>
+
+</div><h3 id="bias-variance.tradeoff.subs">6.1.3 Bias-Variance Tradeoff</h3><p>
+Achieving good generalization depends on several factors, such as the complexity of the model (depth and width), the size and representativeness of the training dataset, and the use of suitable regularization techniques. Our mathematical understanding of the role of these factors in learning a model is only partial. Therefore, practical success often relies heavily on experience, experimentation, and intuition in choosing them. Thus, achieving good generalization is often more of an art than a science. Nevertheless, there are some classical statistical perspectives on generalization that can partially guide us towards achieving good generalization. In this subsection, we discuss one such perspective, known as the <b>bias-variance tradeoff</b>. This perspective is particularly relevant when the cost function is the mean squared error.  In this case, the expected squared prediction error can be written as the sum of three terms, namely the squared <b>bias</b>, the <b>variance</b>, and the noise. The first two terms behave in opposite ways as the model complexity changes.
+</p><p>
+As in the previous subsection, we assume that the labeled dataset <span class="math">\(\mathcal{D}\)</span> of <span class="math">\(N\)</span> examples is drawn i.i.d. from a probability distribution <span class="math">\(\mathcal{P}\)</span>, <i>i.e.,</i> <span class="math">\(\mathcal{D} \sim \mathcal{P}^N\)</span>.  Different draws give different training datasets. For each dataset, the learning algorithm produces a predictor (an ANN model in our case), denoted by <span class="math">\(\mathscr{F}_{\mathcal{D}}\)</span>, which may differ depending on the dataset.
+</p><p>
+The aim is to design a learning process (by choosing a suitable network with suitably tuned hyperparameters) that can train a predictor capable of generalizing well to unseen test examples <span class="math">\((\boldsymbol{x},\boldsymbol{y})\)</span> drawn from the same distribution.
+</p><p>
+Clearly, there is randomness in the way the training datasets are generated. We therefore treat <span class="math">\(\mathcal{D}\)</span> as a random variable representing a training dataset of <span class="math">\(N\)</span> examples.  Consequently, for each fixed input <span class="math">\(\boldsymbol{x}\)</span>, the prediction <span class="math">\(\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\)</span> of the predictor obtained from a fixed learning algorithm (fixed architecture and fixed hyperparameters) is also a random vector.  The generalization performance of these predictors can be assessed by taking the expectation over <span class="math">\(\mathcal{D}\sim\mathcal{P}^N\)</span>.
+</p><p>
+Assume that the true label is generated as
+<div class="math">\[\boldsymbol{y} = \boldsymbol{f}(\boldsymbol{x}) + \boldsymbol{\epsilon},\]</div>
+where <span class="math">\(\boldsymbol{f}:\mathcal{D}_x\rightarrow\mathbb{R}^{n_L}\)</span> is the true underlying function to be learned and <span class="math">\(\boldsymbol{\epsilon}\)</span> is a random noise term with mean <span class="math">\(\mathbb{E}[\boldsymbol{\epsilon}] = \boldsymbol{0}\)</span> and covariance matrix <span class="math">\(\Sigma_\epsilon := \mathrm{Cov}(\boldsymbol{\epsilon})\)</span>. The noise term accounts for variability or measurement noise in the data-generating process. We assume that <span class="math">\(\boldsymbol{\epsilon}\)</span> is independent of <span class="math">\(\boldsymbol{x}\)</span>. The labels of the training examples are generated in the same way. The noise in the test label is independent of the training dataset <span class="math">\(\mathcal{D}\)</span>.
+</p><p>
+At a given test input <span class="math">\(\boldsymbol{x}\)</span>, the expected squared prediction error is given by
+<div class="math">\[
+\mathbb{E}_{\mathcal{D}, \boldsymbol{y}}\!\left[\|\boldsymbol{y} - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right]
+=
+\mathbb{E}_{\mathcal{D}, \boldsymbol{\epsilon}}\!\left[\|\boldsymbol{f}(\boldsymbol{x}) + \boldsymbol{\epsilon} - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right],
+\]</div>
+where  the expectation is taken jointly over the randomness in <span class="math">\(\mathcal{D}\)</span> and in <span class="math">\(\boldsymbol{y}\)</span> given <span class="math">\(\boldsymbol{x}\)</span>, <span class="math">\(\boldsymbol{y}\)</span> independently of <span class="math">\(\mathcal{D}\)</span>. The norm <span class="math">\(\|\cdot\|\)</span> is the Euclidean norm.
+</p><p>
+Expanding the square and using the independence of <span class="math">\(\boldsymbol{\epsilon}\)</span> and <span class="math">\(\mathcal{D}\)</span>, <span class="math">\(\mathbb{E}[\boldsymbol{\epsilon}] = \boldsymbol{0}\)</span> and <span class="math">\(\mathbb{E}\!\left[\|\boldsymbol{\epsilon}\|^2\right] = \mathrm{tr}(\Sigma_\epsilon),\)</span> we get
+</p><div class="math numbered-math">\begin{eqnarray}
+\mathbb{E}_{\mathcal{D}, \boldsymbol{y}}\!\left[\|\boldsymbol{y} - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right]
+&=& \mathbb{E}_{\mathcal{D}}\!\left[\|\boldsymbol{f}(\boldsymbol{x}) - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right]
+  + \mathbb{E}\!\left[\|\boldsymbol{\epsilon}\|^2\right] \\
+&=& \mathbb{E}_{\mathcal{D}}\!\left[\|\boldsymbol{f}(\boldsymbol{x}) - \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})] + \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})] - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right]
+  + \mathrm{tr}(\Sigma_\epsilon)\\
+&=& \|\mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})] - \boldsymbol{f}(\boldsymbol{x})\|^2
+ + \mathbb{E}_D\!\left[\|\mathscr{F}_{\mathcal{D}}(\boldsymbol{x}) - \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})]\|^2\right]
+ + \mathrm{tr}(\Sigma_\epsilon).
+\end{eqnarray}<span class="eq-number">(6.9)</span></div><p>
+Hence, the decomposition becomes
+<div class="math">\[
+\mathbb{E}_{\mathcal{D}, \boldsymbol{y}}\!\left[\|\boldsymbol{y} - \mathscr{F}_{\mathcal{D}}(\boldsymbol{x})\|^2\right]
+= \underbrace{\|\mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})] - \boldsymbol{f}(\boldsymbol{x})\|^2}_{\text{Bias}^2}
++ \underbrace{\mathbb{E}_{\mathcal{D}}\!\left[\|\mathscr{F}_{\mathcal{D}}(\boldsymbol{x}) - \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\boldsymbol{x})]\|^2\right]}_{\text{Variance}}
++ \underbrace{\mathrm{tr}(\Sigma_\epsilon)}_{\text{Noise}}.
+\]</div>
+Note that the intrinsic uncertainty in the data, represented by <span class="math">\(\mathrm{tr}(\Sigma_\epsilon)\)</span>, is irreducible by any learning algorithm.
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 6.4 (Interpretation):</b></div>
+
+The left hand side of the above expression is the expected prediction error, which is decomposed into three parts, namely,
+<ol class="latex-enumerate"><li><b>Bias</b><span class="math">\(^2\)</span> measures the squared Euclidean distance between the average prediction of the model and the value of the true function <span class="math">\(\boldsymbol{f}\)</span> at <span class="math">\(\boldsymbol{x}\)</span>. A high bias indicates a systematically wrong model (underfitting).
+  </li><li><b>Variance</b> measures how sensitive the model's prediction is to fluctuations in the training data. High variance corresponds to overfitting.
+  </li><li><b>Noise</b> is the irreducible error due to randomness in the data itself. It sets a lower bound on the achievable prediction error.
+</li></ol>
+
+</div><p>
+The above expression explains how the reducible part of the prediction error arises from two sources, namely,
+high bias, due to an overly simple model that fails to capture data complexity, and high variance, due to a model that is too sensitive to fluctuations of the training dataset.
+</p><p>
+In the classical setting, increasing the model complexity typically reduces the bias and increases the variance. The optimal generalization performance is achieved at a balance between these two opposing effects, known as the <b>bias-variance tradeoff</b> (see <a href="Ch06GeneralizationRegularization.html#bias.variance.tradeoff.fig">Figure 6.3</a>). In <a href="Ch06GeneralizationRegularization.html#double.descent.subs" class="internal-link">Subsection 6.1.4</a>, we see that this picture changes for heavily overparameterized models.
+<div class="latex-figure" id="bias.variance.tradeoff.fig">
+<img src="Figures/Ch06BiasVarianceTradeoff.png" alt="">
+<div class="figure-caption"><p>Figure 6.3: An illustrative sketch of the bias-variance tradeoff.</p></div>
+</div>
+<h3 id="double.descent.subs">6.1.4 Overparameterization and Double Descent</h3>
+From the bias-variance tradeoff discussed in the previous subsection, we see that the test error is expected to increases once the model complexity exceeds an optimal value (see <a href="Ch06GeneralizationRegularization.html#bias.variance.tradeoff.fig">Figure 6.3</a>). According to this classical statistics approach, a model that exactly fits the training dataset should generalize poorly. Surprisingly, modern deep neural networks exhibit different behaviour as model complexity increases. As the number of parameters exceeds the number of training examples by a large margin, many neural networks fit the training dataset exactly and, at the same time, achieve a small test error. This behaviour is part of a phenomenon called <b>double descent</b>, which we discuss in this subsection.
+</p><p>
+A model is said to be <b>overparameterized</b> if its number of parameters is larger than the number <span class="math">\(N\)</span> of training examples. A model <span class="math">\(h\)</span> is said to <b>interpolate</b> the training dataset <span class="math">\(\mathcal{D}\)</span> if
+<div class="math">\[
+h(\boldsymbol{x}_k) = \boldsymbol{y}_k, \quad k=1,2,\ldots,N.
+\]</div>
+In this case, the training error is zero for every loss function satisfying <span class="math">\(\ell(\boldsymbol{y},\boldsymbol{y})=0\)</span>. The smallest model complexity at which the trained model can interpolate the training dataset is called the <b>interpolation threshold</b>.
+<div class="example" id="interpolation.threshold.exam">
+<div class="heading-container"><b class="heading">Example 6.1 (Interpolation Threshold for Linear Least Squares):</b></div>
+
+Consider the model <span class="math">\(h: \mathbb{R}^{n}\rightarrow \mathbb{R}\)</span> given by
+<div class="math">\[
+h(\boldsymbol{x}) = \sum_{i=1}^{n} w_i\, \phi_i(\boldsymbol{x}),
+\]</div>
+where <span class="math">\(\phi_1,\ldots,\phi_n:\mathcal{D}_x\rightarrow\mathbb{R}\)</span> are fixed functions and <span class="math">\(\boldsymbol{w}=(w_1,\ldots,w_n)^\top\)</span> is the parameter vector. Define the matrix <span class="math">\(A\in\mathbb{R}^{N\times n}\)</span> by <span class="math">\(A_{ki}=\phi_i(\boldsymbol{x}_k)\)</span>, and let <span class="math">\(\boldsymbol{y}=(y_1,\ldots,y_N)^\top\)</span>. The model interpolates the training dataset if and only if
+<div class="math">\[
+A\boldsymbol{w} = \boldsymbol{y}.
+\]</div>
+Assume that <span class="math">\(A\)</span> has full rank, that is, <span class="math">\(\mathrm{rank}(A)=\min(n,N)\)</span>. Then, the above system has a solution for every <span class="math">\(\boldsymbol{y}\in\mathbb{R}^N\)</span> if and only if <span class="math">\(n\ge N\)</span>. Hence, the interpolation threshold is <span class="math">\(n=N\)</span>. We distinguish three cases.
+<ol class="latex-enumerate"><li>If <span class="math">\(n < N\)</span>, then, in general, no interpolating parameter vector exists.
+</li><li>If <span class="math">\(n=N\)</span>, then <span class="math">\(A\)</span> is invertible, and <span class="math">\(\boldsymbol{w}=A^{-1}\boldsymbol{y}\)</span> is the unique interpolating parameter vector.
+</li><li>If <span class="math">\(n > N\)</span>, then the interpolating parameter vectors form an affine subspace of <span class="math">\(\mathbb{R}^n\)</span> of dimension <span class="math">\(n-N\)</span>.
+</li></ol>
+
+</div>
+<div class="latex-figure" id="double.descent.fig">
+<img src="Figures/Ch06DoubleDescent.png" alt="">
+<div class="figure-caption"><p>Figure 6.4: An illustrative sketch of the double descent phenomenon. The training cost reaches zero at the interpolation threshold. The test cost peaks at the interpolation threshold and decreases again in the over-parameterized regime, where it can fall below the classical optimum (dotted line).</p></div>
+</div>
+Empirical studies show that the test error, as a function of the model complexity, typically behaves as sketched in <a href="Ch06GeneralizationRegularization.html#double.descent.fig">Figure 6.4</a>. The figure shows three stages.
+<ol class="latex-enumerate"><li><b>Under-parameterized (classical) regime.</b> Below the interpolation threshold, the test error follows the U-shaped curve of the bias-variance tradeoff. It first decreases and then increases.
+</li><li><b>Interpolation threshold.</b> Near the interpolation threshold, the training error reaches zero, and the test error attains a peak.
+</li><li><b>Over-parameterized (modern) regime.</b> Beyond the interpolation threshold, the training error remains zero. The test error decreases again as the model complexity increases. In many experiments, it falls below the minimum attained in the classical regime.
+</li></ol>
+The test error curve thus has two decreasing parts separated by a peak. This behavior is called <b>double descent</b>.
+<div class="remark" id="double.descent.rem">
+<div class="heading-container"><b class="heading">Remark 6.5:</b></div>
+
+<span class="math">\(~\)</span>
+<ol class="latex-enumerate"><li>Double descent does not contradict the bias-variance decomposition. The decomposition is an identity and holds for every model. What fails beyond the interpolation threshold is the classical assumption that the variance increases with the model complexity.
+</li><li>Double descent is also observed when the model complexity is fixed and the number of training epochs increases. It is also observed when the model is fixed and the number <span class="math">\(N\)</span> of training examples varies. In the latter case, increasing <span class="math">\(N\)</span> moves the interpolation threshold, and, for a model near the threshold, more data can increase the test error.
+</li><li>The peak is more pronounced when the labels are noisy. A suitably tuned explicit regularization, such as the <span class="math">\(\ell^2\)</span>-regularization of <a href="Ch06GeneralizationRegularization.html#parameter.based.regularization.sec" class="internal-link">Subsection 6.2.1</a>, can reduce or remove the peak.
+</li><li>For deep neural networks, a complete mathematical explanation of double descent is not yet available. The linear least-squares example only gives a heuristic picture.
+</li></ol>
+
+</div><h2 id="regularization.techniques.sec">6.2 Regularization Techniques</h2>
+Techniques designed to reduce overfitting and improve generalization are commonly referred to as regularization techniques.
+</p><p>
+Regularization can be applied in two broad ways. One way is the <b>parameter-based regularization</b>, which directly penalizes or constrains the model parameters (for example, weight decay by <span class="math">\(L^1\)</span> or <span class="math">\(L^2\)</span> penalties). Another form of regularization is the <b>process-based regularization</b>, which modifies the training procedure itself to reduce overfitting (for example, early stopping, dropout, or data augmentation).
+<h3 id="parameter.based.regularization.sec">6.2.1 Parameter-based Regularization</h3>
+A neural network with large weights can easily overfit a training dataset. To see this, consider a single neuron with output
+<div class="math">\[y = \mathscr{A}\big(\boldsymbol{w}\cdot \boldsymbol{x} + b\big).\]</div>
+If the components of <span class="math">\(\boldsymbol{w}\)</span> are very large, then a small change in <span class="math">\(\boldsymbol{x}\)</span> can lead to a large change in the output <span class="math">\(y\)</span>.  This makes the neuron very sensitive to the input data. Since the model is trained to represent the training data well, the training error is small. However, small changes in the input (for instance, noisy input) can lead to large deviations in the output, leading to a large testing error.  Hence, the model shows poor generalization on unseen data, which corresponds to overfitting.
+<h4 id="regularized-cost-function">6.2.1.1 Regularized Cost Function</h4>
+One way to prevent this is to keep the weights smaller by minimizing (also referred to as penalizing) the norm of the weight vector during training. This can be achieved by minimizing a <b>regularized cost function</b> defined as
+<div class="math">\[
+\mathcal{C}_{\alpha} (\boldsymbol{\Theta}) = \mathcal{C}(\boldsymbol{\Theta}) + \alpha \Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}),
+\]</div>
+where <span class="math">\(\alpha\ge 0\)</span> is a hyperparameter controlling the strength of penalization, and <span class="math">\(\Omega\)</span> is a <b>regularization function</b>, which is a function of the weights only (denoted by <span class="math">\(\boldsymbol{\Theta}_{\boldsymbol{w}}\)</span>).
+</p><p>
+Commonly used regularization parameters are the following:
+<ul><li><b><span class="math">\(\ell^1\)</span>-Regularization</b>: In this case, the regularization function is taken as
+<div class="math">\[
+\Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}) = \|\boldsymbol{\Theta}_{\boldsymbol{w}}\|_1.
+\]</div>
+</li><li><b><span class="math">\(\ell^2\)</span>-Regularization</b>: In this case, the regularization function is taken as
+<div class="math">\[
+\Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}) = \frac{1}{2}\|\boldsymbol{\Theta}_{\boldsymbol{w}}\|^2_2.
+\]</div>
+</li></ul>
+An affine combination of the two penalties above is also used in practice:
+<div class="math">\[
+\Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}) = \rho\, \|\boldsymbol{\Theta}_{\boldsymbol{w}}\|_1 + (1-\rho)\, \frac{1}{2}\|\boldsymbol{\Theta}_{\boldsymbol{w}}\|^2_2, \qquad \rho\in[0,1],
+\]</div>
+is called the <b>elastic net</b> regularization function. It combines the sparsity-inducing effect of <span class="math">\(\ell^1\)</span>-regularization with the smoothness (differentiability) of <span class="math">\(\ell^2\)</span>-regularization, and reduces to the lasso when <span class="math">\(\rho=1\)</span> and to ridge regression when <span class="math">\(\rho=0\)</span>.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 6.5:</b></div>
+
+Obtain the gradient descent update rule for the regularized cost function with <span class="math">\(\ell^2\)</span>-regularization.  Recall that we have derived a similar update rule (with a different loss function) earlier in our course. What was it?
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The <span class="math">\(\ell^2\)</span>-regularization is called <b>Tikhonov regularization</b> or <b>ridge regression</b>. The <span class="math">\(\ell^1\)</span>-regularization is called <b>lasso</b> in statistical learning.
+
+</div>
+<div class="problem" id="alpha.dependency.of.c.prob">
+<div class="heading-container"><b class="heading">Problem 6.6:</b></div>
+
+Consider the <span class="math">\(\ell^2\)</span>-regularized loss function (used for linear regression)
+<div class="math">\[
+\mathcal{L}_\alpha(\boldsymbol{w}) = \frac{1}{2}\|\boldsymbol{y} - X\boldsymbol{w}\|_{2}^2 + \frac{\alpha}{2} \| \boldsymbol{w} \|^{2}_{2},
+\]</div>
+where <span class="math">\(X\)</span> is an <span class="math">\(n\times n\)</span> invertible matrix, and <span class="math">\(\boldsymbol{w},\boldsymbol{y}\in \mathbb{R}^n\)</span>. Let <span class="math">\(\boldsymbol{w}^*(\alpha)\)</span> denote the minimizer of the above loss function and let <span class="math">\(c=\|\boldsymbol{w}^*(\alpha)\|^{2}_2\)</span>. Then, show that there exists a vector <span class="math">\(\boldsymbol{z}\in \mathbb{R}^n\)</span> such that
+<div class="math">\[
+c = \sum_{j=1}^n \frac{z_{j}^2}{(\alpha + \lambda_j)^2},
+\]</div>
+where <span class="math">\(\lambda_j\)</span>, <span class="math">\(j=1,2,\ldots, n\)</span>, are the eigenvalues of <span class="math">\(X X^\top\)</span>.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 6.6 (Constrained Optimization and Geometric Interpretation):</b></div><p>
+The unconstrained optimization problem with a regularized cost function
+<div class="math">\[
+\tilde{\boldsymbol{\Theta}} = \text{argmin}_{\boldsymbol{\Theta}}~ \mathcal{C}_{\alpha} (\boldsymbol{\Theta}),
+\]</div>
+for a given <span class="math">\(\alpha>0\)</span>, can be equivalently posed as a constrained optimization problem as
+<div class="math">\[
+\tilde{\boldsymbol{\Theta}} = \left\{\begin{array}{ll}
+					&\displaystyle{\text{argmin}_{\boldsymbol{\Theta}}}~ \mathcal{C}(\boldsymbol{\Theta}),\\
+					\text{subject to:} & \|\boldsymbol{\Theta}_{\boldsymbol{w}}\|_p \le c,
+					\end{array}\right.
+\]</div>
+for <span class="math">\(p=1,2\)</span>, and for some constant <span class="math">\(c\)</span> depending on the regularization parameter <span class="math">\(\alpha\)</span>.
+</p><p>
+<b>Geometric Interpretation:</b>
+For the sake of simplicity, let us take <span class="math">\(\boldsymbol{\Theta} = (b,\boldsymbol{w})\)</span> with <span class="math">\(\boldsymbol{w}\in \mathbb{R}^2\)</span>, and consider the linear regression model, where the cost function is the MSE function. The regularized minimizer <span class="math">\(\tilde{\boldsymbol{w}}\)</span> corresponds to the point of tangency between the contours (level sets) of the cost surface and the constraint region. The constraint region is a circle (for <span class="math">\(p=2\)</span>) centered at the origin with radius <span class="math">\(c\)</span>, as shown in <a href="Ch06GeneralizationRegularization.html#regularized.cost.optimization.fig">Figure 6.5</a>.
+</p><p>
+As stated in <a href="Ch06GeneralizationRegularization.html#alpha.dependency.of.c.prob">Problem 6.6</a>, for linear regression, in general, we can observe (only numerically) the following dependency between <span class="math">\(\alpha\)</span> and <span class="math">\(c\)</span>:
+<ul><li>as <span class="math">\(\alpha\)</span> increases, <span class="math">\(c\)</span> decreases, and
+</li><li>as <span class="math">\(\alpha\)</span> decreases, <span class="math">\(c\)</span> increases.
+</li></ul>
+Hence, choosing a large value of <span class="math">\(\alpha\)</span> makes <span class="math">\(\tilde{\boldsymbol{w}}\)</span> to lie very close to the origin.  This leads to a more stable model which is less sensitive to noise but may result in underfitting, with both training and test costs being large.  On the other hand, choosing a very small value of <span class="math">\(\alpha\)</span> makes <span class="math">\(\tilde{\boldsymbol{w}}\)</span> to be very close to <span class="math">\(\boldsymbol{w}^*\)</span>, often leading to overfitting, where the training error is small but the test error is large, as illustrated in <a href="Ch06GeneralizationRegularization.html#train-test-cost.fig">Figure 6.2</a>.
+</p><p>
+
+</div>
+<div class="latex-figure" id="regularized.cost.optimization.fig">
+<img src="Figures/Ch06regularizedCostMinimizer.png" alt="">
+<div class="figure-caption"><p>Figure 6.5: Geometric interpretation of <span class="math">\(\ell^2\)</span>-regularized cost function.
+    The 3D surface represents the cost function <span class="math">\(\mathcal{C}_\alpha(\boldsymbol{w})\)</span> as a function of weights <span class="math">\(w_1\)</span> and <span class="math">\(w_2\)</span>.
+    The ellipses in the <span class="math">\(w_1\)</span>-<span class="math">\(w_2\)</span> plane show the contour lines of the cost function.
+    The red circle represents the regularization constraint <span class="math">\(\|\boldsymbol{w}\|_2 \leq c\)</span>.
+    The unconstrained minimizer <span class="math">\(\boldsymbol{w}^*\)</span> is marked in blue, while the constrained minimizer <span class="math">\(\tilde{\boldsymbol{w}}\)</span> is marked in red, showing the tangency between the constraint and the cost contours.</p></div>
+</div>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 06-Oct-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

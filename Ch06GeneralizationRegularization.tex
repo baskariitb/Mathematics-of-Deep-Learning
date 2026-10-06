@@ -1,0 +1,629 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Generalization and Regularization}\label{generalization.regularization.ch}
+\vspace{-0.2in}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+As a part of training a neural network, the model parameters $\bfm{\Theta}$ are determined by minimizing a cost function over the training dataset $\mathcal{D}_{\text{train}}$. An accurate minimizer makes the model fit the training dataset accurately.  However, tuning the parameters too precisely to fit $\mathcal{D}_{\text{train}}$ has the risk of \hl{overfitting} the data. In such cases, the model represents the training dataset very well (often referred to as memorizing the data) but fails to perform equally well on unseen data, such as the test dataset $\mathcal{D}_{\text{test}}$. This behavior is particularly prominent when the source of the data is noisy.
+
+On the other hand, if the parameters are not tuned adequately, the model may suffer from \hl{underfitting}, where it fails to capture even the underlying patterns in the training dataset, and this again leads to poor performance on unseen data.  Hence, a balance must be achieved between underfitting and overfitting so that the model represents the training dataset reasonably well and at the same time performs satisfactorily on unseen data.
+
+The ability of a trained model to perform well on unseen data is referred to as \hl{generalization}. If a model performs well on the test dataset, we say that the model generalizes well. Training a model with good accuracy on the training dataset while also achieving good generalization is the goal of \hl{regularization}.  In neural networks, regularization refers to a set of techniques applied during training, in which certain constraints are applied to the learning process in order to reduce overfitting so as to improve the model generalization.
+
+In this chapter, we first discuss the concept of generalization in \sect{evaluation.model.behaviour.sec}, starting with the fundamental idea of underfitting and overfitting. We then discuss parameter-based and process-based regularization techniques in \sect{regularization.techniques.sec}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evaluation of Model Behaviour}\label{evaluation.model.behaviour.sec}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A deep neural network is trained on a portion of the dataset, the training dataset. The model works sufficiently well on this data as the cost function is minimized to a required extent. However, this does not guarantee that the model will perform equally well on unseen data.  Therefore, we have to evaluate the model performance on the test dataset before deploying it in practice. 
+
+We start with building intuition for underfitting and overfitting in \subs{underfitting.overfitting.sec} and obgain a generalization bound in \subs{generalization.bounds.subs}.  Further, we discuss a classical statistical tool, the bias-variance tradeoff, in \subs{bias-variance.tradeoff.subs} to identify the limitations of the model performance, and we extend our discussion to the modern deep double descent phenomenon, which is discussed in \subs{double.descent.subs} and is more specific to deep learning models.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Underfitting and Overfitting}\label{underfitting.overfitting.sec}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hl{Underfitting} occurs when the model is too simple to capture the underlying patterns in the data.  In such cases, the model performs poorly on both the training and test datasets.  \figu{underfit-overfit.fig}(a) illustrates a binary classification model that underfits a complex dataset.
+
+\hl{Overfitting} occurs when the model is too complex relative to the amount of noise level of the data. In such cases, the model fits the training data very accurately (including its noise) but fails to generalize to unseen data.  \figu{underfit-overfit.fig}(b) illustrates a binary classification model that overfits a complex dataset.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+\centering
+\input{Figures/Ch06UnderOverFits.png}
+\vspace{-0.2in}
+\caption{(a) Underfitting model illustration, where linear model is used for a complex dataset, which failed to capture the underlying pattern. (b) Overfitting illustration, where the model is fine tuned to capture the underlying pattern of the training dataset more closely.}
+\label{underfit-overfit.fig}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Both underfitting and overfitting are undesirable in a trained model.  The cost function can be used to characterize these behaviors as follows:
+\begin{enumerate}
+\item If both $\mathcal{C}_{\text{test}}(\bfm{\Theta}^*)$ and $\mathcal{C}_{\text{train}}(\bfm{\Theta}^*)$ are high, then the model is said to be underfitted.
+%
+\item If $\mathcal{C}_{\text{test}}(\bfm{\Theta}^*)$ is high and $\mathcal{C}_{\text{train}}(\bfm{\Theta}^*)$ is low, then the model is said to be overfitted,
+\end{enumerate}
+where $\mathcal{C}$ is the cost (or loss) function used in training the model and $\bfm{\Theta}^*$ denotes the parameters of the trained model.  Here, the cost function value $\mathcal{C}_\text{train}(\bfm{\Theta}^*)$, computed on the training dataset is called the \hl{training error}, whereas the cost function value
+$\mathcal{C}_\text{test}(\bfm{\Theta}^*)$, computed on the test dataset is called the \hl{test error} or \hl{generalization error}.
+
+In most of the practical situations (if not always), we have
+$$
+\mathcal{C}_\text{train}(\bfm{\Theta}) \le \mathcal{C}_\text{test}(\bfm{\Theta}).
+$$
+and the \hl{generalization gap} is defined as
+\begin{equation}
+\mathcal{G}\big(\ann{L,\hat{n}}(\cdot;\bfm{\Theta}) \big) = \mathcal{C}_{\text{test}}(\bfm{\Theta}) - \mathcal{C}_{\text{train}}(\bfm{\Theta}).\label{generalization.gap.eq}
+\end{equation}
+An illustrative sketch showing the underfitting, optimal, and overfitting regions is presented in \figu{train-test-cost.fig}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+\centering
+\input{Figures/Ch06UnderOverFitsRegions.png}
+\caption{Variation of training cost $\mathcal{C}_{\text{train}}$ and test cost $\mathcal{C}_{\text{test}}$
+with model complexity, illustrating underfitting, overfitting, and optimal generalization.}
+\label{train-test-cost.fig}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Given the above scenario, if the generalization gap satisfies the inequality
+$$\mathcal{G}\big(\ann{L,\hat{n}}(\cdot;\bfm{\Theta}) \big) < \epsilon,$$
+for some pre-assigned number $\epsilon>0$ and the model achieves a reasonably small training error,  then the model is said to \hl{generalize} well.
+In this case, the model is expected to perform well on unseen data. This is the desired scenario in deep learning. In this case, we say that the model has learned the underlying patterns in the data rather than memorizing the training examples, which may include noise.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Generalization Bounds}\label{generalization.bounds.subs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In the previous subsection, the generalization gap was defined in terms of the training and test errors, which are computed on finite datasets. To establish theoretical generalization bounds, we need a measure of performance that averages the loss over all input-label pairs, weighted by the unknown distribution from which both the training and the test examples are drawn. Unlike in the previous subsection, we define this measure on functions rather than on parameters. This is because a trained model is compared with the best possible predictor, which need not be representable by any fixed architecture.
+
+Throughout this subsection, we use the notation $\mathcal{D}_x \subseteq \R^{n_0}$ to denote the set of all input vectors, called the \hl{feature space}, and $\mathcal{D}_y\subseteq \R^{n_L}$ to denote the set of all labels, called the \hl{label space}. Therefore, the set of all possible examples can be written as $\mathcal{D}_x \times \mathcal{D}_y$.
+
+We further assume that the input vectors and their labels are related through an unknown probability distribution $\probb$ on $\mathcal{D}_x \times \mathcal{D}_y$, called the \hl{data distribution}.  Every example $(\bfm{x},\bfm{y})$, including the examples in the training dataset and test dataset, is assumed to be drawn from $\probb$.
+
+A labeled dataset of $N$ examples
+$$
+\mathcal{D} = \big\{ (\bfm{x}_k, \bfm{y}_k)\in \mathcal{D}_x \times \mathcal{D}_y~|~ k = 1,2,\ldots, N\big\}
+$$
+is said to be drawn i.i.d. from $\probb$ if the $N$ pairs $(\bfm{x}_k, \bfm{y}_k)$ are independent random vectors and each pair has the distribution $\probb$. We write this as $\mathcal{D} \sim \probb^N$.
+
+We denote the set of all measurable functions from $\mathcal{D}_x$ to $\mathcal{D}_y$ by
+$$
+\mathcal{M} := \big\{
+				h:\mathcal{D}_x \rightarrow \mathcal{D}_y ~|~
+					h~\text{is measurable}\big\}.
+$$
+We first define the population risk and its computable counterpart, the empirical risk.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{definition}[Population and Empirical Risks]\label{risk.empirical.risk.def}
+
+Let $\ell:\R^{n_L}\times\R^{n_L}\rightarrow[0,\infty)$ denote a loss function, let $\probb$ be a data distribution on $\mathcal{D}_x \times \mathcal{D}_y$, and let $h\in \mathcal{M}$.
+\begin{enumerate}
+
+\item The \defn{population risk} of $h$ is defined as
+\bea\label{risk.eq}
+\mathcal{R}(h) = \mathbb{E}_{(\bfm{x},\bfm{y})\sim\probb}\Big[\ell\big(\bfm{y},h(\bfm{x})\big)\Big].
+\eea
+
+\item Given a dataset $\mathcal{D}$ of $N$ examples, the \defn{empirical risk} of $h$ is defined as
+\bea\label{empirical.risk.eq}
+\widehat{\mathcal{R}}_{\mathcal{D}}(h) = \frac{1}{N}\sum_{k=1}^N \ell\big(\bfm{y}_k,h(\bfm{x}_k)\big).
+\eea
+
+\end{enumerate}
+\end{definition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{note}
+For a neural network $h = \ann{L,\hat{n}}(\,\cdot\,;\bfm{\Theta})$, the empirical risk on $\mathcal{D}$ is exactly the cost function $\mathcal{C}(\bfm{\Theta})$ of \defi{loss.cost.function.def}.
+\end{note}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The smallest possible population risk over all measurable functions is called the \defn{Bayes risk}, and is defined as
+\bea\label{bayes.risk.eq}
+\mathcal{R}^* = \inf_{h\in \mathcal{M}} \mathcal{R}(h).
+\eea
+A function in $\mathcal{M}$ that attains this infimum, if it exists, is a best possible predictor.
+
+Our next task is to find a function $h\in \mathcal{M}$ whose risk is close to the Bayes risk. However, one challenge is that we cannot evaluate $\mathcal{R}(h)$ since the distribution $\probb$ is unknown. Therefore, we approximate the population risk by the empirical risk $\widehat{\mathcal{R}}_{\mathcal{D}}(h)$.  Another challenge is that we cannot search over all measurable functions.  To address this difficulty, we restrict the search to a fixed set of functions{\color{red},} called the \hl{hypothesis set} and denoted by $\mathcal{H} \subseteq \mathcal{M}$.
+
+In deep learning, $\mathcal{H}$ is a set of neural networks.  For instance, for a fixed architecture and a fixed set $\mathcal{W}$ of admissible parameters, we take
+$$
+\mathcal{H} = \big\{\ann{L,\hat{n}}(\,\cdot\,;\bfm{\Theta})~|~\bfm{\Theta}\in\mathcal{W}\big\}.
+$$
+We have the following proposition as a justification for approximating the population risk by the empirical risk.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{lemma}[Consistency of the Empirical Risk]\label{empirical.risk.unbiased.prop}
+
+Let $h \in \mathcal{M}$ be a given function with $\mathcal{R}(h)<\infty$, and let $\mathcal{D}\sim\probb^N$.  Then
+\begin{enumerate}
+\item $\widehat{\mathcal{R}}_{\mathcal{D}}(h)$ is an unbiased estimator of $\mathcal{R}(h)$, that is,
+$$
+\mathbb{E}_{\mathcal{D}\sim\probb^N}\big[\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big] = \mathcal{R}(h).
+$$
+\item If, in addition, $\sigma_h^2 := \mathrm{Var}\big[\ell\big(\bfm{y},h(\bfm{x})\big)\big]<\infty$ for $(\bfm{x},\bfm{y})\sim\probb$, then for every $\epsilon>0$
+$$
+\probbg\Big(\big|\widehat{\mathcal{R}}_{\mathcal{D}}(h)-\mathcal{R}(h)\big|\ge\epsilon\Big) \le \frac{\sigma_h^2}{N\epsilon^2}.
+$$
+In particular, $\widehat{\mathcal{R}}_{\mathcal{D}}(h)\rightarrow\mathcal{R}(h)$ in probability as $N\rightarrow\infty$.
+\end{enumerate}
+\end{lemma}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proofs}
+
+For $k=1,2,\ldots,N,$ define the random variable
+$$
+Z_k = \ell\big(\bfm{y}_k,h(\bfm{x}_k)\big).
+$$
+Since the examples of $\mathcal{D}$ are i.i.d. and each $Z_k$ depends only on the $k^{\rm th}$ example, the random variables $Z_1,Z_2,\ldots,Z_N$ are i.i.d.  By \eqref{risk.eq}, each of them has the mean $\mathbb{E}[Z_k]=\mathcal{R}(h)$.
+
+\begin{enumerate}
+\item The proof is left as an exercise.\\
+
+\item Since $Z_1,Z_2,\ldots,Z_N$ are independent, we have
+$$
+\mathrm{Var}\big[\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big]  = \frac{\sigma_h^2}{N}.
+$$
+The result now follows by Chebyshev's inequality and part 1 (complete the proof).
+\end{enumerate}
+\end{proofs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In view of the above lemma, we replace the population risk by the empirical risk and minimize it over the hypothesis set. This leads to the following definition.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{definition}[Empirical Risk Minimizer]\label{empirical.risk.minimizer.def}
+
+Let $\mathcal{H}$ be a hypothesis set, let $\ell$ be a loss function, and let $\mathcal{D}$ be a dataset of $N$ examples.  A function $h_{\mathcal{D}}\in\mathcal{H}$ satisfying
+$$
+\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}}) = \inf_{h\in\mathcal{H}} \widehat{\mathcal{R}}_{\mathcal{D}}(h)
+$$
+is called an \defn{empirical risk minimizer}.  The procedure of choosing $h_{\mathcal{D}}$ is called \defn{empirical risk minimization} (ERM).
+\end{definition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The following problem shows that, for a set of neural networks of a fixed architecture, ERM is the same as minimizing the cost function over the admissible parameters, that is, training the network.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Let $\mathcal{H} = \{\ann{L,\hat{n}}(\,\cdot\,;\bfm{\Theta})~|~\bfm{\Theta}\in\mathcal{W}\}$, and let $\bfm{\Theta}^*\in\mathcal{W}$ minimize the cost function $\mathcal{C}$, computed on $\mathcal{D}$, over $\mathcal{W}$. Show that
+$$h_{\mathcal{D}} = \ann{L,\hat{n}}(\,\cdot\,;\bfm{\Theta}^*)$$
+is an empirical risk minimizer.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The above problem assumes that a minimizer $\bfm{\Theta}^*\in \mathcal{W}$ of $\mathcal{C}$ exists.  It is important to note that such a minimizer need not exist in $\mathcal{W}$, and consequently an ERM may fail to exist in $\mathcal{H}$.  The following problem gives a sufficient condition for the existence of an ERM.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Let $\mathcal{D}$ be a dataset, and let $\mathcal{H} = \{\ann{L,\hat{n}}(\,\cdot\,;\bfm{\Theta})~|~\bfm{\Theta}\in\mathcal{W}\}$ be a hypothesis set of networks of a fixed architecture with a continuous activation function.  Let the loss function $\ell$ be continuous. Show that if the parameter set $\mathcal{W}$ is nonempty and compact, then ERM $h_{\mathcal{D}}\in \mathcal{H}$ exists.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{note}$~$
+\begin{enumerate}
+\item Throughout this section, we assume that an ERM $h_{\mathcal{D}}$ exists for every dataset $\mathcal{D}$.\medskip
+\item In practice, an optimization algorithm of \chap{optimization.algorithms.ch} only approximates $\bfm{\Theta}^*$.  The analysis below ignores this optimization error.
+\end{enumerate}
+\end{note}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Error Decomposition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Fix the architecture and the parameter set $\mathcal{W}$, and therefore the hypothesis set $\mathcal{H}$.  Assume that $\mathcal{R}(h)<\infty$ for all $h\in \mathcal{H}$.
+
+Define the following two quantities:
+\begin{equation}
+\varepsilon_\text{gen} = \sup_{h\in\mathcal{H}} \big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big|,
+~~
+\varepsilon_\text{approx} = \inf_{g\in\mathcal{H}} \mathcal{R}(g) - \mathcal{R}^*.
+\label{generalization.approximation.errors.eq}
+\end{equation}
+The number $\varepsilon_\text{gen}$ is called the \hl{uniform generalization gap} of $\mathcal{H}$ for the dataset $\mathcal{D}$.  The number $\varepsilon_\text{approx}$ is called the \hl{approximation error} of $\mathcal{H}$.  
+
+Note that $\varepsilon_\text{gen}$ depends on the dataset $\mathcal{D}$, and hence is a random variable.  The number $\varepsilon_\text{approx}$ depends only on $\mathcal{H}$, $\ell$ and $\probb$, and does not depend on $\mathcal{D}$.  Since $\mathcal{R}^*\le\mathcal{R}(g)$ for every $g\in\mathcal{H}$, we have $\varepsilon_\text{approx}\ge 0$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{theorem}[Error Decomposition]\label{error.decomposition.thm}
+
+Let $\mathcal{H}$ be a hypothesis set with $\mathcal{R}(h)<\infty$ for all $h\in\mathcal{H}$.  Let $\mathcal{D}$ be a dataset, and let $h_{\mathcal{D}}$ be an empirical risk minimizer.  Then
+\bea\label{error.decomposition.eq}
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2\,\varepsilon_\text{gen} + \varepsilon_\text{approx},
+\eea
+and
+\bea\label{risk.training.error.eq}
+\mathcal{R}(h_{\mathcal{D}}) \le \varepsilon_\text{gen} + \varepsilon_\text{int},
+\qquad\text{where}~~
+\varepsilon_\text{int} = \inf_{g\in\mathcal{H}} \widehat{\mathcal{R}}_{\mathcal{D}}(g).
+\eea
+\end{theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{proofs}
+\textbf{Proof of \eqref{error.decomposition.eq}:}\\  
+Let $g\in\mathcal{H}$ be arbitrary.  First, show that 
+$$
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2\,\varepsilon_\text{gen} + \mathcal{R}(g) - \mathcal{R}^*.
+$$
+Since the above inequality holds for every $g\in\mathcal{H}$, taking the infimum over $g\in\mathcal{H}$ on both sides, and noting that the left hand side does not depend on $g$, we get
+$$
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2\,\varepsilon_\text{gen} + \inf_{g\in\mathcal{H}}\mathcal{R}(g) - \mathcal{R}^* = 2\,\varepsilon_\text{gen} + \varepsilon_\text{approx}.
+$$
+
+\textbf{Proof of \eqref{risk.training.error.eq}:}  Left as an exercise.
+\end{proofs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The number $\varepsilon_\text{int}$ defined in the above theorem is the training error of the empirical risk minimizer.  If there exists an $h\in\mathcal{H}$ that fits all the examples of $\mathcal{D}$ exactly (with a loss satisfying $\ell(\bfm{y},\bfm{y})=0$ for all $\bfm{y}\in\mathcal{D}_y$), then we have $\varepsilon_\text{int}=0$. For this reason, $\varepsilon_\text{int}$ is also called the \hl{interpolation error}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}[Generalization Gap]\label{generalization.gap.rem}
+
+The generalization gap \eqref{generalization.gap.eq} given by
+$$\mathcal{G}\big(\ann{L,\hat{n}}(\cdot;\bfm{\Theta}^*)\big) = \mathcal{C}_\text{test}(\bfm{\Theta}^*) - \mathcal{C}_\text{train}(\bfm{\Theta}^*)$$ 
+is related to $\varepsilon_\text{gen}$ as follows:
+
+Take $\mathcal{D}=\mathcal{D}_\text{train}$, and $h_{\mathcal{D}}=\ann{L,\hat{n}}(\,\cdot\,;\bfm{\Theta}^*)$ is the trained network.    If $\mathcal{D}_\text{test}$ is drawn independently of $\mathcal{D}_\text{train}$, then the trained network is a fixed function with respect to $\mathcal{D}_\text{test}$.  Hence, by \lemm{empirical.risk.unbiased.prop}, $\mathcal{C}_\text{test}(\bfm{\Theta}^*)$ is an unbiased estimator of $\mathcal{R}(h_{\mathcal{D}})$.  Also, the training cost is exactly the empirical risk $\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}})$ of the trained network.
+
+Therefore, $\mathcal{G}$ is an estimate of $\mathcal{R}(h_{\mathcal{D}})-\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}})$, and we have
+$$
+\big|\mathcal{R}(h_{\mathcal{D}})-\widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}})\big|
+\le \sup_{h\in\mathcal{H}}\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big|
+= \varepsilon_\text{gen}.
+$$
+From here, we see that
+$$
+|\mathcal{G}| \le \varepsilon_\text{gen} + \big|\mathcal{C}_\text{test}(\bfm{\Theta}^*)-\mathcal{R}(h_{\mathcal{D}})\big|.
+$$
+\lemm{empirical.risk.unbiased.prop} (2) shows that the second term on the right is small with high probability when the test set is large.
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}[Underfitting and Overfitting Interpretation]\label{under.over.fitting.interpretation.rem}
+
+\them{error.decomposition.thm} shows that a small risk of the trained model requires two things.
+\begin{enumerate}
+\item The approximation error $\varepsilon_\text{approx}$ (or the interpolation error $\varepsilon_\text{int}$) must be small.  This requires $\mathcal{H}$ to be rich enough.  For neural networks, this is a question about the expressivity of the architecture discussed in the next chapter.
+\item The uniform generalization gap $\varepsilon_\text{gen}$ must be small.  This requires $\mathcal{H}$ not to be too rich compared with the number $N$ of examples.
+\end{enumerate}
+The above two requirements conflict with each other.  For a fixed dataset, enlarging $\mathcal{H}$ cannot increase $\varepsilon_\text{approx}$, but it can increase $\varepsilon_\text{gen}$, since the supremum is taken over a larger set.  This is the mathematical form of the balance between underfitting and overfitting discussed in \subs{underfitting.overfitting.sec}.
+
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Generalization Bounds for a Finite Hypothesis Set}\label{generalization.bounds.summary.subs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We state a generalization bound for a finite hypothesis set and then explain how the bound is extended to infinite hypothesis sets.  We omit the proofs in this course.
+
+Assume that a hypothesis set $\mathcal{H}\subseteq\mathcal{M}$ has finitely many elements, say $M=\#(\mathcal{H})$.
+Also, assume that the loss function $\ell$ satisfies
+$$
+c_1 \le \ell(\bfm{y},\tilde{\bfm{y}}) \le c_2, \quad\text{for all}~\bfm{y},\tilde{\bfm{y}}\in\mathcal{D}_y,
+$$
+for some constants $0\le c_1 < c_2$.  We write $C = c_2-c_1$.\medskip
+
+The generalization bound is stated in the following theorem.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{theorem}[Generalization Bound for a Finite Hypothesis Set]\label{finite.hypothesis.bound.summary.thm}
+
+Let $\mathcal{H}$ be a finite hypothesis set with $M=\#(\mathcal{H})$ elements, and let $\ell$ be a loss function with values in $[c_1,c_2]$ on $\mathcal{D}_y\times\mathcal{D}_y$ and $C=c_2-c_1$.  Then, for every data distribution $\probb$ on $\mathcal{D}_x \times \mathcal{D}_y$, every $N\in\N$ and every $\delta\in(0,1)$, we have
+\bea\label{generalization.bound.eq}
+\probbg_{\mathcal{D}\sim\probb^N}\Big(\sup_{h\in\mathcal{H}}\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big| \le \kappa(\delta,N)\Big) \ge 1-\delta,
+\eea
+where
+$$
+\kappa(\delta,N) = C\sqrt{\frac{\ln M + \ln(2/\delta)}{2N}}
+$$
+ is called a \hl{generalization bound} for $\mathcal{H}$.
+\end{theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The proof combines Hoeffding's inequality with a union bound over the $M$ elements of $\mathcal{H}$.  The proof of the above theorem is omitted for this course.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}[Bound for the Risk of an Empirical Risk Minimizer]\label{finite.hypothesis.bound.rem}
+
+Since an empirical risk minimizer $h_{\mathcal{D}}$ belongs to $\mathcal{H}$, the above theorem gives, with probability at least $1-\delta$,
+$$
+\mathcal{R}(h_{\mathcal{D}}) \le \widehat{\mathcal{R}}_{\mathcal{D}}(h_{\mathcal{D}}) + C\sqrt{\frac{\ln M + \ln(2/\delta)}{2N}}.
+$$
+Thus, we have the following observations:
+\begin{enumerate}
+\item The population risk of the trained model is at most its training error plus the generalization bound that decays like $1/\sqrt{N}$.\medskip
+\item The bound grows only like $\sqrt{\ln M}$ as the size of the hypothesis set increases.  Thus, a very large finite hypothesis set can still generalize, provided $N$ is large compared with $\ln M$ (as illustrated in \prob{finite.precision.networks.prob}).\medskip
+\item The generalization bound requires the loss function to be bounded.  The $0$--$1$ loss satisfies this with $C=1$.  The square loss satisfies this when the labels and the predictions lie in a bounded set.  The cross-entropy loss is unbounded, and the theorem does not apply to it directly.
+\end{enumerate}
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The following problem illustrates a case where the hypothesis set is finite.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[Networks with Finite-Precision Parameters]\label{finite.precision.networks.prob}
+Consider a binary classification problem with $\mathcal{D}_y=\{0,1\}$ and the $0$--$1$ loss given by
+$$
+\ell(y,\tilde{y}) = \left\{\begin{array}{ll}
+1, & \text{if}~ y\ne \tilde{y},\\
+0, & \text{if}~ y=\tilde{y}.
+\end{array}\right.
+$$
+Fix a network architecture with $m$ trainable parameters, whose output is passed through a threshold to produce a label in $\{0,1\}$.  On a computer, each parameter is stored in a $b$-bit floating-point format.  Let $\mathcal{H}$ be the set of all classifiers obtained from this architecture with parameters representable in the $b$-bit floating-point format.
+\begin{enumerate}
+\item Show that $\#(\mathcal{H})\le 2^{bm}$.
+\item Deduce that, for every data distribution $\probb$, every $N\in\N$ and every $\delta\in(0,1)$,
+$$
+\probbg_{\mathcal{D}\sim\probb^N}\left(\sup_{h\in\mathcal{H}}\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big| \le \sqrt{\frac{bm\ln 2 + \ln(2/\delta)}{2N}}\,\right) \ge 1-\delta.
+$$
+\item Let $m=10^5$, $b=32$, $\delta=0.01$ and $\epsilon=0.05$.  Find the smallest number of examples $N$ that guarantees that the generalization bound in part 2 is at most $\epsilon$.
+\end{enumerate}
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}[Risk Bound for Empirical Risk Minimization]\label{finite.hypothesis.erm.cor}
+
+Let $\mathcal{H}$, $\ell$ and $C$ be as in \them{finite.hypothesis.bound.summary.thm}, and let $h_{\mathcal{D}}$ be an empirical risk minimizer.  Then, show that, for every data distribution $\probb$, every $N\in\N$ and every $\delta\in(0,1)$, with probability at least $1-\delta$ over $\mathcal{D}\sim\probb^N$, we have
+$$
+\mathcal{R}(h_{\mathcal{D}}) - \mathcal{R}^* \le 2C\sqrt{\frac{\ln M + \ln(2/\delta)}{2N}} + \varepsilon_\text{approx}.
+$$
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Extension to General Hypothesis Sets}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In general, a hypothesis set of neural networks with real-valued parameters is uncountable, and therefore $M=\#(\mathcal{H})$ is infinite. Consequently, \them{finite.hypothesis.bound.summary.thm} is not applicable.  
+
+The finite bound is nevertheless the basic step for infinite hypothesis sets.  The idea consists of the following steps:  
+\begin{enumerate}
+\item We cover $\mathcal{H}$ by finitely many balls of a small radius $r$ in the supremum norm, assuming that such a finite cover exists.  
+\item We apply the finite bound to the centers of these balls, which form a finite set.  Every $h\in\mathcal{H}$ lies within distance $r$ of some center.  Hence the deviation between its two risks exceeds that of the center by at most a term proportional to $r$.  
+\item In the resulting bound, the number of elements $M$ is replaced by the number of balls needed to cover $\mathcal{H}$.
+\end{enumerate}
+We need to assume that the loss is Lipschitz continuous in the prediction.  Under this assumption, we can see that two functions that are uniformly close have close population risks and close empirical risks. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{definition}[Covering Number]\label{covering.number.def}
+
+Let $\mathcal{H}\subseteq\mathcal{M}$ and $r>0$.  The \defn{covering number} $\mathscr{C}(\mathcal{H},r)$ is the smallest $n\in\N$ for which there exist functions $g_1,g_2,\ldots,g_n:\mathcal{D}_x\rightarrow \mathcal{D}_y$ such that, for every $h\in\mathcal{H}$, there is an index $i\in\{1,2,\ldots,n\}$ with
+$$
+\sup_{\bfm{x}\in\mathcal{D}_x}\big\|h(\bfm{x})-g_i(\bfm{x})\big\| \le r.
+$$
+If no such $n$ exists, we set $\mathscr{C}(\mathcal{H},r)=\infty$.
+\end{definition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We now state a generalization bound for a general hypothesis set. The proof of this theorem is omitted for this course.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{theorem}[Generalization Bound via Covering Numbers]\label{covering.number.bound.thm}
+
+Let $n_L=1$, let $\mathcal{H}\subseteq\mathcal{M}$, and $\mathcal{D}_y\subseteq[-C_Y,C_Y]$ for some $C_Y>0$.  Let $\alpha>0$.  Let the loss function $\ell$ be Lipschitz continuous in the prediction with constant $C_L>0$, that is,
+$$
+\big|\ell(y,\tilde{y})-\ell(y,z)\big| \le C_L\,|\tilde{y}-z|, \quad\text{for all}~y,\tilde{y},z\in\mathcal{D}_y.
+$$
+Then, for every data distribution $\probb$, every $N\in\N$ and every $\delta\in(0,1)$, with probability at least $1-\delta$ over $\mathcal{D}\sim\probb^N$, we have
+$$
+\big|\mathcal{R}(h)-\widehat{\mathcal{R}}_{\mathcal{D}}(h)\big| \le 4C_YC_L\sqrt{\frac{\ln\mathscr{C}(\mathcal{H},N^{-\alpha}) + \ln(2/\delta)}{N}} + \frac{2C_L}{N^{\alpha}}, \quad\text{for all}~h\in\mathcal{H}.
+$$
+\end{theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Bias-Variance Tradeoff}
+\label{bias-variance.tradeoff.subs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Achieving good generalization depends on several factors, such as the complexity of the model (depth and width), the size and representativeness of the training dataset, and the use of suitable regularization techniques. Our mathematical understanding of the role of these factors in learning a model is only partial. Therefore, practical success often relies heavily on experience, experimentation, and intuition in choosing them. Thus, achieving good generalization is often more of an art than a science. Nevertheless, there are some classical statistical perspectives on generalization that can partially guide us towards achieving good generalization. In this subsection, we discuss one such perspective, known as the \hl{bias-variance tradeoff}. This perspective is particularly relevant when the cost function is the mean squared error.  In this case, the expected squared prediction error can be written as the sum of three terms, namely the squared \hl{bias}, the \hl{variance}, and the noise. The first two terms behave in opposite ways as the model complexity changes.
+
+As in the previous subsection, we assume that the labeled dataset $\mathcal{D}$ of $N$ examples is drawn i.i.d. from a probability distribution $\probb$, \textit{i.e.,} $\mathcal{D} \sim \probb^N$.  Different draws give different training datasets. For each dataset, the learning algorithm produces a predictor (an ANN model in our case), denoted by $\mathscr{F}_{\mathcal{D}}$, which may differ depending on the dataset.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The aim is to design a learning process (by choosing a suitable network with suitably tuned hyperparameters) that can train a predictor capable of generalizing well to unseen test examples $(\bfm{x},\bfm{y})$ drawn from the same distribution.
+
+Clearly, there is randomness in the way the training datasets are generated. We therefore treat $\mathcal{D}$ as a random variable representing a training dataset of $N$ examples.  Consequently, for each fixed input $\bfm{x}$, the prediction $\mathscr{F}_{\mathcal{D}}(\bfm{x})$ of the predictor obtained from a fixed learning algorithm (fixed architecture and fixed hyperparameters) is also a random vector.  The generalization performance of these predictors can be assessed by taking the expectation over $\mathcal{D}\sim\probb^N$.
+
+Assume that the true label is generated as
+$$\bfm{y} = \bfm{f}(\bfm{x}) + \bfm{\epsilon},$$
+where $\bfm{f}:\mathcal{D}_x\rightarrow\R^{n_L}$ is the true underlying function to be learned and $\bfm{\epsilon}$ is a random noise term with mean $\mathbb{E}[\bfm{\epsilon}] = \bfm{0}$ and covariance matrix $\Sigma_\epsilon := \mathrm{Cov}(\bfm{\epsilon})$. The noise term accounts for variability or measurement noise in the data-generating process. We assume that $\bfm{\epsilon}$ is independent of $\bfm{x}$. The labels of the training examples are generated in the same way. The noise in the test label is independent of the training dataset $\mathcal{D}$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+At a given test input $\bfm{x}$, the expected squared prediction error is given by
+$$
+\mathbb{E}_{\mathcal{D}, \bfm{y}}\!\left[\|\bfm{y} - \mathscr{F}_{\mathcal{D}}(\bfm{x})\|^2\right]
+=
+\mathbb{E}_{\mathcal{D}, \bfm{\epsilon}}\!\left[\|\bfm{f}(\bfm{x}) + \bfm{\epsilon} - \mathscr{F}_{\mathcal{D}}(\bfm{x})\|^2\right],
+$$
+where  the expectation is taken jointly over the randomness in $\mathcal{D}$ and in $\bfm{y}$ given $\bfm{x}$, $\bfm{y}$ independently of $\mathcal{D}$. The norm $\|\cdot\|$ is the Euclidean norm.
+
+Expanding the square and using the independence of $\bfm{\epsilon}$ and $\mathcal{D}$, $\mathbb{E}[\bfm{\epsilon}] = \bfm{0}$ and $\mathbb{E}\!\left[\|\bfm{\epsilon}\|^2\right] = \mathrm{tr}(\Sigma_\epsilon),$ we get
+\nbea
+\mathbb{E}_{\mathcal{D}, \bfm{y}}\!\left[\|\bfm{y} - \mathscr{F}_{\mathcal{D}}(\bfm{x})\|^2\right]
+&=& \mathbb{E}_{\mathcal{D}}\!\left[\|\bfm{f}(\bfm{x}) - \mathscr{F}_{\mathcal{D}}(\bfm{x})\|^2\right]
+  + \mathbb{E}\!\left[\|\bfm{\epsilon}\|^2\right] \\
+&=& \mathbb{E}_{\mathcal{D}}\!\left[\|\bfm{f}(\bfm{x}) - \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\bfm{x})] + \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\bfm{x})] - \mathscr{F}_{\mathcal{D}}(\bfm{x})\|^2\right]
+  + \mathrm{tr}(\Sigma_\epsilon)\\
+&=& \|\mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\bfm{x})] - \bfm{f}(\bfm{x})\|^2
+ + \mathbb{E}_D\!\left[\|\mathscr{F}_{\mathcal{D}}(\bfm{x}) - \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\bfm{x})]\|^2\right]
+ + \mathrm{tr}(\Sigma_\epsilon).
+\neea
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Hence, the decomposition becomes
+$$
+\mathbb{E}_{\mathcal{D}, \bfm{y}}\!\left[\|\bfm{y} - \mathscr{F}_{\mathcal{D}}(\bfm{x})\|^2\right]
+= \underbrace{\|\mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\bfm{x})] - \bfm{f}(\bfm{x})\|^2}_{\text{Bias}^2}
++ \underbrace{\mathbb{E}_{\mathcal{D}}\!\left[\|\mathscr{F}_{\mathcal{D}}(\bfm{x}) - \mathbb{E}_{\mathcal{D}}[\mathscr{F}_{\mathcal{D}}(\bfm{x})]\|^2\right]}_{\text{Variance}}
++ \underbrace{\mathrm{tr}(\Sigma_\epsilon)}_{\text{Noise}}.
+$$
+Note that the intrinsic uncertainty in the data, represented by $\mathrm{tr}(\Sigma_\epsilon)$, is irreducible by any learning algorithm.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}[Interpretation]
+The left hand side of the above expression is the expected prediction error, which is decomposed into three parts, namely,
+\begin{enumerate}
+  \item \textbf{Bias}$^2$ measures the squared Euclidean distance between the average prediction of the model and the value of the true function $\bfm{f}$ at $\bfm{x}$. A high bias indicates a systematically wrong model (underfitting).
+  \item \textbf{Variance} measures how sensitive the model's prediction is to fluctuations in the training data. High variance corresponds to overfitting.
+  \item \textbf{Noise} is the irreducible error due to randomness in the data itself. It sets a lower bound on the achievable prediction error.
+\end{enumerate}
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The above expression explains how the reducible part of the prediction error arises from two sources, namely,
+high bias, due to an overly simple model that fails to capture data complexity, and high variance, due to a model that is too sensitive to fluctuations of the training dataset.
+
+In the classical setting, increasing the model complexity typically reduces the bias and increases the variance. The optimal generalization performance is achieved at a balance between these two opposing effects, known as the \hl{bias-variance tradeoff} (see \figu{bias.variance.tradeoff.fig}). In \subs{double.descent.subs}, we see that this picture changes for heavily overparameterized models.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+\centering
+\input{Figures/Ch06BiasVarianceTradeoff.png}
+\caption{An illustrative sketch of the bias-variance tradeoff.}
+\label{bias.variance.tradeoff.fig}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Overparameterization and Double Descent}
+\label{double.descent.subs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+From the bias-variance tradeoff discussed in the previous subsection, we see that the test error is expected to increases once the model complexity exceeds an optimal value (see \figu{bias.variance.tradeoff.fig}). According to this classical statistics approach, a model that exactly fits the training dataset should generalize poorly. Surprisingly, modern deep neural networks exhibit different behaviour as model complexity increases. As the number of parameters exceeds the number of training examples by a large margin, many neural networks fit the training dataset exactly and, at the same time, achieve a small test error. This behaviour is part of a phenomenon called \hl{double descent}, which we discuss in this subsection.
+
+A model is said to be \hl{overparameterized} if its number of parameters is larger than the number $N$ of training examples. A model $h$ is said to \hl{interpolate} the training dataset $\mathcal{D}$ if
+$$
+h(\bfm{x}_k) = \bfm{y}_k, \quad k=1,2,\ldots,N.
+$$
+In this case, the training error is zero for every loss function satisfying $\ell(\bfm{y},\bfm{y})=0$. The smallest model complexity at which the trained model can interpolate the training dataset is called the \hl{interpolation threshold}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{example}[Interpolation Threshold for Linear Least Squares]\label{interpolation.threshold.exam}
+Consider the model $h: \R^{n}\rightarrow \R$ given by
+$$
+h(\bfm{x}) = \sum_{i=1}^{n} w_i\, \phi_i(\bfm{x}),
+$$
+where $\phi_1,\ldots,\phi_n:\mathcal{D}_x\rightarrow\R$ are fixed functions and $\bfm{w}=(w_1,\ldots,w_n)^\top$ is the parameter vector. Define the matrix $A\in\R^{N\times n}$ by $A_{ki}=\phi_i(\bfm{x}_k)$, and let $\bfm{y}=(y_1,\ldots,y_N)^\top$. The model interpolates the training dataset if and only if
+$$
+A\bfm{w} = \bfm{y}.
+$$
+Assume that $A$ has full rank, that is, $\mathrm{rank}(A)=\min(n,N)$. Then, the above system has a solution for every $\bfm{y}\in\R^N$ if and only if $n\ge N$. Hence, the interpolation threshold is $n=N$. We distinguish three cases.
+\begin{enumerate}
+\item If $n < N$, then, in general, no interpolating parameter vector exists.
+\item If $n=N$, then $A$ is invertible, and $\bfm{w}=A^{-1}\bfm{y}$ is the unique interpolating parameter vector.
+\item If $n > N$, then the interpolating parameter vectors form an affine subspace of $\R^n$ of dimension $n-N$.
+\end{enumerate}
+\end{example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+\centering
+\input{Figures/Ch06DoubleDescent.png}
+\caption{An illustrative sketch of the double descent phenomenon. The training cost reaches zero at the interpolation threshold. The test cost peaks at the interpolation threshold and decreases again in the over-parameterized regime, where it can fall below the classical optimum (dotted line).}
+\label{double.descent.fig}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Empirical studies show that the test error, as a function of the model complexity, typically behaves as sketched in \figu{double.descent.fig}. The figure shows three stages.
+\begin{enumerate}
+\item \textbf{Under-parameterized (classical) regime.} Below the interpolation threshold, the test error follows the U-shaped curve of the bias-variance tradeoff. It first decreases and then increases.
+\item \textbf{Interpolation threshold.} Near the interpolation threshold, the training error reaches zero, and the test error attains a peak.
+\item \textbf{Over-parameterized (modern) regime.} Beyond the interpolation threshold, the training error remains zero. The test error decreases again as the model complexity increases. In many experiments, it falls below the minimum attained in the classical regime.
+\end{enumerate}
+The test error curve thus has two decreasing parts separated by a peak. This behavior is called \hl{double descent}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}\label{double.descent.rem}
+$~$
+\begin{enumerate}
+\item Double descent does not contradict the bias-variance decomposition. The decomposition is an identity and holds for every model. What fails beyond the interpolation threshold is the classical assumption that the variance increases with the model complexity.\medskip
+\item Double descent is also observed when the model complexity is fixed and the number of training epochs increases. It is also observed when the model is fixed and the number $N$ of training examples varies. In the latter case, increasing $N$ moves the interpolation threshold, and, for a model near the threshold, more data can increase the test error.\medskip
+\item The peak is more pronounced when the labels are noisy. A suitably tuned explicit regularization, such as the $\ell^2$-regularization of \subs{parameter.based.regularization.sec}, can reduce or remove the peak.\medskip
+\item For deep neural networks, a complete mathematical explanation of double descent is not yet available. The linear least-squares example only gives a heuristic picture.
+\end{enumerate}
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Regularization Techniques}\label{regularization.techniques.sec}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Techniques designed to reduce overfitting and improve generalization are commonly referred to as regularization techniques.
+
+Regularization can be applied in two broad ways. One way is the \hl{parameter-based regularization}, which directly penalizes or constrains the model parameters (for example, weight decay by $L^1$ or $L^2$ penalties). Another form of regularization is the \hl{process-based regularization}, which modifies the training procedure itself to reduce overfitting (for example, early stopping, dropout, or data augmentation).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Parameter-based Regularization}\label{parameter.based.regularization.sec}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A neural network with large weights can easily overfit a training dataset. To see this, consider a single neuron with output
+$$y = \actf\big(\bfm{w}\cdot \bfm{x} + b\big).$$
+If the components of $\bfm{w}$ are very large, then a small change in $\bfm{x}$ can lead to a large change in the output $y$.  This makes the neuron very sensitive to the input data. Since the model is trained to represent the training data well, the training error is small. However, small changes in the input (for instance, noisy input) can lead to large deviations in the output, leading to a large testing error.  Hence, the model shows poor generalization on unseen data, which corresponds to overfitting.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Regularized Cost Function}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+One way to prevent this is to keep the weights smaller by minimizing (also referred to as penalizing) the norm of the weight vector during training. This can be achieved by minimizing a \hl{regularized cost function} defined as
+$$
+\mathcal{C}_{\alpha} (\bfm{\Theta}) = \mathcal{C}(\bfm{\Theta}) + \alpha \Omega(\bfm{\Theta}_{\bfm{w}}),
+$$
+where $\alpha\ge 0$ is a hyperparameter controlling the strength of penalization, and $\Omega$ is a \hl{regularization function}, which is a function of the weights only (denoted by $\bfm{\Theta}_{\bfm{w}}$).
+
+Commonly used regularization parameters are the following:
+\begin{itemize}
+\item \textbf{$\ell^1$-Regularization}: In this case, the regularization function is taken as
+$$
+\Omega(\bfm{\Theta}_{\bfm{w}}) = \|\bfm{\Theta}_{\bfm{w}}\|_1.
+$$
+\item \textbf{$\ell^2$-Regularization}: In this case, the regularization function is taken as
+$$
+\Omega(\bfm{\Theta}_{\bfm{w}}) = \frac{1}{2}\|\bfm{\Theta}_{\bfm{w}}\|^2_2.
+$$
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+An affine combination of the two penalties above is also used in practice:
+$$
+\Omega(\bfm{\Theta}_{\bfm{w}}) = \rho\, \|\bfm{\Theta}_{\bfm{w}}\|_1 + (1-\rho)\, \frac{1}{2}\|\bfm{\Theta}_{\bfm{w}}\|^2_2, \qquad \rho\in[0,1],
+$$
+is called the \hl{elastic net} regularization function. It combines the sparsity-inducing effect of $\ell^1$-regularization with the smoothness (differentiability) of $\ell^2$-regularization, and reduces to the lasso when $\rho=1$ and to ridge regression when $\rho=0$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Obtain the gradient descent update rule for the regularized cost function with $\ell^2$-regularization.  Recall that we have derived a similar update rule (with a different loss function) earlier in our course. What was it?
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{note}
+The $\ell^2$-regularization is called \hl{Tikhonov regularization} or \hl{ridge regression}. The $\ell^1$-regularization is called \hl{lasso} in statistical learning.
+\end{note}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}\label{alpha.dependency.of.c.prob}
+Consider the $\ell^2$-regularized loss function (used for linear regression)
+$$
+\mathcal{L}_\alpha(\bfm{w}) = \frac{1}{2}\|\bfm{y} - X\bfm{w}\|_{2}^2 + \frac{\alpha}{2} \| \bfm{w} \|^{2}_{2},
+$$
+where $X$ is an $n\times n$ invertible matrix, and $\bfm{w},\bfm{y}\in \R^n$. Let $\bfm{w}^*(\alpha)$ denote the minimizer of the above loss function and let $c=\|\bfm{w}^*(\alpha)\|^{2}_2$. Then, show that there exists a vector $\bfm{z}\in \R^n$ such that
+$$
+c = \sum_{j=1}^n \frac{z_{j}^2}{(\alpha + \lambda_j)^2},
+$$
+where $\lambda_j$, $j=1,2,\ldots, n$, are the eigenvalues of $X X^\top$.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}[Constrained Optimization and Geometric Interpretation]
+
+The unconstrained optimization problem with a regularized cost function
+$$
+\tilde{\bfm{\Theta}} = \argmin_{\bfm{\Theta}}~ \mathcal{C}_{\alpha} (\bfm{\Theta}),
+$$
+for a given $\alpha>0$, can be equivalently posed as a constrained optimization problem as
+$$
+\tilde{\bfm{\Theta}} = \left\{\begin{array}{ll}
+					&\displaystyle{\argmin_{\bfm{\Theta}}}~ \mathcal{C}(\bfm{\Theta}),\\
+					\text{subject to:} & \|\bfm{\Theta}_{\bfm{w}}\|_p \le c,
+					\end{array}\right.
+$$
+for $p=1,2$, and for some constant $c$ depending on the regularization parameter $\alpha$.
+
+%%%%%%%%%%%%%%
+\textbf{Geometric Interpretation:}
+%%%%%%%%%%%%%%
+For the sake of simplicity, let us take $\bfm{\Theta} = (b,\bfm{w})$ with $\bfm{w}\in \R^2$, and consider the linear regression model, where the cost function is the MSE function. The regularized minimizer $\tilde{\bfm{w}}$ corresponds to the point of tangency between the contours (level sets) of the cost surface and the constraint region. The constraint region is a circle (for $p=2$) centered at the origin with radius $c$, as shown in \figu{regularized.cost.optimization.fig}.
+
+As stated in \prob{alpha.dependency.of.c.prob}, for linear regression, in general, we can observe (only numerically) the following dependency between $\alpha$ and $c$:
+\begin{itemize}
+\item as $\alpha$ increases, $c$ decreases, and
+\item as $\alpha$ decreases, $c$ increases.
+\end{itemize}
+Hence, choosing a large value of $\alpha$ makes $\tilde{\bfm{w}}$ to lie very close to the origin.  This leads to a more stable model which is less sensitive to noise but may result in underfitting, with both training and test costs being large.  On the other hand, choosing a very small value of $\alpha$ makes $\tilde{\bfm{w}}$ to be very close to $\bfm{w}^*$, often leading to overfitting, where the training error is small but the test error is large, as illustrated in \figu{train-test-cost.fig}.
+
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[t]
+\centering
+\input{Figures/Ch06regularizedCostMinimizer.png}
+\caption{Geometric interpretation of $\ell^2$-regularized cost function.
+    The 3D surface represents the cost function $\mathcal{C}_\alpha(\bfm{w})$ as a function of weights $w_1$ and $w_2$.
+    The ellipses in the $w_1$-$w_2$ plane show the contour lines of the cost function.
+    The red circle represents the regularization constraint $\|\bfm{w}\|_2 \leq c$.
+    The unconstrained minimizer $\bfm{w}^*$ is marked in blue, while the constrained minimizer $\tilde{\bfm{w}}$ is marked in red, showing the tangency between the constraint and the cost contours.}\label{regularized.cost.optimization.fig}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

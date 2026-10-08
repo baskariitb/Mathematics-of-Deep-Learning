@@ -491,7 +491,7 @@ G_{j,k} = \rho G_{j,k-1} + (1-\rho) g_{j,k}^2,
 \]</div>
 where <span class="math">\(0<\rho<1\)</span>. In this update, the effective learning rate depends more strongly on the gradients of the recent iterations, whereas the older ones get less weightage.
 </p><h4 id="adaptive-moments-adam">5.2.3.3 Adaptive Moments (Adam).</h4>
-We have seen that the AdaGrad updates the effective learning rates through cummulative history, whereas the RMSProp updates with a decaying memory.
+We have seen that the AdaGrad updates the effective learning rates through cumulative history, whereas the RMSProp updates with a decaying memory.
 </p><p>
 The <b>Adam</b> method combines RMSProp with momentum by including the exponentially weighted moving averages of both gradients and squared gradients. The update rule for the <b>Adam method</b> is given by
 <div class="math">\[\begin{array}{rcl}

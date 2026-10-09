@@ -108,7 +108,9 @@
 <div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#double.descent.subs">6.1.4 Overparameterization and Double Descent</a></div>
 <div class="toc-item toc-section"><a href="Ch06GeneralizationRegularization.html#regularization.techniques.sec">6.2 Regularization Techniques</a></div>
 <div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#parameter.based.regularization.sec">6.2.1 Parameter-based Regularization</a></div>
-<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#regularized-cost-function">6.2.1.1 Regularized Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#process.based.regularization.sec">6.2.2 Process-based Regularization</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#early-stopping">6.2.2.1 Early Stopping</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#dropout.subs">6.2.2.2 Dropout</a></div>
 </div></div>
 </div>
     </div>
@@ -534,7 +536,7 @@ Assume that <span class="math">\(A\)</span> has full rank, that is, <span class=
 </div>
 Empirical studies show that the test error, as a function of the model complexity, typically behaves as sketched in <a href="Ch06GeneralizationRegularization.html#double.descent.fig">Figure 6.4</a>. The figure shows three stages.
 <ol class="latex-enumerate"><li><b>Under-parameterized (classical) regime.</b> Below the interpolation threshold, the test error follows the U-shaped curve of the bias-variance tradeoff. It first decreases and then increases.
-</li><li><b>Interpolation threshold.</b> Near the interpolation threshold, the training error reaches zero, and the test error attains a peak.
+</li><li><b>Interpolation threshold.</b> Near the interpolation threshold, the training error reaches zero (computationally, a value close to zero), and the test error attains a peak.
 </li><li><b>Over-parameterized (modern) regime.</b> Beyond the interpolation threshold, the training error remains zero. The test error decreases again as the model complexity increases. In many experiments, it falls below the minimum attained in the classical regime.
 </li></ol>
 The test error curve thus has two decreasing parts separated by a peak. This behavior is called <b>double descent</b>.
@@ -556,7 +558,7 @@ Regularization can be applied in two broad ways. One way is the <b>parameter-bas
 A neural network with large weights can easily overfit a training dataset. To see this, consider a single neuron with output
 <div class="math">\[y = \mathscr{A}\big(\boldsymbol{w}\cdot \boldsymbol{x} + b\big).\]</div>
 If the components of <span class="math">\(\boldsymbol{w}\)</span> are very large, then a small change in <span class="math">\(\boldsymbol{x}\)</span> can lead to a large change in the output <span class="math">\(y\)</span>.  This makes the neuron very sensitive to the input data. Since the model is trained to represent the training data well, the training error is small. However, small changes in the input (for instance, noisy input) can lead to large deviations in the output, leading to a large testing error.  Hence, the model shows poor generalization on unseen data, which corresponds to overfitting.
-<h4 id="regularized-cost-function">6.2.1.1 Regularized Cost Function</h4>
+</p><p>
 One way to prevent this is to keep the weights smaller by minimizing (also referred to as penalizing) the norm of the weight vector during training. This can be achieved by minimizing a <b>regularized cost function</b> defined as
 <div class="math">\[
 \mathcal{C}_{\alpha} (\boldsymbol{\Theta}) = \mathcal{C}(\boldsymbol{\Theta}) + \alpha \Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}),
@@ -573,21 +575,21 @@ Commonly used regularization parameters are the following:
 \Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}) = \frac{1}{2}\|\boldsymbol{\Theta}_{\boldsymbol{w}}\|^2_2.
 \]</div>
 </li></ul>
-An affine combination of the two penalties above is also used in practice:
+An affine combination 
 <div class="math">\[
 \Omega(\boldsymbol{\Theta}_{\boldsymbol{w}}) = \rho\, \|\boldsymbol{\Theta}_{\boldsymbol{w}}\|_1 + (1-\rho)\, \frac{1}{2}\|\boldsymbol{\Theta}_{\boldsymbol{w}}\|^2_2, \qquad \rho\in[0,1],
 \]</div>
-is called the <b>elastic net</b> regularization function. It combines the sparsity-inducing effect of <span class="math">\(\ell^1\)</span>-regularization with the smoothness (differentiability) of <span class="math">\(\ell^2\)</span>-regularization, and reduces to the lasso when <span class="math">\(\rho=1\)</span> and to ridge regression when <span class="math">\(\rho=0\)</span>.
-<div class="problem">
-<div class="heading-container"><b class="heading">Problem 6.5:</b></div>
-
-Obtain the gradient descent update rule for the regularized cost function with <span class="math">\(\ell^2\)</span>-regularization.  Recall that we have derived a similar update rule (with a different loss function) earlier in our course. What was it?
-
-</div>
+of the two penalties above can also be used and is called the <b>elastic net</b> regularization function. It combines the sparsity-inducing effect of <span class="math">\(\ell^1\)</span>-regularization with the smoothness (differentiability) of <span class="math">\(\ell^2\)</span>-regularization, and reduces to the <b>lasso</b> when <span class="math">\(\rho=1\)</span> and to <b>ridge regression</b> when <span class="math">\(\rho=0\)</span>.
 <div class="note">
 <div class="heading-container"><b class="heading">Note:</b></div>
 
 The <span class="math">\(\ell^2\)</span>-regularization is called <b>Tikhonov regularization</b> or <b>ridge regression</b>. The <span class="math">\(\ell^1\)</span>-regularization is called <b>lasso</b> in statistical learning.
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 6.5:</b></div>
+
+Obtain the gradient descent update rule for the regularized cost function with <span class="math">\(\ell^2\)</span>-regularization.  Recall that we have derived a similar update rule (with a different loss function) earlier in our course. What was it?
 
 </div>
 <div class="problem" id="alpha.dependency.of.c.prob">
@@ -637,8 +639,142 @@ Hence, choosing a large value of <span class="math">\(\alpha\)</span> makes <spa
     The red circle represents the regularization constraint <span class="math">\(\|\boldsymbol{w}\|_2 \leq c\)</span>.
     The unconstrained minimizer <span class="math">\(\boldsymbol{w}^*\)</span> is marked in blue, while the constrained minimizer <span class="math">\(\tilde{\boldsymbol{w}}\)</span> is marked in red, showing the tangency between the constraint and the cost contours.</p></div>
 </div>
+<h3 id="process.based.regularization.sec">6.2.2 Process-based Regularization</h3>
+Process-based regularization techniques modify the training procedure itself to reduce overfitting, rather than directly constraining the model parameters. Some common approaches include early stopping, dropout, and data augmentation, which we discuss in this section.
+<h4 id="early-stopping">6.2.2.1 Early Stopping</h4>
+<b>Early stopping</b> is perhaps the most commonly used regularization technique due to its simplicity and effectiveness.  This method monitors the performance of the model on a validation dataset during training and stops the optimization process (in terms of iterations or epochs) when the validation performance ceases to improve. It then returns the parameter at which the validation performance was the best.
+</p><p>
+Recall that the given dataset is divided into three parts, namely, the training dataset, the validation dataset, and the test dataset.  The early stopping technique uses the validation dataset to monitor the performance of the model during the training process.
+</p><p>
+It is generally observed that, as training progresses over iterations or epochs, the training error decreases monotonically, whereas the validation error shows a different behavior.  For the initial iterations (or epochs), the validation error also decreases, but beyond a certain point, it starts to increase gradually, producing a U-shaped error profile as sketched in <a href="Ch06GeneralizationRegularization.html#training-validation-error.fig">Figure 6.6</a>. The early stopping technique makes use of this behavior to decide the stopping criterion for the training process.
+<div class="latex-figure" id="training-validation-error.fig">
+<img src="Figures/Ch06EarlyStopping.png" alt="">
+<div class="figure-caption"><p>Figure 6.6: An illustrative sketch of the U-shaped validation error with the monotonically decreasing training error.</p></div>
+</div><p>
+The idea behind the early stopping technique is made precise in the following algorithm:
+<div class="algorithm">
+<div class="heading-container"><b class="heading">Algorithm 6.1 (Early Stopping):</b></div><p>
+<b>Input:</b>
+<ul><li>Training and validation datasets <span class="math">\(\mathcal{D}_\text{train}\)</span> and <span class="math">\(\mathcal{D}_\text{val}\)</span>,
+</li><li>Maximum number of epochs/iterations <span class="math">\(K\)</span> (choose this sufficiently large),
+</li><li>Validation frequency <span class="math">\(n\ll K\)</span>, which is the number of epochs/iterations between two successive validations,
+</li><li>Patience <span class="math">\(p_0\)</span>, which is the number of successive validations without improvement that is allowed before stopping, and
+</li><li>Cost/loss function.
+</li></ul>
+<b>Processing:</b>
+</p><p>
+Assign <span class="math">\(p=0\)</span>, and <span class="math">\(\mathcal{C}_{\text{val}}^* = +\infty\)</span> (in a program, assign a sufficiently large number).
+</p><p>
+Initialize the parameter <span class="math">\(\boldsymbol{\Theta}_0\)</span> (usually randomly; in some simple cases, it may be taken as zero).
+</p><p>
+Start with <span class="math">\(k=0\)</span> and do the following while <span class="math">\(k+n\le K\)</span>:
+<ul><li><b>Step 1:</b> <b>Train</b> the model for <span class="math">\(n\)</span> epochs/iterations, starting from <span class="math">\(\boldsymbol{\Theta}_k\)</span>, using any of the optimization methods that we discussed in the previous chapter. Assign
+<div class="math">\[k \leftarrow k + n.\]</div>
+Let the parameter at the end of this training step be denoted by <span class="math">\(\boldsymbol{\Theta}_k\)</span>.
+</li><li><b>Step 2:</b> <b>Validate</b> <span class="math">\(\boldsymbol{\Theta}_k\)</span> by performing the following steps:
+	<ul><li> Perform forward propagation on all the examples of <span class="math">\(\mathcal{D}_\text{val}\)</span>,
+	</li><li> Compute <span class="math">\(\mathcal{C}_{\text{val}}\)</span>.
+	</li><li> Check the following:
+		<ul><li> If <span class="math">\(\mathcal{C}_{\text{val}} < \mathcal{C}_{\text{val}}^*\)</span>, then assign
+		</li><li> <span class="math">\(~~~~\mathcal{C}_{\text{val}}^* = \mathcal{C}_{\text{val}},\)</span>
+		</li><li> <span class="math">\(~~~~\tilde{\boldsymbol{\Theta}} = \boldsymbol{\Theta}_k\)</span>.
+		</li><li> <span class="math">\(~~~~p=0\)</span>.
+		</li><li> Else
+		</li><li> <span class="math">\(~~~~ p \leftarrow p+1.\)</span>
+		</li><li>  If <span class="math">\(p \ge p_0\)</span>, then stop and go to the output.
+		</li><li>  Else, go to Step 1.
+		</li></ul>
+	</li></ul>
+</li></ul>
+<b>Output:</b> <span class="math">\(\tilde{\boldsymbol{\Theta}}\)</span>.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+<ol class="latex-enumerate"><li>Early stopping is often combined with a learning-rate schedule. For instance, when <span class="math">\(p = p_0/2\)</span>, the learning rate <span class="math">\(\eta\)</span> may be reduced. This often improves the validation performance again.
+</li><li>The <b>validation frequency</b> <span class="math">\(n\)</span> in the above algorithm is a hyperparameter.
+</li></ol>
+
+</div>
+For a quadratic cost function, gradient descent started from zero and stopped after <span class="math">\(k\)</span> iterations behaves approximately like <span class="math">\(\ell^2\)</span>-regularization with <span class="math">\(\alpha \approx 1/(k\eta)\)</span>, provided the learning rate <span class="math">\(\eta\)</span> is small. This is shown in the following problem.
+<div class="problem" id="early.stopping.l2.prob">
+<div class="heading-container"><b class="heading">Problem 6.7:</b></div>
+
+Consider the quadratic cost function
+<div class="math">\[
+\mathcal{C}(\boldsymbol{\Theta}) = \frac{1}{2}(\boldsymbol{\Theta}-\boldsymbol{\Theta}^*)^\top H\, (\boldsymbol{\Theta}-\boldsymbol{\Theta}^*), \qquad \boldsymbol{\Theta},\boldsymbol{\Theta}^*\in\mathbb{R}^d,
+\]</div>
+where <span class="math">\(H\)</span> is a symmetric positive definite matrix with the eigen-decomposition 
+<div class="math">\[H = Q\Lambda Q^\top,\]</div> 
+where <span class="math">\(Q\)</span> is orthogonal, and <span class="math">\(\Lambda=\mathrm{diag}(\lambda_1,\ldots,\lambda_d)\)</span>. For simplicity, assume that all the components of <span class="math">\(\boldsymbol{\Theta}\)</span> are weights, so that the <span class="math">\(\ell^2\)</span>-penalty acts on the whole of <span class="math">\(\boldsymbol{\Theta}\)</span>.
+<ol class="latex-enumerate"><li>Let <span class="math">\(\boldsymbol{\Theta}_k\)</span> be the <span class="math">\(k^{\rm th}\)</span> iterate of the gradient descent method with learning rate <span class="math">\(\eta\)</span>, and with <span class="math">\(\boldsymbol{\Theta}_0=\boldsymbol{0}\)</span>. Show that
+<div class="math">\[
+Q^\top \boldsymbol{\Theta}_k = \big[I-(I-\eta\Lambda)^k\big]\, Q^\top\boldsymbol{\Theta}^*.
+\]</div>
+</li><li>Let <span class="math">\(\tilde{\boldsymbol{\Theta}}_\alpha\)</span> be the minimizer of the <span class="math">\(\ell^2\)</span>-regularized cost function
+<div class="math">\[
+\mathcal{C}_\alpha(\boldsymbol{\Theta}) = \mathcal{C}(\boldsymbol{\Theta}) + \frac{\alpha}{2}\|\boldsymbol{\Theta}\|_2^2, \qquad \alpha>0.
+\]</div>
+Show that
+<div class="math">\[
+Q^\top \tilde{\boldsymbol{\Theta}}_\alpha = \big[I-\alpha(\Lambda+\alpha I)^{-1}\big]\, Q^\top\boldsymbol{\Theta}^*.
+\]</div>
+</li><li>Assume that <span class="math">\(0 < \eta\lambda_j\ll 1\)</span> and <span class="math">\(\lambda_j\ll\alpha\)</span> for all <span class="math">\(j=1,2,\ldots,d\)</span>. Show that <span class="math">\(\boldsymbol{\Theta}_k\approx\tilde{\boldsymbol{\Theta}}_\alpha\)</span> when
+<div class="math">\[
+\alpha \approx \frac{1}{k\eta}.
+\]</div>
+</li><li>Use the above result to explain why early stopping acts as an <span class="math">\(\ell^2\)</span>-regularization. Which components of <span class="math">\(Q^\top\boldsymbol{\Theta}_k\)</span> are close to the corresponding components of <span class="math">\(Q^\top\boldsymbol{\Theta}^*\)</span> when training is stopped early, and which are not?
+</li></ol>
+
+</div><h4 id="dropout.subs">6.2.2.2 Dropout</h4>
+As we can see from <a href="Ch06GeneralizationRegularization.html#train-test-cost.fig">Figure 6.2</a>, increasing the model complexity can lead to overfitting. However, in many practical situations, a high-capacity (more neurons and layers) model is desirable to capture complex patterns in the data. In such cases, <b>dropout</b> serves as an efficient regularization technique to reduce overfitting without reducing the number of neurons and layers.
+</p><p>
+Given a neural network, the dropout technique implicitly trains an ensemble of subnetworks, in which all subnetworks share the same parameter set <span class="math">\(\boldsymbol{\Theta}\)</span>.
+</p><p>
+A <b>subnetwork</b> of a given parent network is obtained by removing a subset of neurons from one or more layers (typically excluding the output layer to preserve valid predictions).
+</p><p>
+The <b>dropout</b> technique is a training procedure where each iteration of the optimization is performed on a subnetwork, which is obtained by randomly dropping some neurons from the layers other than the output layer. A neuron is dropped by multiplying its output by a random factor <span class="math">\(r\)</span>, which takes the value <span class="math">\(0\)</span> with a preassigned probability and the value <span class="math">\(1\)</span> otherwise.
+</p><p>
+First, choose the vector of dropout probabilities <span class="math">\(\boldsymbol{p} = (p^{(0)}, p^{(1)}, \ldots, p^{(L-1)})\)</span>, where each <span class="math">\(p^{(l)}\in [0,1)\)</span>,  for <span class="math">\(l=0,1,2,\ldots, L-1\)</span>, is called the <b>dropout probability</b> of the <span class="math">\(l^{\rm th}\)</span> layer.
+</p><p>
+For each training example in each iteration, a set of mask vectors <span class="math">\(\boldsymbol{r}^{(l)}\)</span>, for <span class="math">\(l=0,1,2,\ldots, L-1\)</span>, is randomly generated with <span class="math">\(r^{(l)}_i \sim \text{Bernoulli}(1-p^{(l)})\)</span>, <i>i.e.,</i>
+<div class="math">\[
+r^{(l)}_i = \left\{\begin{array}{ll}
+				0,&\text{with probability}~ p^{(l)},\\
+				1,&\text{with probability}~ 1-p^{(l)},
+			\end{array}\right.
+\quad i=1,2,\dots,n_l.
+\]</div>
+Then, the output of the <span class="math">\(l^{\rm th}\)</span> layer is redefined as
+<div class="math">\[
+\tilde{\boldsymbol{x}}^{(l)} = \frac{\boldsymbol{r}^{(l)} \odot \boldsymbol{x}^{(l)}}{1-p^{(l)}},
+\]</div>
+where <span class="math">\(\boldsymbol{x}^{(l)}\)</span> is the output of the <span class="math">\(l^{\rm th}\)</span> layer computed from <span class="math">\(\tilde{\boldsymbol{x}}^{(l-1)}\)</span> in the usual way (for <span class="math">\(l=0\)</span>, <span class="math">\(\boldsymbol{x}^{(0)}\)</span> is the input). The vector <span class="math">\(\tilde{\boldsymbol{x}}^{(l)}\)</span> is then used in place of <span class="math">\(\boldsymbol{x}^{(l)}\)</span> as the input to the <span class="math">\((l+1)^{\rm th}\)</span> layer.
+</p><p>
+The factor <span class="math">\(1/(1-p^{(l)})\)</span> is chosen for the following reason. Since <span class="math">\(\mathbb{E}[r^{(l)}_i] = 1-p^{(l)}\)</span>, the expectation with respect to the mask gives
+<div class="math">\[
+\mathbb{E}\big[\tilde{x}^{(l)}_i\big] = x^{(l)}_i, \qquad i=1,2,\ldots,n_l.
+\]</div>
+Thus, on average, each neuron of the next layer receives the same input as it would receive from the full network. This is why no rescaling is needed when the full network is used after training.
+</p><p>
+Thus, during training, each forward pass effectively uses a different subnetwork, with all subnetworks sharing the same parameter set <span class="math">\(\boldsymbol{\Theta}\)</span>.
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+It is important to note that the dropout procedure is applied only during training.
+During testing (inference), the full network is used without dropout, <i>i.e.,</i> <span class="math">\(\tilde{\boldsymbol{x}}^{(l)} = \boldsymbol{x}^{(l)}\)</span>.
+
+</div>
+The dropout methodology allows us to implicitly train an ensemble of subnetworks, and it is generally observed to be successful in improving generalization and reducing overfitting without altering the basic architecture of the network.
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 6.8:</b></div>
+
+Modify the batch forward propagation <a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.algo">Algorithm 4.1</a>, to incorporate the dropout procedure for a single forward pass.
+
+</div>
     </div>
-    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 06-Oct-2026</footer>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 09-Oct-2026</footer>
     <script>
     document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
     document.addEventListener("keydown", function(e) {

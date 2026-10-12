@@ -535,7 +535,7 @@ Assume that <span class="math">\(A\)</span> has full rank, that is, <span class=
 <div class="figure-caption"><p>Figure 6.4: An illustrative sketch of the double descent phenomenon. The training cost reaches zero at the interpolation threshold. The test cost peaks at the interpolation threshold and decreases again in the over-parameterized regime, where it can fall below the classical optimum (dotted line).</p></div>
 </div>
 Empirical studies show that the test error, as a function of the model complexity, typically behaves as sketched in <a href="Ch06GeneralizationRegularization.html#double.descent.fig">Figure 6.4</a>. The figure shows three stages.
-<ol class="latex-enumerate"><li><b>Under-parameterized (classical) regime.</b> Below the interpolation threshold, the test error follows the U-shaped curve of the bias-variance tradeoff. It first decreases and then increases.
+<ol class="latex-enumerate"><li><b>Under-parameterized (classical) regime.</b> Below the interpolation threshold, the test error follows a U-shaped curve, similar to the total error curve in the bias-variance tradeoff. It first decreases and then increases.
 </li><li><b>Interpolation threshold.</b> Near the interpolation threshold, the training error reaches zero (computationally, a value close to zero), and the test error attains a peak.
 </li><li><b>Over-parameterized (modern) regime.</b> Beyond the interpolation threshold, the training error remains very close to zero. The test error decreases again as the model complexity increases. In many experiments, it falls below the minimum attained in the classical regime.
 </li></ol>

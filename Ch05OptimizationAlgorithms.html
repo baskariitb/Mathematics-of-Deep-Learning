@@ -501,7 +501,7 @@ v_{j,k} &=& \beta_2 v_{j,k-1} + (1-\beta_2) g_{j,k}^2, \\
 \end{array}\]</div>
 for <span class="math">\(\beta_1, \beta_2\in (0,1)\)</span>, and
 <div class="math">\[
-m_{j,0} = 0,~~v_{j,0} = 0,
+m_{j,-1} = 0,~~v_{j,-1} = 0,
 \]</div>
 where <span class="math">\(\widehat{m}_{j,k}\)</span> and <span class="math">\(\widehat{v}_{j,k}\)</span> are <b>bias-corrected estimates</b> given by
 <div class="math">\[
@@ -515,11 +515,11 @@ The following problem clarifies the role of <span class="math">\(\widehat{m}\)</
 
 Let <span class="math">\(X\)</span> be a random variable with mean <span class="math">\(\mu\)</span> and let <span class="math">\(\{X_1,X_2,\ldots, X_N\}\)</span> be independent and identically distributed samples from <span class="math">\(X\)</span>. Consider the exponential moving average 
 <div class="math">\[
-\mu_0=0,~~\mu_{k} = \beta \mu_{k-1} + (1-\beta) X_{k},~~k=1,2,\ldots, N,
+\mu_0=0,~~\mu_{k} = \beta \mu_{k-1} + (1-\beta) X_{k},~~k=0,1,2,\ldots, N,
 \]</div>
 where <span class="math">\(0< \beta < 1\)</span>.  Also define
 <div class="math">\[
-\widehat{\mu}_k = \frac{\mu_k}{1-\beta^k}.
+\widehat{\mu}_k = \frac{\mu_k}{1-\beta^{k+1}}.
 \]</div>
 <ol class="latex-enumerate"><li>Show that <span class="math">\(\mu_k\)</span> is a biased estimator of <span class="math">\(\mu\)</span>. 
 </li><li>Show that <span class="math">\(\widehat{\mu}_k\)</span> is an unbiased estimator of <span class="math">\(\mu\)</span>.

@@ -526,8 +526,7 @@ where <span class="math">\(0< \beta < 1\)</span>.  Also define
 </li></ol>
 
 </div><h4 id="adamw">5.2.3.4 AdamW</h4>
-A commonly used variant of Adam is <b>AdamW</b>, which incorporates an
-<span class="math">\(L^2\)</span> penalty through a decoupled weight-decay term. Formally, one may
+A commonly used variant of Adam is <b>AdamW</b>, which uses a decoupled weight-decay term. Formally, one may
 consider the regularized cost
 <div class="math">\[
 \mathcal{C}_\lambda(\boldsymbol{\Theta})
@@ -559,7 +558,7 @@ gradient update. In componentwise form, the update is
 \]</div>
 where the bias-corrected estimates are obtained as in Adam, with the gradients computed without the penalty term.
 </p><p>
-AdamW is widely used in the training of Transformer-based models and large language models. In particular, it is the default optimizer in the current (at the time of writing this notes) Hugging Face Transformers training framework.</p>
+AdamW is widely used in the training of Transformer-based models and large language models. In particular, it is the default optimizer in the current (at the time of writing these notes) Hugging Face Transformers training framework.</p>
     </div>
     <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 29-Sep-2026</footer>
     <script>

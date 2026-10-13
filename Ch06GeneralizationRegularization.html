@@ -547,7 +547,7 @@ The test error curve thus has two decreasing parts separated by a peak. This beh
 <ol class="latex-enumerate"><li>Double descent does not contradict the bias-variance decomposition. The decomposition is an identity and holds for every model. What fails beyond the interpolation threshold is the classical assumption that the variance increases with the model complexity.
 </li><li>Double descent is also observed when the model complexity is fixed and the number of training epochs increases. It is also observed when the model is fixed and the number <span class="math">\(N\)</span> of training examples varies. In the latter case, increasing <span class="math">\(N\)</span> moves the interpolation threshold, and, for a model near the threshold, more data can increase the test error.
 </li><li>The peak is more pronounced when the labels are noisy. A suitably tuned explicit regularization, such as the <span class="math">\(\ell^2\)</span>-regularization of <a href="Ch06GeneralizationRegularization.html#parameter.based.regularization.sec" class="internal-link">Subsection 6.2.1</a>, can reduce or remove the peak.
-</li><li>For deep neural networks, a complete mathematical explanation of double descent is not yet available. The linear least-squares example only gives a heuristic picture.
+</li><li>For deep neural networks, a complete mathematical explanation of double descent is not yet available. 
 </li></ol>
 
 </div><h2 id="regularization.techniques.sec">6.2 Regularization Techniques</h2>

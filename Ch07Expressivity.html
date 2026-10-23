@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expressivity of Feedforward Networks</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter "><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multiclass.classification.subs">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch03LogisticRegression.html" class="chapter-link">CH 3: Logistic Regression</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch03LogisticRegression.html#logistic.regression.ch">Logistic Regression</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#model.derivation.sec">3.1 The Logistic Regression Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#bayes.derivation.susb">3.1.1 Derivation using Bayes' Formula</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#logistic.regression.neuron.sec">3.1.2 Single Neuron Interpretation</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#training.a.model.sec">3.2 Training Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#cross-entropy.loss.function.subs">3.2.1 Cross-Entropy Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs">3.2.2 Gradient Descent Algorithm</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#applications.logistic.regression.sec">3.3 Applications of Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#credit.default.subs">3.3.1 Finance: Credit Default Prediction</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch03LogisticRegression.html#model-and-training">3.3.1.1 Model and training.</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch04NetworkGradientEvaluation.html" class="chapter-link">CH 4: Network and Gradient Evaluation</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Network and Gradient Evaluation</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec">4.1 Matrix Formulation and Forward Propagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#layer-function-in-matrix-form">4.1.1 Layer Function in Matrix Form</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.subs">4.1.2 Forward Propagation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-batch-form">4.1.2.1 The Batch Form</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.method.sec">4.2 Backpropagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation">4.2.1 Gradient Computation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation-for-neurons">4.2.1.1 Gradient Computation for Neurons</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#propagation-for-shallow-networks">4.2.1.2 Propagation for Shallow Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.algorithm.subs">4.2.2 The Backpropagation Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.backpropagation.subs">4.2.3 Batch Form, Computational Cost, and Gradient Checking</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-delta-matrices">4.2.3.1 The Delta Matrices</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#backward-recursion-in-matrix-form">4.2.3.2 Backward Recursion in Matrix Form</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch05OptimizationAlgorithms.html" class="chapter-link">CH 5: Optimization Algorithms</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Optimization Algorithms</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#gradient.descent.methods.sec">5.1 Gradient Descent Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#batch-gradient-descent-method">5.1.1 Batch Gradient Descent Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#stochastic-gradient-descent-sgd">5.1.2 Stochastic Gradient Descent (SGD)</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#mini.batch.gd.subs">5.1.3 Mini-batch Gradient Descent</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#momentum.adaptive.GD.sec">5.2 Momentum and Adaptive Gradient Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#momentum-method">5.2.1 Momentum Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#nesterov-accelerated-gd-method">5.2.2 Nesterov Accelerated GD Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-step-size-methods">5.2.3 Adaptive Step Size Methods</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adagrad">5.2.3.1 AdaGrad.</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#root-mean-square-propagation-rmsprop">5.2.3.2 Root Mean Square Propagation (RMSProp)</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-moments-adam">5.2.3.3 Adaptive Moments (Adam).</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adamw">5.2.3.4 AdamW</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch06GeneralizationRegularization.html" class="chapter-link">CH 6: Generalization and Regularization</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch06GeneralizationRegularization.html#generalization.regularization.ch">Generalization and Regularization</a></div>
+<div class="toc-item toc-section"><a href="Ch06GeneralizationRegularization.html#evaluation.model.behaviour.sec">6.1 Evaluation of Model Behaviour</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#underfitting.overfitting.sec">6.1.1 Underfitting and Overfitting</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#generalization.bounds.subs">6.1.2 Generalization Bounds</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#error-decomposition">6.1.2.1 Error Decomposition</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#generalization.bounds.summary.subs">6.1.2.2 Generalization Bounds for a Finite Hypothesis Set</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#extension-to-general-hypothesis-sets">6.1.2.3 Extension to General Hypothesis Sets</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#bias-variance.tradeoff.subs">6.1.3 Bias-Variance Tradeoff</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#double.descent.subs">6.1.4 Overparameterization and Double Descent</a></div>
+<div class="toc-item toc-section"><a href="Ch06GeneralizationRegularization.html#regularization.techniques.sec">6.2 Regularization Techniques</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#parameter.based.regularization.sec">6.2.1 Parameter-based Regularization</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#process.based.regularization.sec">6.2.2 Process-based Regularization</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#early-stopping">6.2.2.1 Early Stopping</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#dropout.subs">6.2.2.2 Dropout</a></div>
+</div></div>
+<div class="toc-chapter current"><a href="Ch07Expressivity.html" class="chapter-link">CH 7: Expressivity of Feedforward Networks</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch07Expressivity.html#expressivity.ch">Expressivity of Feedforward Networks</a></div>
+<div class="toc-item toc-section"><a href="Ch07Expressivity.html#universal.approximation.sec">7.1 Universal Approximation by Shallow Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#function.spaces.subs">7.1.1 Function Spaces and Universal Approximators</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#shallow.relu.1d.subs">7.1.2 Shallow ReLU Networks in One Dimension</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#general.activations.subs">7.1.3 General Activation Functions</a></div>
+<div class="toc-item toc-section"><a href="Ch07Expressivity.html#depth.width.sec">7.2 Role of Depth and Width</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#sawtooth.subs">7.2.1 Depth: The Sawtooth Example</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#bounded.width.subs">7.2.2 Width: Deep Networks of Bounded Width</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="expressivity.ch">Chapter 7: Expressivity of Feedforward Networks</h1>
+Having understood the architecture and the training of feedforward neural networks in the previous chapters, we now ask the question
+</p><p>
+	<i>Why should neural networks work?</i>
+</p><p>
+There is abundant empirical evidence that deep learning models work well in a wide range of domains, such as image recognition and natural language processing. However, empirical evidence does not explain why they work.  A part of the answer comes from mathematical results on the capacity of neural networks to approximate functions. This capacity is referred to as the <b>expressivity</b> of a network.  In this chapter, we review a few of these results.
+</p><p>
+A neural network is used in two major ways.  One is <b>pattern recognition</b>, which corresponds to a <b>classification problem</b>, as illustrated in the previous chapters. The other is <b>function approximation</b>, in particular regression, where the goal is to approximate an underlying functional relationship between inputs and outputs.  In fact, classification can also be viewed as a function approximation, where the function maps input vectors to discrete labels.
+</p><p>
+In recent years, neural networks have also been used to construct approximate solutions of differential equations. The differential equation is incorporated into the cost function through its residual. Such networks are known as <b>physics-informed neural networks</b> (PINNs).   PINNs provide a natural bridge from approximation theory to scientific machine learning.
+</p><p>
+In <a href="Ch07Expressivity.html#universal.approximation.sec" class="internal-link">Section 7.1</a>, we show that a network with a single hidden layer can approximate any continuous function on a compact set to any desired accuracy.  This property is known as the <b>universal approximation property</b>. In <a href="Ch07Expressivity.html#depth.width.sec" class="internal-link">Section 7.2</a>, we discuss the role of depth and width. We show by an example that deep networks can represent certain functions with exponentially fewer neurons than shallow networks.  Finally, in <a href="Ch07Expressivity.html#pinns.sec" class="internal-link">Section &laquo;Click Here&raquo;</a>, we outline the idea of PINNs and apply it to an ordinary differential equation and to simple linear partial differential equations.
+<h2 id="universal.approximation.sec">7.1 Universal Approximation by Shallow Networks</h2>
+Approximating a nonlinear function is challenging because different types of nonlinearities require different function classes for effective approximation.  A basic requirement in approximation theory is to identify a function class within which any given function can be approximated to a desired accuracy.  Such a property is referred to as <b>universal approximation</b>.  In this section, we show that shallow neural networks have this property.
+</p><h3 id="function.spaces.subs">7.1.1 Function Spaces and Universal Approximators</h3>
+Let <span class="math">\(\mathcal{D}_x\)</span> denote the input or feature space and <span class="math">\(\mathcal{D}_y\)</span> the target or label space.  Define a function class
+<div class="math">\[
+\mathbb{F}(\mathcal{D}_x,\mathcal{D}_y):= \big\{ f:\mathcal{D}_x \rightarrow \mathcal{D}_y~\big|~ f ~ \text{possesses certain properties}\big\}.
+\]</div>
+A <b>hypothesis class</b> is a subclass <span class="math">\(\mathcal{H}\subseteq \mathbb{F}\)</span> from which we seek an approximation to a given target function <span class="math">\(f^*\in \mathbb{F}\)</span>.
+</p><p>
+In what follows, we consider the function class <span class="math">\(\mathbb{F}\)</span> as a linear space equipped with a norm.  We call such a normed linear space a <b>function space</b>, especially if it is a Banach space or a Hilbert space.
+<div class="example" id="function.spaces.eg">
+<div class="heading-container"><b class="heading">Example 7.1 (Function Spaces):</b></div><p>
+<b>Continuous Functions:</b>
+<ul><li>
+Let <span class="math">\(\mathcal{D}_x\subset \mathbb{R}^{n_0}\)</span> be compact and <span class="math">\(\mathcal{D}_y\subseteq \mathbb{R}^{n_L}\)</span>. Then,
+<div class="math">\[
+\mathbb{F}(\mathcal{D}_x,\mathcal{D}_y):= \big\{ f:\mathcal{D}_x \rightarrow \mathcal{D}_y~\big|~ f ~ \text{is continuous}\big\}
+\]</div>
+is a function space with the <b>uniform norm</b> (or <b>supremum norm</b>) defined as
+<div class="math">\[
+\|f\|_{\infty,\mathcal{D}_x} := \sup\{\|f(\boldsymbol{x})\|~|~\boldsymbol{x}\in \mathcal{D}_x \},
+\]</div>
+where <span class="math">\(\|\cdot\|\)</span> on the right hand side denotes a vector norm on <span class="math">\(\mathbb{R}^{n_L}\)</span>, which is often taken as the Euclidean norm.
+</p><p>
+We use the notation <span class="math">\(\mathbb{C}(\mathcal{D}_x, \mathcal{D}_y)\)</span> to denote the space of continuous functions. If <span class="math">\(\mathcal{D}_y=\mathbb{R}\)</span>, then we write <span class="math">\(\mathbb{C}(\mathcal{D}_x)\)</span>.
+</p><p>
+Since <span class="math">\(\mathcal{D}_x\)</span> is compact, <span class="math">\((\mathbb{C}(\mathcal{D}_x, \mathcal{D}_y), \|\cdot\|_{\infty,\mathcal{D}_x})\)</span> is a Banach space.
+</li></ul>
+<b>Continuously Differentiable Functions:</b>
+<ul><li>
+Let <span class="math">\(\mathcal{D}_x\subset \mathbb{R}^{n_0}\)</span> be compact, <span class="math">\(\mathcal{D}_y\subseteq \mathbb{R}^{n_L}\)</span>, and let <span class="math">\(k\in \mathbb{N}\)</span>. Then,
+<div class="math">\[
+\mathbb{F}(\mathcal{D}_x,\mathcal{D}_y):= \big\{ f:\mathcal{D}_x \rightarrow \mathcal{D}_y~\big|~ f ~ \text{is } k\text{-times continuously differentiable}\big\}
+\]</div>
+is a function space with the norm defined as
+<div class="math">\[
+\|f\|_{\infty,k,\mathcal{D}_x} := \max_{|\boldsymbol{\alpha}|\le k}~\sup\{\|\partial^{\boldsymbol{\alpha}} f(\boldsymbol{x})\|~|~\boldsymbol{x}\in \mathcal{D}_x\},
+\]</div>
+where <span class="math">\(\boldsymbol{\alpha}=(\alpha_1,\ldots,\alpha_{n_0})\in \mathbb{N}_0^{n_0}\)</span> is a multi-index, <span class="math">\(|\boldsymbol{\alpha}|=\alpha_1+\ldots+\alpha_{n_0},\)</span> and <span class="math">\(\mathbb{N}_0^{n_0} = (\mathbb{N}\cup \{0\})^{n_0}\)</span>.
+</p><p>
+We use the notation <span class="math">\(\mathbb{C}^k(\mathcal{D}_x, \mathcal{D}_y)\)</span> to denote the space of <span class="math">\(k\)</span>-times continuously differentiable functions. It is a Banach space since <span class="math">\(\mathcal{D}_x\)</span> is compact. If <span class="math">\(\mathcal{D}_y=\mathbb{R}\)</span>, then we write <span class="math">\(\mathbb{C}^k(\mathcal{D}_x)\)</span>.
+</li></ul>
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The space <span class="math">\(\mathbb{C}^k(\mathcal{D}_x)\)</span> is needed in <a href="Ch07Expressivity.html#pinns.sec" class="internal-link">Section &laquo;Click Here&raquo;</a>, where derivatives of a network appear in the cost function.
+
+</div><p>
+Solutions of mathematical problems are often functions, and we look for a solution in an appropriate function space. For many problems, a solution is known to exist, but its explicit form is either unknown or too complicated to obtain.  In such situations, we look for an approximation to the solution in a hypothesis set. This hypothesis class can approximate every element to any desired accuracy only if it is <b>dense</b> in the function space.
+<div class="definition" id="dense.subset.def">
+<div class="heading-container"><b class="heading">Definition 7.1 (Dense Subset):</b></div><p>
+A subset <span class="math">\(\mathcal{H}\)</span> of a normed linear space <span class="math">\(\mathbb{F}\)</span> is said to be <b>dense</b> in <span class="math">\(\mathbb{F}\)</span> if for every <span class="math">\(f\in \mathbb{F}\)</span>, and every <span class="math">\(\varepsilon>0\)</span>, there exists <span class="math">\(h\in \mathcal{H}\)</span> such that
+<div class="math">\[
+\|f - h\| < \varepsilon.
+\]</div>
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 7.1:</b></div>
+
+Let <span class="math">\(\mathcal{H}\)</span> be a dense subset of the normed linear space <span class="math">\(\mathbb{F}\)</span>.  Show that for every <span class="math">\(f\in \mathbb{F}\)</span>, there exists a sequence <span class="math">\(\{h_n\}\)</span> in <span class="math">\(\mathcal{H}\)</span> such that <span class="math">\(h_n\rightarrow f\)</span> as <span class="math">\(n\rightarrow \infty\)</span>.
+
+</div><p>
+We now introduce a notation for families of neural networks.
+<div class="remark" id="family.ffnn.rem">
+<div class="heading-container"><b class="heading">Remark 7.1 (Family of Feedforward Neural Networks):</b></div><p>
+Given <span class="math">\(L, \hat{n}, n_0, n_L\in \mathbb{N}\)</span>, and an activation function <span class="math">\(\mathscr{A}:\mathbb{R}\rightarrow \mathbb{R}\)</span>, the set of all multilayer perceptrons of depth <span class="math">\(L\)</span> and width <span class="math">\(\hat{n}\)</span>, with activation <span class="math">\(\mathscr{A}\)</span> in all hidden layers and the identity activation in the output layer, is denoted by
+<div class="math">\[
+\mathscr{N}_{L,\hat{n}}(\mathscr{A}; n_0, n_L) = \Big\{
+						{\mathscr{F}_{L,\hat{n}}}: \mathbb{R}^{n_0} \rightarrow \mathbb{R}^{n_L}~\Big|~  \mathscr{A}^{(l)} = \mathscr{A},~  l=1,2,\ldots, L-1,~ \mathscr{A}^{(L)}(x) = x
+						\Big\}.
+\]</div>
+Further, we use the notation
+<div class="math">\[
+\mathscr{N}_{L}(\mathscr{A}; n_0, n_L) = \displaystyle{\bigcup_{\hat{n}\in \mathbb{N}}} \mathscr{N}_{L,\hat{n}}(\mathscr{A}; n_0, n_L)
+\]</div>
+to denote the set of all multilayer perceptrons of depth <span class="math">\(L\)</span> and arbitrary but finite width.
+
+</div>
+In particular, every <span class="math">\({\mathscr{F}_{2,\hat{n}}}\in \mathscr{N}_{2,\hat{n}}(\mathscr{A}; 1, 1)\)</span> is a shallow network with one input, one output and <span class="math">\(\hat{n}=n_1\)</span> hidden neurons. With the notations of <a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Chapter 1</a>, it takes the form
+</p><div class="math numbered-math" id="shallow.network.1d.eq">\begin{eqnarray}
+{\mathscr{F}_{2,\hat{n}}}(x) =  \sum_{j=1}^{\hat{n}}w^{(2)}_{1j}\, \mathscr{A}\big(w^{(1)}_{j1} x + b^{(1)}_j\big) + b^{(2)}_1,~~ x\in \mathbb{R},
+\end{eqnarray}<span class="eq-number">(7.1)</span></div><p>
+for some <span class="math">\(w^{(1)}_{j1}, b^{(1)}_{j}, w^{(2)}_{1j}, b^{(2)}_{1} \in \mathbb{R}\)</span>, <span class="math">\(j=1,2,\ldots, \hat{n}\)</span>.
+</p><p>
+We now define the notion of a universal approximator.
+<div class="definition" id="universal.approximator.def">
+<div class="heading-container"><b class="heading">Definition 7.2 (Universal Approximator):</b></div><p>
+A set <span class="math">\(\mathcal{H}\)</span> of functions defined on <span class="math">\(\mathbb{R}^n\)</span> is called a <b>universal approximator</b> of <span class="math">\(\mathbb{C}(\mathbb{R}^n)\)</span> if, for every compact set <span class="math">\(\mathcal{D}_x \subset \mathbb{R}^n\)</span>, the set of restrictions
+<span class="math">\(\mathcal{H}|_{\mathcal{D}_x} = \{h|_{\mathcal{D}_x} : h \in \mathcal{H}\}\)</span>
+is dense in <span class="math">\(\mathbb{C}(\mathcal{D}_x)\)</span> with respect to the uniform norm.
+In other words, for every compact set <span class="math">\(\mathcal{D}_x \subset \mathbb{R}^n\)</span>, every <span class="math">\(f \in \mathbb{C}(\mathcal{D}_x)\)</span> and every <span class="math">\(\varepsilon > 0\)</span>,
+there exists <span class="math">\(h \in \mathcal{H}\)</span> such that
+<div class="math">\[
+\sup_{\boldsymbol{x} \in \mathcal{D}_x} |f(\boldsymbol{x}) - h(\boldsymbol{x})| < \varepsilon.
+\]</div>
+
+</div><p>
+The following is a classical example of a universal approximator.
+<div class="example" id="polynomial.universal.eg">
+<div class="heading-container"><b class="heading">Example 7.2 (Multivariate Polynomial Functions):</b></div><p>
+Recall that a <b>polynomial function</b> <span class="math">\(p : \mathbb{R}^n \to \mathbb{R}\)</span> is of the form
+<div class="math">\[
+p(\boldsymbol{x}) = \sum_{\boldsymbol{\alpha} \in \mathbb{N}_0^n} c_{\boldsymbol{\alpha}}\, \boldsymbol{x}^{\boldsymbol{\alpha}},~\boldsymbol{x}=(x_1, x_2, \ldots, x_n)\in \mathbb{R}^n,
+\]</div>
+where only finitely many coefficients <span class="math">\( c_{\boldsymbol{\alpha}} \in \mathbb{R} \)</span> are nonzero. For each multi-index <span class="math">\(\boldsymbol{\alpha}=(\alpha_1, \alpha_2,\ldots, \alpha_n)\in \mathbb{N}_0^n\)</span>, the monomial is defined as
+<div class="math">\[
+ \boldsymbol{x}^{\boldsymbol{\alpha}} = \prod_{k=1}^n x_k^{\alpha_k},
+ \]</div>
+and its degree is <span class="math">\( |\boldsymbol{\alpha}| = \alpha_1 + \alpha_2 + \cdots + \alpha_n.\)</span> The <b>degree</b> of the polynomial <span class="math">\( p \)</span> is the largest <span class="math">\( |\boldsymbol{\alpha}| \)</span> such that <span class="math">\( c_{\boldsymbol{\alpha}} \neq 0 \)</span>.
+</p><p>
+By the Stone--Weierstrass theorem, the set of all polynomials is dense in <span class="math">\(\mathbb{C}(\mathcal{D}_x)\)</span> for every compact set <span class="math">\(\mathcal{D}_x\subset \mathbb{R}^n\)</span>. Hence,
+the set of all polynomials on <span class="math">\(\mathbb{R}^n\)</span> is a universal approximator of <span class="math">\(\mathbb{C}(\mathbb{R}^n)\)</span>.
+
+</div>
+<h3 id="shallow.relu.1d.subs">7.1.2 Shallow ReLU Networks in One Dimension</h3>
+In this subsection, we prove that shallow <span class="math">\(\texttt{ReLU}\)</span> networks are universal approximators of <span class="math">\(\mathbb{C}(\mathbb{R})\)</span>.  The proof has two steps. First, we show that continuous piecewise affine functions are dense in <span class="math">\(\mathbb{C}([a,b])\)</span>. Second, we show that every continuous piecewise affine function on <span class="math">\([a,b]\)</span> is a shallow <span class="math">\(\texttt{ReLU}\)</span> network.
+</p><p>
+Recall, a function <span class="math">\(\varphi:[a,b]\rightarrow \mathbb{R}\)</span> is called a <b>continuous piecewise affine function</b> with respect to a partition 
+<span class="math">\(
+a = x_0 < x_1 < \cdots < x_N = b
+\)</span>
+if <span class="math">\(\varphi\)</span> is continuous on <span class="math">\([a,b]\)</span> and affine on each subinterval <span class="math">\([x_k, x_{k+1}]\)</span>, <span class="math">\(k=0,1,\ldots, N-1\)</span>.
+<div class="lemma" id="denseness.continuous.piecewise.affine.functions.lemm">
+<div class="heading-container"><b class="heading">Lemma 7.1 (Denseness of Continuous Piecewise Affine Functions):</b></div>
+
+
+For every <span class="math">\(f \in \mathbb{C}([a,b])\)</span> and every <span class="math">\(\varepsilon > 0\)</span>, there exists a continuous piecewise affine function <span class="math">\(\varphi_\varepsilon: [a,b]\rightarrow \mathbb{R}\)</span> such that
+<div class="math">\[
+\|f - \varphi_\varepsilon\|_{\infty,[a,b]} < \varepsilon.
+\]</div>
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+Let <span class="math">\(f \in \mathbb{C}([a,b])\)</span> and <span class="math">\(\varepsilon>0\)</span> be given.
+</p><p>
+Since <span class="math">\(f\)</span> is continuous on the compact interval <span class="math">\([a,b]\)</span>, it is uniformly continuous. Hence, there exists <span class="math">\(\delta=\delta(\varepsilon)>0\)</span> such that <span class="math">\(|f(x)-f(y)|<\varepsilon\)</span> whenever <span class="math">\(x,y\in[a,b]\)</span> and <span class="math">\(|x-y|<\delta\)</span>.  Choose <span class="math">\(N\in \mathbb{N}\)</span> sufficiently large so that <span class="math">\((b-a)/N<\delta\)</span>. Then, on the uniform partition
+<div class="math">\[
+a = x_0 < x_1 < \dots < x_N = b,~~x_k = a + k\frac{b-a}{N},
+\]</div>
+we have
+<div class="math">\[
+|f(x) - f(y)| < \varepsilon, \quad \text{for all } x,y \in [x_k, x_{k+1}],~k=0,\dots,N-1.
+\]</div>
+Define the piecewise affine function
+<div class="math">\[
+\varphi_\varepsilon(x) = f(x_k) + t\big(f(x_{k+1}) - f(x_{k})\big),~ \text{for}~ x=x_k+t (x_{k+1}-x_k),~\text{with}~t\in [0,1],
+\]</div>
+for <span class="math">\(k=0,1,\ldots, N-1\)</span>. The function <span class="math">\(\varphi_\varepsilon\)</span> is continuous on <span class="math">\([a,b]\)</span> and interpolates <span class="math">\(f\)</span> at the nodes <span class="math">\(x_k\)</span>.
+</p><p>
+Let <span class="math">\(x\in [a,b]\)</span> be arbitrary. Choose <span class="math">\(k\in \{0,1,\ldots, N-1\}\)</span> such that <span class="math">\(x\in [x_k, x_{k+1}]\)</span>. The value <span class="math">\(\varphi_\varepsilon(x)\)</span> lies between <span class="math">\(f(x_k)\)</span> and <span class="math">\(f(x_{k+1})\)</span>. Since <span class="math">\(f\)</span> is continuous, by the intermediate value theorem, there exists <span class="math">\(\xi\in [x_k, x_{k+1}]\)</span> such that
+<div class="math">\[
+\varphi_\varepsilon(x) = f(\xi).
+\]</div>
+Since <span class="math">\(x,\xi\in [x_k, x_{k+1}]\)</span>, by the choice of the partition, we have
+<div class="math">\[
+|f(x) - \varphi_\varepsilon(x)|= |f(x) - f(\xi)| < \varepsilon.
+\]</div>
+Since this estimate holds for every <span class="math">\(x\in [a,b]\)</span>, and the supremum of the continuous function <span class="math">\(|f-\varphi_\varepsilon|\)</span> over the compact set <span class="math">\([a,b]\)</span> is attained, we have
+<div class="math">\[
+\|f-\varphi_\varepsilon\|_{\infty, [a,b]} = \max_{x\in [a,b]} |f(x) - \varphi_\varepsilon(x)| < \varepsilon.
+\]</div>
+
+</div><div class="remark" id="lipschitz.neurons.rem">
+<div class="heading-container"><b class="heading">Remark 7.2 (Number of Neurons for Lipschitz Functions):</b></div>
+
+The above proof does not give a bound on <span class="math">\(N\)</span> for a general continuous function.  However, suppose that <span class="math">\(f\)</span> is Lipschitz continuous on <span class="math">\([a,b]\)</span> with Lipschitz constant <span class="math">\(\Lambda>0\)</span>. Then
+<div class="math">\[
+|f(x) - \varphi_\varepsilon(x)| = |f(x) - f(\xi)| \le \Lambda\,|x-\xi| \le \Lambda\,\frac{b-a}{N}.
+\]</div>
+Hence, the choice
+<div class="math">\[
+N > \frac{\Lambda (b-a)}{\varepsilon}
+\]</div>
+is sufficient.  We will see in <a href="Ch07Expressivity.html#cpa.as.shallow.relu.lemm">Lemma 7.2</a> that <span class="math">\(N\)</span> is the number of hidden neurons of the corresponding shallow <span class="math">\(\texttt{ReLU}\)</span> network.
+
+</div>
+We now show that every continuous piecewise affine function on <span class="math">\([a,b]\)</span> is exactly a shallow <span class="math">\(\texttt{ReLU}\)</span> network.
+<div class="lemma" id="cpa.as.shallow.relu.lemm">
+<div class="heading-container"><b class="heading">Lemma 7.2 (Continuous Piecewise Affine Functions as Shallow ReLU Networks):</b></div>
+
+
+Let <span class="math">\(\varphi:[a,b]\rightarrow \mathbb{R}\)</span> be a continuous piecewise affine function with respect to the partition <span class="math">\(a = x_0 < x_1 < \cdots < x_N = b\)</span>. Then, there exists <span class="math">\({\mathscr{F}_{2,N}}\in \mathscr{N}_{2,N}(\mathscr{R}_0; 1, 1)\)</span> such that
+<div class="math">\[
+{\mathscr{F}_{2,N}}(x) = \varphi(x),~~\text{for all}~x\in [a,b],
+\]</div>
+where <span class="math">\(\mathscr{R}_0\)</span> is the <span class="math">\(\texttt{ReLU}\)</span> function defined in <a href="Ch01FeedForwardArchitecture.html#ReLUFunction.eq">(1.6)</a>.
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+Choose <span class="math">\(w^{(1)}_{j1} = 1,\)</span> <span class="math">\(b^{(1)}_j = -x_{j-1},\)</span> for <span class="math">\(j=1,2,\ldots, N,\)</span> <span class="math">\(\hat{n} = N\)</span>, and <span class="math">\(\mathscr{A} = \mathscr{R}_0\)</span>. From <a href="#shallow.network.1d.eq">(7.1)</a>, we get
+<div class="math">\[
+{\mathscr{F}_{2,N}}(x) =  \sum_{j=1}^{N}w^{(2)}_{1j}\, \mathscr{R}_0\big(x - x_{j-1}\big) + b^{(2)}_1,~~ x\in [a,b].
+\]</div>
+Imposing the condition <span class="math">\({\mathscr{F}_{2,N}}(x_0) = \varphi(x_0)\)</span>, we get
+<div class="math">\[b^{(2)}_1 = \varphi(x_0).\]</div>
+Let
+<div class="math">\[
+m_k = \frac{\varphi(x_{k+1}) - \varphi(x_k)}{x_{k+1}-x_k},~~k=0,1,\ldots, N-1,
+\]</div>
+denote the slope of <span class="math">\(\varphi\)</span> on <span class="math">\([x_k, x_{k+1}]\)</span>. 
+</p><p>
+For <span class="math">\(x\in [x_0, x_1]\)</span>, the condition <span class="math">\({\mathscr{F}_{2,N}}(x) = \varphi(x)\)</span> reads
+<div class="math">\[
+{\mathscr{F}_{2,N}}(x) = \varphi(x_0) + m_0 (x-x_0).
+\]</div>
+Comparing with the general expression of <span class="math">\({\mathscr{F}_{2,N}}(x)\)</span>, we get <span class="math">\(w^{(2)}_{11} = m_0\)</span>.
+</p><p>
+For any <span class="math">\(k=1,2,\ldots, N-1\)</span>, let <span class="math">\(x\in [x_k, x_{k+1}]\)</span>. Then we have
+</p><div class="math numbered-math">\begin{eqnarray}
+{\mathscr{F}_{2,N}}(x) 
+&=& \sum_{j=1}^{k+1}w^{(2)}_{1j}\, \mathscr{R}_0\big(x - x_{j-1}\big) + b^{(2)}_1\\
+&=& \sum_{j=1}^{k+1}w^{(2)}_{1j}\, \big(x - x_{j-1}\big) + \varphi(x_0) .
+\end{eqnarray}<span class="eq-number">(7.2)</span></div><p>
+Thus, <span class="math">\({\mathscr{F}_{2,N}}\)</span> is affine on <span class="math">\([x_k, x_{k+1}]\)</span>. Let us take
+</p><div class="math numbered-math">\begin{eqnarray}
+w^{(2)}_{1j} = m_{j-1} - m_{j-2},~~j=2,3,\ldots, N.
+\end{eqnarray}<span class="eq-number">(7.3)</span></div><p>
+Then, its slope on the interval <span class="math">\([x_k, x_{k+1}]\)</span> is
+<div class="math">\[
+\sum_{j=1}^{k+1}w^{(2)}_{1j} = m_0 + \sum_{j=2}^{k+1}\big(m_{j-1} - m_{j-2}\big) = m_k.
+\]</div>
+Hence, on each subinterval <span class="math">\([x_k,x_{k+1}]\)</span>, the functions <span class="math">\({\mathscr{F}_{2,N}}\)</span> and <span class="math">\(\varphi\)</span> are affine with the same slope <span class="math">\(m_k\)</span>.
+</p><p>
+It remains to show that <span class="math">\({\mathscr{F}_{2,N}}(x_k) = \varphi(x_k),~~ k=0,1,2,\ldots, N\)</span>. We prove this by induction on <span class="math">\(k\)</span>. 
+</p><p>
+For <span class="math">\(k=0\)</span>, we have <span class="math">\({\mathscr{F}_{2,N}}(x_0) = \varphi(x_0)\)</span>. Assume that <span class="math">\({\mathscr{F}_{2,N}}(x_k) = \varphi(x_k)\)</span>. Since  <span class="math">\({\mathscr{F}_{2,N}}\)</span> and <span class="math">\(\varphi\)</span> are affine with the same slope in <span class="math">\([x_k, x_{k+1}]\)</span>, we have <span class="math">\({\mathscr{F}_{2,N}}(x_{k+1}) = \varphi(x_{k+1})\)</span>.
+</p><p>
+Two affine functions that takes the same value at <span class="math">\(x_k\)</span> and <span class="math">\(x_{k+1}\)</span> coincide on <span class="math">\([x_k,x_{k+1}]\)</span>. Hence, <span class="math">\({\mathscr{F}_{2,N}}(x) = \varphi(x)\)</span> for all <span class="math">\(x\in [a,b]\)</span>.
+
+</div><p>
+We now state and prove the main result of this subsection.
+<div class="theorem" id="universal.approximation.shallow.relu.thm">
+<div class="heading-container"><b class="heading">Theorem 7.1 (Universal Approximation by Shallow ReLU Networks):</b></div>
+
+The class <span class="math">\(\mathscr{N}_{2}(\mathscr{R}_0; 1, 1)\)</span> is a universal approximator of <span class="math">\(\mathbb{C}(\mathbb{R})\)</span>.
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+Let <span class="math">\(\mathcal{D}_x\subset\mathbb{R}\)</span> be compact, and let <span class="math">\(f\in\mathbb{C}(\mathcal{D}_x)\)</span> and
+<span class="math">\(\varepsilon>0\)</span> be given.
+We have to show that there exists
+<span class="math">\({\mathscr{F}_{2,\hat{n}_\varepsilon}}\in\mathscr{N}_{2}(\mathscr{R}_0;1,1)\)</span> such that
+<div class="math">\[
+   \|f-{\mathscr{F}_{2,\hat{n}_\varepsilon}}\|_{\infty,\mathcal{D}_x}<\varepsilon.
+\]</div>
+Since <span class="math">\(\mathcal{D}_x\)</span> is compact, it is closed and bounded in <span class="math">\(\mathbb{R}\)</span>. Hence, there is a closed and bounded interval <span class="math">\([a,b]\)</span> with <span class="math">\(\mathcal{D}_x\subset[a,b]\)</span>. By the Tietze extension theorem, there exists a continuous function
+<span class="math">\(\widetilde f\)</span> on <span class="math">\([a,b]\)</span> such that <span class="math">\(\widetilde f|_{\mathcal{D}_x} = f\)</span>.
+</p><p>
+By <a href="Ch07Expressivity.html#denseness.continuous.piecewise.affine.functions.lemm">Lemma 7.1</a>, there exists a continuous piecewise affine function <span class="math">\(\varphi_\varepsilon\)</span> on a partition of <span class="math">\([a,b]\)</span> with <span class="math">\(\hat{n}_\varepsilon\)</span> subintervals such that
+<div class="math">\[
+   \|\widetilde{f}-\varphi_\varepsilon\|_{\infty,[a,b]}<\varepsilon.
+\]</div>
+By <a href="Ch07Expressivity.html#cpa.as.shallow.relu.lemm">Lemma 7.2</a>, there exists <span class="math">\({\mathscr{F}_{2,\hat{n}_\varepsilon}}\in\mathscr{N}_{2}(\mathscr{R}_0;1,1)\)</span> such that <span class="math">\({\mathscr{F}_{2,\hat{n}_\varepsilon}}(x) = \varphi_\varepsilon(x)\)</span> for all <span class="math">\(x\in[a,b]\)</span>.
+Restricting to <span class="math">\(\mathcal{D}_x\subset[a,b]\)</span> yields
+</p><div class="math numbered-math">\begin{eqnarray}
+\|f-{\mathscr{F}_{2,\hat{n}_\varepsilon}}\|_{\infty,\mathcal{D}_x}
+&=& \sup_{x\in\mathcal{D}_x} |\widetilde f(x)-\varphi_\varepsilon(x)|\\
+&\le& \sup_{x\in[a,b]} |\widetilde f(x)-\varphi_\varepsilon(x)| \\
+&=&   \|\widetilde{f}-\varphi_\varepsilon\|_{\infty,[a,b]}< \varepsilon.
+\end{eqnarray}<span class="eq-number">(7.4)</span></div><p>
+Since <span class="math">\(\mathcal{D}_x\)</span> and <span class="math">\(f\)</span> were arbitrary, <span class="math">\(\mathscr{N}_2(\mathscr{R}_0;1,1)\)</span> is a universal approximator of <span class="math">\(\mathbb{C}(\mathbb{R})\)</span>.
+
+</div><p>
+The following problem shows that shallow networks with the Heaviside activation also approximate continuous functions uniformly on an interval, although the network functions themselves are discontinuous.
+<div class="problem" id="shallow.heaviside.prob">
+<div class="heading-container"><b class="heading">Problem 7.2 (Shallow Heaviside Networks):</b></div>
+
+Let <span class="math">\(f \in \mathbb{C}([a,b])\)</span> and <span class="math">\(\varepsilon > 0\)</span>.
+<ol class="latex-enumerate"><li>Show that there exists a step function <span class="math">\(s_\varepsilon:[a,b]\rightarrow \mathbb{R}\)</span>, constant on each <span class="math">\([x_k,x_{k+1})\)</span> of a uniform partition, such that <span class="math">\(\|f - s_\varepsilon\|_{\infty,[a,b]} < \varepsilon\)</span>.
+</li><li>Show that there exists <span class="math">\({\mathscr{F}_{2,\hat{n}_\varepsilon}} \in \mathscr{N}_{2}(\mathscr{H}; 1, 1)\)</span>, for some <span class="math">\(\hat{n}_\varepsilon\in \mathbb{N}\)</span>, such that <span class="math">\(\|f - {\mathscr{F}_{2,\hat{n}_\varepsilon}}\|_{\infty,[a,b]} < \varepsilon\)</span>.
+</li></ol>
+
+</div><h3 id="general.activations.subs">7.1.3 General Activation Functions</h3>
+The universal approximation property is not restricted to the <span class="math">\(\texttt{ReLU}\)</span> activation or to one dimension. In this subsection, we state two classical results without proof. The first result is for sigmoidal activation functions.
+<div class="definition" id="sigmoidal.function.def">
+<div class="heading-container"><b class="heading">Definition 7.3 (Sigmoidal Function):</b></div>
+
+A function <span class="math">\(\varphi:\mathbb{R}\to\mathbb{R}\)</span> is said to be <b>sigmoidal</b> if
+<div class="math">\[
+\lim_{t\to -\infty}\varphi(t) = 0,
+\qquad
+\lim_{t\to +\infty}\varphi(t) = 1.
+\]</div>
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The logistic functions <span class="math">\(\mathscr{S}_k\)</span>, <span class="math">\(k>0\)</span>, defined in <a href="Ch01FeedForwardArchitecture.html#sigmoid.function.activation.eq">(1.5)</a> are sigmoidal functions. A sigmoidal function in the above sense need not be monotone or differentiable.
+
+</div>
+<div class="theorem" id="cybenko.thm">
+<div class="heading-container"><b class="heading">Theorem 7.2 (Cybenko Theorem):</b></div><p>
+Let <span class="math">\(\mathscr{S}:\mathbb{R}\rightarrow \mathbb{R}\)</span> be a continuous sigmoidal function
+and let <span class="math">\(I_{n_0}=[0,1]^{n_0}\)</span>.
+Then, the restrictions of the networks in <span class="math">\(\mathscr{N}_{2}(\mathscr{S}; n_0, 1)\)</span> to <span class="math">\(I_{n_0}\)</span> form a dense subset of <span class="math">\(\mathbb{C}(I_{n_0})\)</span>.
+
+</div>
+The proof uses the Hahn--Banach theorem and the Riesz representation theorem. We omit it in this course.
+</p><p>
+The next theorem characterizes the continuous activation functions for which shallow networks are universal approximators.
+<div class="theorem" id="leshno.thm">
+<div class="heading-container"><b class="heading">Theorem 7.3 (Leshno--Lin--Pinkus--Schocken Theorem):</b></div>
+
+Let <span class="math">\(\mathscr{A}:\mathbb{R}\rightarrow \mathbb{R}\)</span> be continuous.
+Then, the class of shallow networks <span class="math">\(\mathscr{N}_{2}(\mathscr{A}; n_0, 1)\)</span> is a universal approximator of <span class="math">\(\mathbb{C}(\mathbb{R}^{n_0})\)</span> if and only if <span class="math">\(\mathscr{A}\)</span> is not a polynomial.
+
+</div>
+The proof of the above theorem is omitted for this course.
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The activation functions <span class="math">\(\mathscr{S}_k\)</span>, <span class="math">\(\tanh\)</span>, <span class="math">\(\mathscr{R}_\alpha\)</span> (<span class="math">\(0\le \alpha<1\)</span>), <span class="math">\(\texttt{SLU}_k\)</span> and the softplus function are continuous and are not polynomials. Hence, shallow networks with any of these activations are universal approximators. On the other hand, if <span class="math">\(\mathscr{A}\)</span> is the identity function, then every network in <span class="math">\(\mathscr{N}_{2}(\mathscr{A}; n_0, 1)\)</span> is an affine function. The class of affine functions is not dense in <span class="math">\(\mathbb{C}(\mathcal{D}_x)\)</span>.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 7.3 (Universality is an Existence Result):</b></div>
+
+The universal approximation theorems guarantee that an approximating network exists. They do not give a bound on the number of neurons for a general continuous function. <a href="Ch07Expressivity.html#lipschitz.neurons.rem">Remark 7.2</a> gives such a bound in one dimension for Lipschitz functions. The theorems also say nothing about whether a training algorithm finds the approximating network.
+
+</div>
+<h2 id="depth.width.sec">7.2 Role of Depth and Width</h2>
+The results of the previous section show that depth is not necessary for universal approximation. A single hidden layer is sufficient if the width is allowed to be arbitrarily large.  Nevertheless, deep networks are preferred in practice. In this section, we show by an example that depth can reduce the number of neurons needed to represent a function. We also state a result showing that depth can compensate for a bounded width.
+<h3 id="sawtooth.subs">7.2.1 Depth: The Sawtooth Example</h3>
+Consider the <b>hat function</b> <span class="math">\(g:[0,1]\rightarrow [0,1]\)</span> defined by
+</p><div class="math numbered-math" id="hat.function.eq">\begin{eqnarray}
+g(x) = \left\{\begin{array}{ll}
+2x, & \text{if}~0\le x\le \tfrac{1}{2},\\
+2-2x, & \text{if}~\tfrac{1}{2}< x\le 1.
+\end{array}\right.
+\end{eqnarray}<span class="eq-number">(7.5)</span></div><p>
+Since <span class="math">\(g\)</span> maps <span class="math">\([0,1]\)</span> into <span class="math">\([0,1]\)</span>, we can define <span class="math">\(g_k:[0,1]\rightarrow[0,1]\)</span>, for <span class="math">\(k\in \mathbb{N}\)</span>, recursively by
+<div class="math">\[
+g_1 = g, \qquad g_{k+1} = g\circ g_k,~~k\in\mathbb{N}.
+\]</div>
+Thus, <span class="math">\(g_k\)</span> is the <span class="math">\(k\)</span>-fold composition of <span class="math">\(g\)</span> with itself.
+<div class="problem" id="hat.relu.prob">
+<div class="heading-container"><b class="heading">Problem 7.3:</b></div>
+
+Show that
+<div class="math">\[
+g(x) = 2\,\mathscr{R}_0(x) - 4\,\mathscr{R}_0\big(x-\tfrac{1}{2}\big),~~\text{for all}~x\in [0,1].
+\]</div><p>
+From the above representation of <span class="math">\(g\)</span>, can you observe that <span class="math">\(g\)</span> can be written as a neural network on the interval <span class="math">\([0,1]\)</span>? If so, what are the width and depth of this network? Provide the activation function of each layer and give the number of weights and biases.
+</p><p>
+
+</div><p>
+The graph of <span class="math">\(g_{k}\)</span> is a sawtooth. The next proposition counts its linear pieces.
+<div class="lemma" id="sawtooth.pieces.prop">
+<div class="heading-container"><b class="heading">Lemma 7.3 (Pieces of the Sawtooth Function):</b></div>
+
+For every <span class="math">\(k\in\mathbb{N}\)</span>, the function <span class="math">\(g_{k}\)</span> is continuous piecewise affine on <span class="math">\([0,1]\)</span> with respect to the uniform partition
+<div class="math">\[
+x_{j,k} = \frac{j}{2^k},~~j=0,1,\ldots, 2^k.
+\]</div>
+The function <span class="math">\(g_{k}\)</span> is an affine bijection from <span class="math">\(I_{j,k}=[x_{j,k}, x_{j+1,k}]\)</span> onto <span class="math">\([0,1]\)</span>, with slope <span class="math">\((-1)^j 2^k\)</span> on <span class="math">\((x_{j,k}, x_{j+1,k})\)</span>.   
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+We use induction on <span class="math">\(k\)</span>. For <span class="math">\(k=1\)</span>, the statement follows from <a href="#hat.function.eq">(7.5)</a>. The pieces are <span class="math">\(I_{0,1}=[0,\tfrac{1}{2}]\)</span> and <span class="math">\(I_{1,1}=[\tfrac{1}{2},1]\)</span>, with slopes <span class="math">\(2\)</span> and <span class="math">\(-2\)</span>.
+</p><p>
+Assume that the statement holds for some <span class="math">\(k\in \mathbb{N}\)</span>, and write <span class="math">\(g_{k+1} = g\circ g_{k}\)</span>. Fix <span class="math">\(j\in\{0,1,\ldots,2^k-1\}\)</span>. The two halves of <span class="math">\(I_{j,k}\)</span> are
+<div class="math">\[
+I_{2j,k+1}=[x_{2j,k+1},x_{2j+1,k+1}] \quad\text{and}\quad I_{2j+1,k+1}=[x_{2j+1,k+1},x_{2j+2,k+1}],
+\]</div>
+and their common endpoint <span class="math">\(x_{2j+1,k+1}\)</span> is the midpoint of <span class="math">\(I_{j,k}\)</span>.
+</p><p>
+By the induction hypothesis, <span class="math">\(g_{k}\)</span> is an affine bijection from <span class="math">\(I_{j,k}\)</span> onto <span class="math">\([0,1]\)</span> with slope <span class="math">\((-1)^j 2^k\)</span>. Hence, it maps the midpoint of <span class="math">\(I_{j,k}\)</span> to <span class="math">\(\tfrac{1}{2}\)</span>, and it maps each half of <span class="math">\(I_{j,k}\)</span> bijectively onto one of the intervals <span class="math">\([0,\tfrac{1}{2}]\)</span> and <span class="math">\([\tfrac{1}{2},1]\)</span>.
+</p><p>
+<b>Case 1: <span class="math">\(j\)</span> even.</b> Then <span class="math">\(g_{k}\)</span> is increasing on <span class="math">\(I_{j,k}\)</span>. It maps <span class="math">\(I_{2j,k+1}\)</span> onto <span class="math">\([0,\tfrac{1}{2}]\)</span>, where <span class="math">\(g\)</span> has slope <span class="math">\(2\)</span>, and it maps <span class="math">\(I_{2j+1,k+1}\)</span> onto <span class="math">\([\tfrac{1}{2},1]\)</span>, where <span class="math">\(g\)</span> has slope <span class="math">\(-2\)</span>.
+</p><p>
+<b>Case 2: <span class="math">\(j\)</span> odd.</b> Then <span class="math">\(g_{k}\)</span> is decreasing on <span class="math">\(I_{j,k}\)</span>. It maps <span class="math">\(I_{2j,k+1}\)</span> onto <span class="math">\([\tfrac{1}{2},1]\)</span>, where <span class="math">\(g\)</span> has slope <span class="math">\(-2\)</span>, and it maps <span class="math">\(I_{2j+1,k+1}\)</span> onto <span class="math">\([0,\tfrac{1}{2}]\)</span>, where <span class="math">\(g\)</span> has slope <span class="math">\(2\)</span>.
+</p><p>
+In both cases, <span class="math">\(g_{k+1}\)</span> is a composition of two affine bijections on each half of <span class="math">\(I_{j,k}\)</span>. Hence, it is an affine bijection from each half onto <span class="math">\([0,1]\)</span>. Its slope is the product of the two slopes. In both cases, this gives
+<div class="math">\[
+2^{k+1}~~\text{on}~I_{2j,k+1}, \qquad -2^{k+1}~~\text{on}~I_{2j+1,k+1}.
+\]</div>
+Since <span class="math">\((-1)^{2j}=1\)</span> and <span class="math">\((-1)^{2j+1}=-1\)</span>, the slope of <span class="math">\(g_{k+1}\)</span> on <span class="math">\(I_{i,k+1}\)</span> is <span class="math">\((-1)^i 2^{k+1}\)</span> for every <span class="math">\(i=0,1,\ldots,2^{k+1}-1\)</span>. This proves the statement for <span class="math">\(k+1\)</span>.
+</p><p>
+Finally, consecutive slopes have opposite signs. Hence, each of the <span class="math">\(2^k-1\)</span> interior nodes is a breakpoint, and <span class="math">\(g_{k}\)</span> has exactly <span class="math">\(2^k\)</span> affine pieces.
+
+</div>
+In the next proposition, we show that <span class="math">\(g_{k}\)</span> is represented by a deep <span class="math">\(\texttt{ReLU}\)</span> network.
+<div class="lemma" id="sawtooth.deep.network.prop">
+<div class="heading-container"><b class="heading">Lemma 7.4 (Deep Network for the Sawtooth Function):</b></div>
+
+For every <span class="math">\(k\in\mathbb{N}\)</span>, there exists <span class="math">\({\mathscr{F}_{k+1,2}}\in \mathscr{N}_{k+1,2}(\mathscr{R}_0; 1, 1)\)</span> such that
+<div class="math">\[
+{\mathscr{F}_{k+1,2}}(x) = g_{k}(x),~~\text{for all}~x\in[0,1].
+\]</div>
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+By <a href="Ch07Expressivity.html#hat.relu.prob">Problem 7.3</a>, we have
+<div class="math">\[
+g(x) = {\mathscr{F}_{2,2}}(x;\boldsymbol{\Theta}_1),~~x\in[0,1],
+\]</div>
+where
+<div class="math">\[
+\boldsymbol{\Theta}_1 = \left(\overline{W}^{(1)}, \overline{W}^{(2)}\right)
+= \left(
+	\left(\begin{array}{cc}0&1\\-\frac{1}{2}&1\end{array}\right),~
+	\left(\begin{array}{ccc}0&2&-4\end{array}\right)
+	\right),
+\]</div>
+with <span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(1)} = \mathscr{R}_0\)</span> (componentwise) and <span class="math">\(\mathscr{A}^{(2)} = \text{id}\)</span>. This proves the proposition for <span class="math">\(k=1\)</span>.
+</p><p>
+For illustration, consider <span class="math">\(k=2\)</span>. Since <span class="math">\(g(x)\in[0,1]\)</span> for <span class="math">\(x\in[0,1]\)</span>, we can apply the above representation to <span class="math">\(g(x)\)</span> and get
+</p><div class="math numbered-math">\begin{eqnarray}
+g_2(x) &=& g(g(x))\\ 
+&=& {\mathscr{F}_{2,2}}(g(x);\boldsymbol{\Theta}_1)\\ 
+&=& {\mathscr{F}_{2,2}}({\mathscr{F}_{2,2}}(x;\boldsymbol{\Theta}_1) ;\boldsymbol{\Theta}_1)\\
+&=&{\mathscr{F}_{2,2}}\Big(2\,\mathscr{R}_0(x) - 4\,\mathscr{R}_0\big(x-\tfrac{1}{2}\big);\boldsymbol{\Theta}_1\Big)\\
+&=&2\,\mathscr{R}_0\Big(2\,\mathscr{R}_0(x) - 4\,\mathscr{R}_0\big(x-\tfrac{1}{2}\big)\Big) - 4\,\mathscr{R}_0\big(2\,\mathscr{R}_0(x) - 4\,\mathscr{R}_0\big(x-\tfrac{1}{2}\big)-\tfrac{1}{2}\big)
+\end{eqnarray}<span class="eq-number">(7.6)</span></div><p>
+Take
+<div class="math">\[
+\boldsymbol{x}^{(1)} = \left(\begin{array}{c}\mathscr{R}_0(x)\\\mathscr{R}_0\big(x-\tfrac{1}{2}\big)\end{array}\right),~~
+\boldsymbol{x}^{(2)} = \left(\begin{array}{c}\mathscr{R}_0\big(2x^{(1)}_1 - 4x^{(1)}_2\big)\\\mathscr{R}_0\big(2x^{(1)}_1 - 4x^{(1)}_2-\tfrac{1}{2}\big)\end{array}\right),~~
+x^{(3)} = 2x^{(2)}_1 - 4 x^{(2)}_2.
+\]</div>
+Then <span class="math">\(g_2(x) = x^{(3)}\)</span>. This is the forward propagation of <span class="math">\(x\)</span> through two hidden layers, each having two neurons with <code>ReLU</code> activation, and an output layer with identity activation. Therefore,
+<div class="math">\[
+g_2(x) = {\mathscr{F}_{3,2}}(x;\boldsymbol{\Theta}_2),~~x\in[0,1],
+\]</div>
+where
+<div class="math">\[
+\boldsymbol{\Theta}_2 = \left(\overline{W}^{(1)}, \overline{W}^{(2)}, \overline{W}^{(3)}\right)
+= \left(
+	\left(\begin{array}{cc}0&1\\-\frac{1}{2}&1\end{array}\right),~
+	\left(\begin{array}{ccc}0&2&-4\\-\frac{1}{2}&2&-4\end{array}\right),~
+	\left(\begin{array}{ccc}0&2&-4\end{array}\right)
+	\right).
+\]</div><p>
+We now prove the proposition for general <span class="math">\(k\)</span> by induction. For <span class="math">\(k\in\mathbb{N}\)</span>, define
+<div class="math">\[
+\boldsymbol{\Theta}_k = \left(\overline{W}^{(1)}, \overline{W}^{(2)}, \ldots, \overline{W}^{(k)}, \overline{W}^{(k+1)}\right),
+\]</div>
+where
+<div class="math">\[
+\overline{W}^{(1)} = \left(\begin{array}{cc}0&1\\-\frac{1}{2}&1\end{array}\right),~~
+\overline{W}^{(l)}=\left(\begin{array}{ccc}0&2&-4\\-\frac{1}{2}&2&-4\end{array}\right),~l=2,\ldots, k,~~
+\overline{W}^{(k+1)}=\left(\begin{array}{ccc}0&2&-4\end{array}\right),
+\]</div>
+with the activation <span class="math">\(\mathscr{R}_0\)</span> in the hidden layers and the identity activation in the output layer. 
+We show that
+<div class="math">\[
+g_k(x) = {\mathscr{F}_{k+1,2}}(x;\boldsymbol{\Theta}_k),~~x\in[0,1].
+\]</div><p>
+
+The case <span class="math">\(k=1\)</span> is proved above. Assume that the statement holds for some <span class="math">\(k\in\mathbb{N}\)</span>. Let <span class="math">\(x\in[0,1]\)</span>, and let <span class="math">\(\boldsymbol{x}^{(k)}=(x^{(k)}_1,x^{(k)}_2)^\top\)</span> be the activation of the last hidden layer of <span class="math">\({\mathscr{F}_{k+1,2}}(\,\cdot\,;\boldsymbol{\Theta}_k)\)</span> at <span class="math">\(x\)</span>. By the induction hypothesis and the form of the output layer,
+<div class="math">\[
+g_k(x) = 2x^{(k)}_1 - 4x^{(k)}_2.
+\]</div>
+Since <span class="math">\(g_k(x)\in[0,1]\)</span>, <a href="Ch07Expressivity.html#hat.relu.prob">Problem 7.3</a> gives
+</p><div class="math numbered-math">\begin{eqnarray}
+g_{k+1}(x) &=& g\big(g_k(x)\big)\\
+&=& 2\,\mathscr{R}_0\big(g_k(x)\big) - 4\,\mathscr{R}_0\big(g_k(x)-\tfrac{1}{2}\big)\\
+&=& 2\,\mathscr{R}_0\big(2x^{(k)}_1 - 4x^{(k)}_2\big) - 4\,\mathscr{R}_0\big(2x^{(k)}_1 - 4x^{(k)}_2-\tfrac{1}{2}\big).
+\end{eqnarray}<span class="eq-number">(7.7)</span></div><p>
+The two terms
+<div class="math">\[
+x^{(k+1)}_1 = \mathscr{R}_0\big(2x^{(k)}_1 - 4x^{(k)}_2\big),~~
+x^{(k+1)}_2 = \mathscr{R}_0\big(2x^{(k)}_1 - 4x^{(k)}_2-\tfrac{1}{2}\big)
+\]</div>
+form the activation of a new hidden layer with augmented weight matrix
+<div class="math">\[
+\overline{W}^{(k+1)}=\left(\begin{array}{ccc}0&2&-4\\-\frac{1}{2}&2&-4\end{array}\right)
+\]</div>
+and activation <span class="math">\(\mathscr{R}_0\)</span>. Moreover, <span class="math">\(g_{k+1}(x) = 2x^{(k+1)}_1 - 4x^{(k+1)}_2\)</span>, which is the output layer with augmented weight matrix <span class="math">\(\left(\begin{array}{ccc}0&2&-4\end{array}\right)\)</span> and identity activation. 
+</p><p>
+Therefore, a neural network representation of <span class="math">\(g_{k+1}\)</span> is obtained by inserting a hidden layer in the neural network representation of <span class="math">\(g_k\)</span> before the output layer with the augmented weight as given above with activation <span class="math">\(\mathscr{R}_0\)</span> and thus can be written as
+<div class="math">\[
+g_{k+1}(x) = {\mathscr{F}_{k+2,2}}(x;\boldsymbol{\Theta}_{k+1}),~~x\in[0,1].
+\]</div>
+This completes the induction and the proof.
+</p><p>
+
+</div>
+We now show that a shallow <span class="math">\(\texttt{ReLU}\)</span> network needs exponentially many neurons to represent <span class="math">\(g_{k}\)</span>.
+<div class="theorem" id="shallow.relu.pieces.thm">
+<div class="heading-container"><b class="heading">Theorem 7.4 (Pieces of a Shallow ReLU Network):</b></div>
+
+Every <span class="math">\({\mathscr{F}_{2,\hat{n}}}\in \mathscr{N}_{2,\hat{n}}(\mathscr{R}_0; 1, 1)\)</span> is a continuous piecewise affine function on <span class="math">\(\mathbb{R}\)</span> with at most <span class="math">\(\hat{n}\)</span> breakpoints and its restriction to any interval has at most <span class="math">\(\hat{n}+1\)</span> affine pieces.
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+For <span class="math">\(j=1,2,\ldots,\hat{n}\)</span>, write the <span class="math">\(j\)</span>-th term in <a href="#shallow.network.1d.eq">(7.1)</a> as
+<div class="math">\[
+\phi_j(x) = \mathscr{R}_0\big(w^{(1)}_{j1} x + b^{(1)}_j\big),~~x\in\mathbb{R}.
+\]</div>
+Then, we can write
+<div class="math">\[
+{\mathscr{F}_{2,\hat{n}}}(x) =  \sum_{j=1}^{\hat{n}}w^{(2)}_{1j}\, \phi_j(x) + b^{(2)}_1.
+\]</div><p>
+<i>Step 1: Each <span class="math">\(\phi_j\)</span> is continuous and has at most one breakpoint.</i>
+The function <span class="math">\(\phi_j\)</span> is continuous, since it is the composition of the continuous function <span class="math">\(\mathscr{R}_0\)</span> with an affine function. We consider two cases.
+<ul><li>If <span class="math">\(w^{(1)}_{j1}=0\)</span>, then <span class="math">\(\phi_j(x)=\mathscr{R}_0\big(b^{(1)}_j\big)\)</span> is constant on <span class="math">\(\mathbb{R}\)</span>.
+</li><li>If <span class="math">\(w^{(1)}_{j1}\neq 0\)</span>, define <span class="math">\(\xi_j = -b^{(1)}_j/w^{(1)}_{j1}\)</span>. Then <span class="math">\(w^{(1)}_{j1} x + b^{(1)}_j = w^{(1)}_{j1}(x-\xi_j)\)</span>. This expression has one sign on <span class="math">\((-\infty,\xi_j]\)</span> and the opposite sign on <span class="math">\([\xi_j,\infty)\)</span>. On the side where it is non-negative, <span class="math">\(\phi_j(x) = w^{(1)}_{j1}(x-\xi_j)\)</span>. On the other side, <span class="math">\(\phi_j(x)=0\)</span>. Hence, <span class="math">\(\phi_j\)</span> is affine on <span class="math">\((-\infty,\xi_j]\)</span> and on <span class="math">\([\xi_j,\infty)\)</span>.
+</li></ul><p>
+<i>Step 2: The network is continuous and has at most <span class="math">\(\hat{n}\)</span> breakpoints.</i>
+Let <span class="math">\(P\)</span> be the set of points <span class="math">\(\xi_j\)</span> for those <span class="math">\(j\)</span> with <span class="math">\(w^{(1)}_{j1}\neq 0\)</span>. Then <span class="math">\(P\)</span> has <span class="math">\(m\le \hat{n}\)</span> elements. Order them as <span class="math">\(p_1 < p_2 < \cdots < p_m\)</span>. These points divide <span class="math">\(\mathbb{R}\)</span> into the <span class="math">\(m+1\)</span> intervals
+<div class="math">\[
+(-\infty,p_1],~[p_1,p_2],~\ldots,~[p_{m-1},p_m],~[p_m,\infty).
+\]</div>
+None of these intervals contains a point of <span class="math">\(P\)</span> in its interior. Hence, by Step 1, every <span class="math">\(\phi_j\)</span> is affine on each of these intervals. Since
+<div class="math">\[
+{\mathscr{F}_{2,\hat{n}}}(x) = \sum_{j=1}^{\hat{n}} w^{(2)}_{1j}\,\phi_j(x) + b^{(2)}_1,
+\]</div>
+the network <span class="math">\({\mathscr{F}_{2,\hat{n}}}\)</span> is also affine on each of these intervals. It is continuous on <span class="math">\(\mathbb{R}\)</span>, since it is a linear combination of continuous functions plus a constant. Therefore, <span class="math">\({\mathscr{F}_{2,\hat{n}}}\)</span> is continuous and piecewise affine on <span class="math">\(\mathbb{R}\)</span>. Its breakpoints lie in <span class="math">\(P\)</span>, so it has at most <span class="math">\(\hat{n}\)</span> breakpoints.
+</p><p>
+<i>Step 3: Restriction to an interval.</i>
+Let <span class="math">\(I\subseteq\mathbb{R}\)</span> be an interval. The function <span class="math">\({\mathscr{F}_{2,\hat{n}}}\)</span> is affine on the intersection of <span class="math">\(I\)</span> with each of the <span class="math">\(m+1\)</span> intervals of Step 2. Hence, its restriction to <span class="math">\(I\)</span> has at most <span class="math">\(m+1\le \hat{n}+1\)</span> affine pieces.
+
+</div>
+<div class="corollary" id="depth.separation.coro">
+<div class="heading-container"><b class="heading">Corollary 7.1 (Shallow Networks for the Sawtooth Function):</b></div>
+
+Let <span class="math">\(k\in\mathbb{N}\)</span>. There exists <span class="math">\({\mathscr{F}_{2,2^k}}\in \mathscr{N}_{2,2^k}(\mathscr{R}_0; 1, 1)\)</span> such that
+<div class="math">\[
+{\mathscr{F}_{2,2^k}}(x) = g_{k}(x),~~\text{for all}~x\in[0,1].
+\]</div>
+Moreover, if <span class="math">\({\mathscr{F}_{2,\hat{n}}}\in \mathscr{N}_{2,\hat{n}}(\mathscr{R}_0; 1, 1)\)</span> satisfies <span class="math">\({\mathscr{F}_{2,\hat{n}}}(x) = g_{k}(x)\)</span> for all <span class="math">\(x\in[0,1]\)</span>, then <span class="math">\(\hat{n}\ge 2^k\)</span>.
+
+</div>
+<div class="proofs">
+<div class="heading-container"><b class="heading">Proof:</b></div>
+
+<b>Step 1: [Existence]</b><br>
+By the above <a href="Ch07Expressivity.html#sawtooth.pieces.prop">Lemma 7.3</a>, <span class="math">\(g_k\)</span> is continuous piecewise affine on <span class="math">\([0,1]\)</span> with respect to the partition <span class="math">\(x_{j,k}=j/2^k\)</span>, <span class="math">\(j=0,1,\ldots,2^k\)</span>. This partition has <span class="math">\(2^k\)</span> subintervals. Hence, by <a href="Ch07Expressivity.html#cpa.as.shallow.relu.lemm">Lemma 7.2</a>, there exists <span class="math">\({\mathscr{F}_{2,2^k}}\)</span> such that <span class="math">\({\mathscr{F}_{2,2^k}}=g_k\)</span> on <span class="math">\([0,1]\)</span>.
+</p><p>
+<b>Step 2: [Lower bound]</b>
+Let <span class="math">\({\mathscr{F}_{2,\hat{n}}}=g_k\)</span> on <span class="math">\([0,1]\)</span>. By <a href="Ch07Expressivity.html#sawtooth.pieces.prop">Lemma 7.3</a>, the slope of <span class="math">\(g_k\)</span> changes at each of the <span class="math">\(2^k-1\)</span> points <span class="math">\(x_{j,k}\)</span>, <span class="math">\(j=1,2,\ldots,2^k-1\)</span>. Each such point is a breakpoint of <span class="math">\({\mathscr{F}_{2,\hat{n}}}\)</span>. By <a href="Ch07Expressivity.html#shallow.relu.pieces.thm">Theorem 7.4</a>, <span class="math">\({\mathscr{F}_{2,\hat{n}}}\)</span> has at most <span class="math">\(\hat{n}\)</span> breakpoints. Hence, <span class="math">\(\hat{n}\ge 2^k-1\)</span>.
+</p><p>
+Suppose that <span class="math">\(\hat{n}=2^k-1\)</span>. Then every neuron has a breakpoint, and these breakpoints are exactly the points <span class="math">\(x_{j,k}\)</span>, <span class="math">\(j=1,2,\ldots,2^k-1\)</span>. After relabelling the neurons, the <span class="math">\(j\)</span>-th neuron has <span class="math">\(w^{(1)}_{j1}\neq 0\)</span> and breakpoint <span class="math">\(x_{j,k}\)</span>. Let <span class="math">\(s_j\)</span> be the sign of <span class="math">\(w^{(1)}_{j1}\)</span>. Since <span class="math">\(\mathscr{R}_0\)</span> is positively homogeneous,
+<div class="math">\[
+\mathscr{R}_0\big(w^{(1)}_{j1}x+b^{(1)}_j\big) = |w^{(1)}_{j1}|\,\mathscr{R}_0\big(s_j(x-x_{j,k})\big).
+\]</div>
+Hence, on <span class="math">\([0,1]\)</span>,
+<div class="math">\[
+{\mathscr{F}_{2,\hat{n}}}(x) = b^{(2)}_1 + \sum_{j=1}^{2^k-1} a_j\,\mathscr{R}_0\big(s_j(x-x_{j,k})\big),~~a_j = w^{(2)}_{1j}\,|w^{(1)}_{j1}|.
+\]</div><p>
+If <span class="math">\(s_j=1\)</span>, the <span class="math">\(j\)</span>-th term has slope <span class="math">\(0\)</span> to the left of <span class="math">\(x_{j,k}\)</span> and slope <span class="math">\(a_j\)</span> to the right. If <span class="math">\(s_j=-1\)</span>, it has slope <span class="math">\(-a_j\)</span> to the left and slope <span class="math">\(0\)</span> to the right. In both cases, its slope jumps by <span class="math">\(a_j\)</span> at <span class="math">\(x_{j,k}\)</span>. The other terms are affine near <span class="math">\(x_{j,k}\)</span>. By <a href="Ch07Expressivity.html#sawtooth.pieces.prop">Lemma 7.3</a>, the slope of <span class="math">\(g_k\)</span> jumps at <span class="math">\(x_{j,k}\)</span> by
+<div class="math">\[
+(-1)^j2^k-(-1)^{j-1}2^k = (-1)^j\,2^{k+1}.
+\]</div>
+Hence, <span class="math">\(a_j=(-1)^j2^{k+1}\)</span> for every <span class="math">\(j\)</span>.
+</p><p>
+Let <span class="math">\(J=\{j : s_j=-1\}\)</span>. On <span class="math">\((0,x_{1,k})\)</span>, the terms with <span class="math">\(s_j=1\)</span> vanish, and the terms with <span class="math">\(j\in J\)</span> have slope <span class="math">\(-a_j\)</span>. The slope of <span class="math">\(g_k\)</span> on this interval is <span class="math">\(2^k\)</span>. Hence,
+<div class="math">\[
+-\sum_{j\in J} (-1)^j\,2^{k+1} = 2^k,~~\text{that is,}~~\sum_{j\in J}(-1)^j = -\frac{1}{2}.
+\]</div>
+The left-hand side is an integer. This is a contradiction. Hence, <span class="math">\(\hat{n}\ge 2^k\)</span>.
+
+</div>
+<div class="remark" id="depth.efficiency.rem">
+<div class="heading-container"><b class="heading">Remark 7.4 (Depth and Efficiency):</b></div>
+
+The deep network of <a href="Ch07Expressivity.html#sawtooth.deep.network.prop">Lemma 7.4</a> represents <span class="math">\(g_{k}\)</span> with <span class="math">\(2k\)</span> hidden neurons. By <a href="Ch07Expressivity.html#depth.separation.coro">Corollary 7.1</a>, a shallow network needs <span class="math">\(2^k\)</span> hidden neurons. For example, for <span class="math">\(k=10\)</span>, the deep network has <span class="math">\(20\)</span> hidden neurons, whereas a shallow network needs <span class="math">\(1024\)</span>.
+</p><p>
+The above comparison concerns exact representation. Telgarsky (2016) proves a stronger result for approximation. Networks with fewer layers need exponentially many neurons even to approximate <span class="math">\(g_{k}\)</span> to a fixed accuracy in the <span class="math">\(L^1\)</span> norm.
+</p><p>
+Thus, depth does not increase the class of functions that can be approximated. It can reduce the number of neurons needed to approximate a given function.
+
+</div>
+<div class="problem" id="neurons.parameters.prob">
+<div class="heading-container"><b class="heading">Problem 7.4:</b></div>
+
+Consider a network <span class="math">\({\mathscr{F}_{L,\hat{n}}}\in \mathscr{N}_{L,\hat{n}}(\mathscr{R}_0; 1, 1)\)</span>, with <span class="math">\(L\ge 2\)</span>, in which every hidden layer has <span class="math">\(\hat{n}\)</span> neurons.
+<ol class="latex-enumerate"><li>Show that the number of hidden neurons is <span class="math">\(N=(L-1)\hat{n}\)</span>, and that the number of trainable parameters (weights and biases) is
+<div class="math">\[
+P = 3\hat{n}+1 + (L-2)\,\hat{n}(\hat{n}+1).
+\]</div>
+Deduce that
+<div class="math">\[
+P = (\hat{n}+1)\,N - \hat{n}^2 + 2\hat{n} + 1.
+\]</div>
+Hence, for a fixed width <span class="math">\(\hat{n}\)</span>, the number of parameters is an affine function of the number of neurons.
+</li><li>Find the number of trainable parameters of the network of <a href="Ch07Expressivity.html#sawtooth.deep.network.prop">Lemma 7.4</a>.
+</li><li>Using <a href="Ch07Expressivity.html#depth.separation.coro">Corollary 7.1</a>, find a lower bound on the number of trainable parameters of a shallow network that represents <span class="math">\(g_k\)</span> on <span class="math">\([0,1]\)</span>.
+</li><li>Compare the two numbers for <span class="math">\(k=10\)</span>.
+</li></ol>
+
+</div><h3 id="bounded.width.subs">7.2.2 Width: Deep Networks of Bounded Width</h3>
+In <a href="Ch07Expressivity.html#universal.approximation.sec" class="internal-link">Section 7.1</a>, we have discussed the universal approximation results by fixing the depth at two and letting the width grow. One may also fix the width and let the depth grow. The following result, which we state without proof, answers the question of how narrow a deep <span class="math">\(\texttt{ReLU}\)</span> network can be.
+<div class="theorem" id="hanin.sellke.thm">
+<div class="heading-container"><b class="heading">Theorem 7.5 (Hanin--Sellke Theorem):</b></div>
+
+Let <span class="math">\(n_0\in\mathbb{N}\)</span>. The class
+<div class="math">\[
+\bigcup_{L\in\mathbb{N}} \mathscr{N}_{L,n_0+1}(\mathscr{R}_0; n_0, 1)
+\]</div>
+of <span class="math">\(\texttt{ReLU}\)</span> networks of width <span class="math">\(n_0+1\)</span> and arbitrary depth is a universal approximator of <span class="math">\(\mathbb{C}(\mathbb{R}^{n_0})\)</span>. Moreover, <span class="math">\(\texttt{ReLU}\)</span> networks of width <span class="math">\(n_0\)</span> and arbitrary depth are not universal approximators of <span class="math">\(\mathbb{C}(\mathbb{R}^{n_0})\)</span>.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 7.5 (Width versus Depth):</b></div>
+
+Shallow networks achieve universality through width (<a href="Ch07Expressivity.html#universal.approximation.sec" class="internal-link">Section 7.1</a>). Narrow networks achieve universality through depth (<a href="Ch07Expressivity.html#hanin.sellke.thm">Theorem 7.5</a>). In practice, both depth and width are chosen together, and the choice is guided by experiments.
+
+</div>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 22-Oct-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

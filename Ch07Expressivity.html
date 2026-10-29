@@ -121,6 +121,11 @@
 <div class="toc-item toc-section"><a href="Ch07Expressivity.html#depth.width.sec">7.2 Role of Depth and Width</a></div>
 <div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#sawtooth.subs">7.2.1 Depth: The Sawtooth Example</a></div>
 <div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#bounded.width.subs">7.2.2 Width: Deep Networks of Bounded Width</a></div>
+<div class="toc-item toc-section"><a href="Ch07Expressivity.html#pinns.sec">7.3 Physics-Informed Neural Networks for ODEs</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#hard-constrained-formulation">7.3.1 Hard-constrained Formulation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#soft-constrained-formulation">7.3.2 Soft-constrained Formulation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#residual-and-cost-function">7.3.3 Residual and Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#training-algorithm">7.3.4 Training Algorithm</a></div>
 </div></div>
 </div>
     </div>
@@ -136,7 +141,7 @@ A neural network is used in two major ways.  One is <b>pattern recognition</b>, 
 </p><p>
 In recent years, neural networks have also been used to construct approximate solutions of differential equations. The differential equation is incorporated into the cost function through its residual. Such networks are known as <b>physics-informed neural networks</b> (PINNs).   PINNs provide a natural bridge from approximation theory to scientific machine learning.
 </p><p>
-In <a href="Ch07Expressivity.html#universal.approximation.sec" class="internal-link">Section 7.1</a>, we show that a network with a single hidden layer can approximate any continuous function on a compact set to any desired accuracy.  This property is known as the <b>universal approximation property</b>. In <a href="Ch07Expressivity.html#depth.width.sec" class="internal-link">Section 7.2</a>, we discuss the role of depth and width. We show by an example that deep networks can represent certain functions with exponentially fewer neurons than shallow networks.  Finally, in <a href="Ch07Expressivity.html#pinns.sec" class="internal-link">Section &laquo;Click Here&raquo;</a>, we outline the idea of PINNs and apply it to an ordinary differential equation and to simple linear partial differential equations.
+In <a href="Ch07Expressivity.html#universal.approximation.sec" class="internal-link">Section 7.1</a>, we show that a network with a single hidden layer can approximate any continuous function on a compact set to any desired accuracy.  This property is known as the <b>universal approximation property</b>. In <a href="Ch07Expressivity.html#depth.width.sec" class="internal-link">Section 7.2</a>, we discuss the role of depth and width. We show by an example that deep networks can represent certain functions with exponentially fewer neurons than shallow networks.  Finally, in <a href="Ch07Expressivity.html#pinns.sec" class="internal-link">Section 7.3</a>, we outline the idea of PINNs and apply it to an ordinary differential equation and to simple linear partial differential equations.
 <h2 id="universal.approximation.sec">7.1 Universal Approximation by Shallow Networks</h2>
 Approximating a nonlinear function is challenging because different types of nonlinearities require different function classes for effective approximation.  A basic requirement in approximation theory is to identify a function class within which any given function can be approximated to a desired accuracy.  Such a property is referred to as <b>universal approximation</b>.  In this section, we show that shallow neural networks have this property.
 </p><h3 id="function.spaces.subs">7.1.1 Function Spaces and Universal Approximators</h3>
@@ -184,7 +189,7 @@ We use the notation <span class="math">\(\mathbb{C}^k(\mathcal{D}_x, \mathcal{D}
 <div class="note">
 <div class="heading-container"><b class="heading">Note:</b></div>
 
-The space <span class="math">\(\mathbb{C}^k(\mathcal{D}_x)\)</span> is needed in <a href="Ch07Expressivity.html#pinns.sec" class="internal-link">Section &laquo;Click Here&raquo;</a>, where derivatives of a network appear in the cost function.
+The space <span class="math">\(\mathbb{C}^k(\mathcal{D}_x)\)</span> is needed in <a href="Ch07Expressivity.html#pinns.sec" class="internal-link">Section 7.3</a>, where derivatives of a network appear in the cost function.
 
 </div><p>
 Solutions of mathematical problems are often functions, and we look for a solution in an appropriate function space. For many problems, a solution is known to exist, but its explicit form is either unknown or too complicated to obtain.  In such situations, we look for an approximation to the solution in a hypothesis set. This hypothesis class can approximate every element to any desired accuracy only if it is <b>dense</b> in the function space.
@@ -751,8 +756,131 @@ of <span class="math">\(\texttt{ReLU}\)</span> networks of width <span class="ma
 Shallow networks achieve universality through width (<a href="Ch07Expressivity.html#universal.approximation.sec" class="internal-link">Section 7.1</a>). Narrow networks achieve universality through depth (<a href="Ch07Expressivity.html#hanin.sellke.thm">Theorem 7.5</a>). In practice, both depth and width are chosen together, and the choice is guided by experiments.
 
 </div>
+<h2 id="pinns.sec">7.3 Physics-Informed Neural Networks for ODEs</h2>
+The universal approximation results show that a network can approximate the solution of a differential equation, provided the solution is continuous. In this section, we discuss how to compute such a network.  The idea is to include the differential equation, together with its initial condition, in the cost function. The resulting networks are called <b>physics-informed neural networks</b> (PINNs).
+</p><p>
+In this section, we restrict our discussion to initial value problems for first-order ordinary differential equations (ODEs) of the form
+</p><div class="math numbered-math" id="ivp.eq">\begin{eqnarray}
+\begin{aligned}
+\frac{dy}{dt} &= f(t,y), \qquad t\in[0,T],\\
+y(0) &= y_0,
+\end{aligned}
+\end{eqnarray}<span class="eq-number">(7.8)</span></div><p>
+where <span class="math">\(f:[0,T]\times\mathbb{R}\to\mathbb{R}\)</span> is a given sufficiently regular function, <span class="math">\(T>0\)</span>, and <span class="math">\(y_0\in\mathbb{R}\)</span> is the prescribed initial value. We seek an approximation <span class="math">\(\widehat{y}(t)\approx y(t)\)</span> for <span class="math">\(t\in[0,T].\)</span>
+</p><p>
+We use a feedforward neural network <span class="math">\({\mathscr{F}_{L,\hat{n}}}(\cdot\,;\boldsymbol{\Theta})\)</span> with <span class="math">\(n_0=1\)</span> and <span class="math">\(n_L=1\)</span> to obtain the approximation. The activation function is chosen smooth enough so that the derivative of the network output with respect to <span class="math">\(t\)</span> is defined.
+</p><p>
+A <b>trial solution</b> is a candidate approximation <span class="math">\(\widetilde{y}(t;\boldsymbol{\Theta})\)</span> of the solution <span class="math">\(y\)</span> of <a href="#ivp.eq">(7.8)</a> constructed using a network function <span class="math">\({\mathscr{F}_{L,\hat{n}}}(t;\boldsymbol{\Theta})\)</span>. The problem here is to obtain the parameters <span class="math">\(\boldsymbol{\Theta}\)</span> by minimizing an appropriately defined cost function. If <span class="math">\(\boldsymbol{\Theta}^*\)</span> denotes a minimizer, then the approximation is <span class="math">\(\widehat{y}(t) = \widetilde{y}(t;\boldsymbol{\Theta}^*)\)</span>. 
+</p><p>
+There are two ways to define a trial solution.
+<h3 id="hard-constrained-formulation">7.3.1 Hard-constrained Formulation</h3>
+In the hard-constrained formulation, the initial condition is enforced exactly into the trial solution by defining it as
+</p><div class="math numbered-math" id="trial.hard.eq">\begin{eqnarray}
+\widetilde{y}(t;\boldsymbol{\Theta}) := y_0 + t\,{\mathscr{F}_{L,\hat{n}}}(t;\boldsymbol{\Theta}).
+\end{eqnarray}<span class="eq-number">(7.9)</span></div><p>
+By construction, <span class="math">\(\widetilde{y}(0;\boldsymbol{\Theta})=y_0\)</span> for every choice of the parameters <span class="math">\(\boldsymbol{\Theta}\)</span>. Therefore, the trial solution <span class="math">\(\widetilde{y}\)</span> satisfies the initial condition exactly, and the network function <span class="math">\({\mathscr{F}_{L,\hat{n}}}(t;\boldsymbol{\Theta})\)</span> is a correction term scaled by <span class="math">\(t\)</span>. 
+<h3 id="soft-constrained-formulation">7.3.2 Soft-constrained Formulation</h3>
+The soft-constrained formulation takes the trial solution as the network function itself. That is,
+</p><div class="math numbered-math" id="trial.soft.eq">\begin{eqnarray}
+\widetilde{y}(t;\boldsymbol{\Theta}) :={\mathscr{F}_{L,\hat{n}}}(t;\boldsymbol{\Theta}).
+\end{eqnarray}<span class="eq-number">(7.10)</span></div><p>
+Here, the initial condition is not enforced exactly. It is imposed through a penalty term in the cost function, as defined in the next subsection. Hence, the trial solution satisfies the initial condition only approximately.
+<h3 id="residual-and-cost-function">7.3.3 Residual and Cost Function</h3>
+Define the pointwise <b>residual</b> of the ODE for the trial solution as
+</p><div class="math numbered-math" id="residual.ode.eq">\begin{eqnarray}
+\mathcal{R}(t;\boldsymbol{\Theta}) := \frac{d}{dt}\widetilde{y}(t;\boldsymbol{\Theta}) - f\big(t,\widetilde{y}(t;\boldsymbol{\Theta})\big).
+\end{eqnarray}<span class="eq-number">(7.11)</span></div><p>
+Select a set of <b>collocation points</b> <span class="math">\(\{t_j\}_{j=0}^N \subset [0,T]\)</span> with <span class="math">\(t_0=0\)</span>, and let <span class="math">\(\Delta t_j = t_j-t_{j-1}\)</span>, <span class="math">\(j=1,2,\ldots, N\)</span>. The <b>residual cost function</b> is defined as
+</p><div class="math numbered-math" id="residual.cost.ode.eq">\begin{eqnarray}
+\mathcal{C}_{\texttt{res}}(\boldsymbol{\Theta}) \;=\; \sum_{j=1}^N \big|\mathcal{R}(t_j;\boldsymbol{\Theta})\big|^2\Delta t_j.
+\end{eqnarray}<span class="eq-number">(7.12)</span></div><p>
+This is a quadrature approximation of the integral of <span class="math">\(|\mathcal{R}(t;\boldsymbol{\Theta})|^2\)</span> over <span class="math">\([0,T]\)</span>. The collocation points may be chosen uniformly, randomly, or by adaptive strategies. Minimizing the residual cost makes the trial solution satisfy the ODE <a href="#ivp.eq">(7.8)</a> approximately.
+</p><p>
+In the soft-constrained formulation, we also need to enforce the initial condition <span class="math">\(y(0)=y_0\)</span>. This is done by adding the penalty
+</p><div class="math numbered-math" id="ic.penalty.ode.eq">\begin{eqnarray}
+\mathcal{C}_{\texttt{ic}}(\boldsymbol{\Theta}) = \left|\widetilde{y}(0;\boldsymbol{\Theta})  - y_0 \right|^2.
+\end{eqnarray}<span class="eq-number">(7.13)</span></div><p>
+The <b>total cost function</b> in the soft-constrained formulation is then given by
+</p><div class="math numbered-math" id="total.cost.ode.eq">\begin{eqnarray}
+\mathcal{C}(\boldsymbol{\Theta}) = \mathcal{C}_{\texttt{res}}(\boldsymbol{\Theta}) + \lambda\, \mathcal{C}_{\texttt{ic}}(\boldsymbol{\Theta}),
+\end{eqnarray}<span class="eq-number">(7.14)</span></div><p>
+where <span class="math">\(\lambda > 0\)</span> is a weighting parameter that controls the relative importance of the initial condition.
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+In the hard-constrained formulation, <span class="math">\(\mathcal{C}_{\texttt{ic}}(\boldsymbol{\Theta})=0\)</span> for every <span class="math">\(\boldsymbol{\Theta}\)</span>. Hence, the total cost is <span class="math">\(\mathcal{C}(\boldsymbol{\Theta}) = \mathcal{C}_{\texttt{res}}(\boldsymbol{\Theta})\)</span>.
+
+</div>
+<div class="remark" id="network.derivatives.rem">
+<div class="heading-container"><b class="heading">Remark 7.6 (Derivatives of the Network):</b></div>
+
+The residual <a href="#residual.ode.eq">(7.11)</a> involves the derivative of the network function <span class="math">\({\mathscr{F}_{L,\hat{n}}}(t;\boldsymbol{\Theta})\)</span> with respect to its input <span class="math">\(t\)</span>. This derivative is computed exactly by automatic differentiation, which is available in PyTorch and TensorFlow (see <a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Chapter 4</a>). The gradient of the cost function with respect to <span class="math">\(\boldsymbol{\Theta}\)</span> is then computed by automatic differentiation as well.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The neural network ODE solver discussed here is a special case of <b>physics-informed neural networks</b>. The essence of PINNs is to incorporate the differential equation into the cost function through its residual, along with the associated initial and boundary conditions.
+
+</div>
+<div class="problem" id="pinn.second.order.prob">
+<div class="heading-container"><b class="heading">Problem 7.5:</b></div>
+
+Consider the initial value problem
+<div class="math">\[
+\begin{array}{cc}
+\dfrac{d^2y}{dt^2} + \omega^2 y = 0,&t\in[0,T],\\
+y(0)=y_0,&\\
+\dfrac{dy}{dt}(0)=v_0,&
+\end{array}
+\]</div>
+where <span class="math">\(\omega>0\)</span>, <span class="math">\(y_0\)</span> and <span class="math">\(v_0\)</span> are given.
+<ol class="latex-enumerate"><li>Construct a hard-constrained trial solution <span class="math">\(\widetilde{y}(t;\boldsymbol{\Theta})\)</span> using a network <span class="math">\({\mathscr{F}_{L,\hat{n}}}(t;\boldsymbol{\Theta})\)</span>, such that both initial conditions hold for every <span class="math">\(\boldsymbol{\Theta}\)</span>.
+</li><li>Write the residual and the residual cost function.
+</li><li>Write the total cost function for the soft-constrained formulation.
+</li><li>What condition on the activation function is needed in this problem?
+</li></ol>
+
+</div><h3 id="training-algorithm">7.3.4 Training Algorithm</h3>
+The training goal is to find parameters <span class="math">\(\boldsymbol{\Theta}^*\)</span> such that
+<div class="math">\[\boldsymbol{\Theta}^* = \text{argmin}_{\boldsymbol{\Theta}} \, \mathcal{C}(\boldsymbol{\Theta}). \]</div>
+An exact minimizer cannot be computed in general. Therefore, we use one of the gradient-based optimizers of <a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Chapter 5</a>, such as mini-batch gradient descent, gradient descent with momentum, or Adam, to obtain an approximation to <span class="math">\(\boldsymbol{\Theta}^*\)</span>.
+<div class="algorithm" id="pinn.ode.algo">
+<div class="heading-container"><b class="heading">Algorithm 7.1 (PINN for an Initial Value Problem):</b></div><p>
+<b>Input:</b>
+<ul><li>The architecture of <span class="math">\({\mathscr{F}_{L,\hat{n}}}\)</span> (depth, layer widths, smooth activation function).
+    </li><li>Collocation points <span class="math">\(\{t_j\}_{j=0}^N\)</span> in <span class="math">\([0,T]\)</span> with <span class="math">\(t_0=0\)</span>.
+    </li><li>An initial parameter set <span class="math">\(\boldsymbol{\Theta}_0\)</span>, a learning rate, and a stopping criterion.
+</li></ul>
+<b>Processing:</b>
+</p><p>
+For <span class="math">\(k=0,1,2,\ldots\)</span>, do the following steps:
+<ol class="latex-enumerate"><li>Evaluate the trial solution <span class="math">\(\widetilde{y}(t_j;\boldsymbol{\Theta}_k)\)</span>, <span class="math">\(j=0,1,\ldots,N\)</span>, using <a href="#trial.hard.eq">(7.9)</a> or <a href="#trial.soft.eq">(7.10)</a>.
+    </li><li>Compute the residuals <span class="math">\(\mathcal{R}(t_j;\boldsymbol{\Theta}_k)\)</span>, <span class="math">\(j=1,2,\ldots, N\)</span>, using <a href="#residual.ode.eq">(7.11)</a>.
+    </li><li>Compute the total cost <span class="math">\(\mathcal{C}(\boldsymbol{\Theta}_k)\)</span> using <a href="#residual.cost.ode.eq">(7.12)</a>--<a href="#total.cost.ode.eq">(7.14)</a>. The penalty <span class="math">\(\mathcal{C}_{\texttt{ic}}\)</span> is included only in the soft-constrained formulation.
+    </li><li>Compute the gradient <span class="math">\(\nabla_{\boldsymbol{\Theta}}\mathcal{C}(\boldsymbol{\Theta}_k)\)</span> and update to obtain <span class="math">\(\boldsymbol{\Theta}_{k+1}\)</span> using the chosen optimizer.
+    </li><li>Check the stopping criterion. If it is satisfied, stop. Otherwise, increase <span class="math">\(k\)</span> by one and repeat the above steps.
+</li></ol><p>
+<b>Output:</b> Return <span class="math">\(\widetilde{y}(t;\boldsymbol{\Theta}_{k+1})\)</span> as the approximate solution.
+</p><p>
+
+</div>
+<div class="code">
+<div class="heading-container"><b class="heading">Code 7.1:</b></div>
+
+Write a PyTorch code that implements <a href="Ch07Expressivity.html#pinn.ode.algo">Algorithm 7.1</a> for the initial value problem
+<div class="math">\[
+\begin{array}{cc}
+\dfrac{dy}{dt} = -\kappa y,&t\in[0,1],\\
+y(0)=1,&
+\end{array}
+\]</div>
+where <span class="math">\(\kappa>0\)</span> is a parameter.
+Use the hard-constrained trial solution and the <span class="math">\(\tanh\)</span> activation. Plot the trained solution together with the exact solution <span class="math">\(y(t)=e^{-\kappa t}\)</span> for <span class="math">\(\kappa = 1, 5, 20\)</span>. Repeat the computation with the soft-constrained trial solution and compare the two errors at <span class="math">\(t=0\)</span>.
+
+</div>
     </div>
-    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 22-Oct-2026</footer>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 29-Oct-2026</footer>
     <script>
     document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
     document.addEventListener("keydown", function(e) {

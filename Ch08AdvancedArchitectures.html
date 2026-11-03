@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Architectures</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+</head>
+<body>
+    <button id="toc-button">&#9776; Table of Contents</button>
+    <div id="toc-panel">
+        <button id="close-toc">&times;</button>
+        <div class="main-page-bar">
+            <a href="index.html" class="main-page-btn">Main Page</a>
+        </div>
+        <div class="full-toc">
+<div class="toc-chapter "><a href="Ch01FeedForwardArchitecture.html" class="chapter-link">CH 1: Feed Forward Architecture</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Feed Forward Architecture</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#neuron.function.sec">1.1 Artificial Neurons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#artificial.neuron.subs">1.1.1 Neuron Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#biological.neuron.subs">1.1.2 Comparison with Biological Neurons</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#fully.connected.networks.sec">1.2 Fully Connected Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multilayer.perceptrons.ssec">1.2.1 Multilayer Perceptrons</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#network.dimensions.subs">1.2.2 Network Function and Dimensions</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#activation.functions.sec">1.3 Activation Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#heaviside.activation.subs">1.3.1 Step Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#heaviside-function">1.3.1.1 Heaviside function</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#bipolar-function">1.3.1.2 Bipolar Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-functions">1.3.2 Sigmoid Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hyperbolic-tangent-function">1.3.3 Hyperbolic Tangent Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#hockey-stick-functions">1.3.4 Hockey-stick Functions</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#leaky-rectified-linear-unit">1.3.4.1 Leaky Rectified Linear Unit</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#sigmoid-linear-units">1.3.4.2 Sigmoid Linear Units</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softplus-function">1.3.4.3 Softplus Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#identity-function">1.3.5 Identity Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#multiclass.classification.subs">1.3.6 Multi-class Classification</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch01FeedForwardArchitecture.html#softmax-function">1.3.6.1 Softmax Function</a></div>
+<div class="toc-item toc-section"><a href="Ch01FeedForwardArchitecture.html#learning.network.sec">1.4 Supervised Learning: An Overview</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#supervised.learning.subs">1.4.1 Labeled Dataset</a></div>
+<div class="toc-item toc-subsection"><a href="Ch01FeedForwardArchitecture.html#learning.procedure.subs">1.4.2 Learning Procedure</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch02Perceptrons.html" class="chapter-link">CH 2: Perceptrons</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch02Perceptrons.html#perceptrons.ch">Perceptrons</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#perceptrons.sec">2.1 Neuron Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#boolean-functions">2.1.1 Boolean Functions</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#illustrative.datasets.subs">2.1.2 Illustrative Datasets</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#separability.algorithm.sec">2.2 Separability and Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#linear.separability.subs">2.2.1 Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#training.algorithm.subs">2.2.2 Training Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#perceptron.convergence.theorem.subs">2.2.3 Perceptron Convergence Theorem</a></div>
+<div class="toc-item toc-section"><a href="Ch02Perceptrons.html#beyond.linear.separability.sec">2.3 Beyond Linear Separability</a></div>
+<div class="toc-item toc-subsection"><a href="Ch02Perceptrons.html#feature.space.mapping.subs">2.3.1 Feature Space Mapping</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch03LogisticRegression.html" class="chapter-link">CH 3: Logistic Regression</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch03LogisticRegression.html#logistic.regression.ch">Logistic Regression</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#model.derivation.sec">3.1 The Logistic Regression Model</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#bayes.derivation.susb">3.1.1 Derivation using Bayes' Formula</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#logistic.regression.neuron.sec">3.1.2 Single Neuron Interpretation</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#training.a.model.sec">3.2 Training Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#cross-entropy.loss.function.subs">3.2.1 Cross-Entropy Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#gradient.descent.algorithm.subs">3.2.2 Gradient Descent Algorithm</a></div>
+<div class="toc-item toc-section"><a href="Ch03LogisticRegression.html#applications.logistic.regression.sec">3.3 Applications of Logistic Regression</a></div>
+<div class="toc-item toc-subsection"><a href="Ch03LogisticRegression.html#credit.default.subs">3.3.1 Finance: Credit Default Prediction</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch03LogisticRegression.html#model-and-training">3.3.1.1 Model and training.</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch04NetworkGradientEvaluation.html" class="chapter-link">CH 4: Network and Gradient Evaluation</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Network and Gradient Evaluation</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#matrix.formulation.forward.propagation.sec">4.1 Matrix Formulation and Forward Propagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#layer-function-in-matrix-form">4.1.1 Layer Function in Matrix Form</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.forward.propagation.subs">4.1.2 Forward Propagation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-batch-form">4.1.2.1 The Batch Form</a></div>
+<div class="toc-item toc-section"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.method.sec">4.2 Backpropagation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation">4.2.1 Gradient Computation</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#gradient-computation-for-neurons">4.2.1.1 Gradient Computation for Neurons</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#propagation-for-shallow-networks">4.2.1.2 Propagation for Shallow Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#backpropagation.algorithm.subs">4.2.2 The Backpropagation Algorithm</a></div>
+<div class="toc-item toc-subsection"><a href="Ch04NetworkGradientEvaluation.html#batch.backpropagation.subs">4.2.3 Batch Form, Computational Cost, and Gradient Checking</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#the-delta-matrices">4.2.3.1 The Delta Matrices</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch04NetworkGradientEvaluation.html#backward-recursion-in-matrix-form">4.2.3.2 Backward Recursion in Matrix Form</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch05OptimizationAlgorithms.html" class="chapter-link">CH 5: Optimization Algorithms</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Optimization Algorithms</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#gradient.descent.methods.sec">5.1 Gradient Descent Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#batch-gradient-descent-method">5.1.1 Batch Gradient Descent Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#stochastic-gradient-descent-sgd">5.1.2 Stochastic Gradient Descent (SGD)</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#mini.batch.gd.subs">5.1.3 Mini-batch Gradient Descent</a></div>
+<div class="toc-item toc-section"><a href="Ch05OptimizationAlgorithms.html#momentum.adaptive.GD.sec">5.2 Momentum and Adaptive Gradient Methods</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#momentum-method">5.2.1 Momentum Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#nesterov-accelerated-gd-method">5.2.2 Nesterov Accelerated GD Method</a></div>
+<div class="toc-item toc-subsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-step-size-methods">5.2.3 Adaptive Step Size Methods</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adagrad">5.2.3.1 AdaGrad.</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#root-mean-square-propagation-rmsprop">5.2.3.2 Root Mean Square Propagation (RMSProp)</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adaptive-moments-adam">5.2.3.3 Adaptive Moments (Adam).</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch05OptimizationAlgorithms.html#adamw">5.2.3.4 AdamW</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch06GeneralizationRegularization.html" class="chapter-link">CH 6: Generalization and Regularization</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch06GeneralizationRegularization.html#generalization.regularization.ch">Generalization and Regularization</a></div>
+<div class="toc-item toc-section"><a href="Ch06GeneralizationRegularization.html#evaluation.model.behaviour.sec">6.1 Evaluation of Model Behaviour</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#underfitting.overfitting.sec">6.1.1 Underfitting and Overfitting</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#generalization.bounds.subs">6.1.2 Generalization Bounds</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#error-decomposition">6.1.2.1 Error Decomposition</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#generalization.bounds.summary.subs">6.1.2.2 Generalization Bounds for a Finite Hypothesis Set</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#extension-to-general-hypothesis-sets">6.1.2.3 Extension to General Hypothesis Sets</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#bias-variance.tradeoff.subs">6.1.3 Bias-Variance Tradeoff</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#double.descent.subs">6.1.4 Overparameterization and Double Descent</a></div>
+<div class="toc-item toc-section"><a href="Ch06GeneralizationRegularization.html#regularization.techniques.sec">6.2 Regularization Techniques</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#parameter.based.regularization.sec">6.2.1 Parameter-based Regularization</a></div>
+<div class="toc-item toc-subsection"><a href="Ch06GeneralizationRegularization.html#process.based.regularization.sec">6.2.2 Process-based Regularization</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#early-stopping">6.2.2.1 Early Stopping</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch06GeneralizationRegularization.html#dropout.subs">6.2.2.2 Dropout</a></div>
+</div></div>
+<div class="toc-chapter "><a href="Ch07Expressivity.html" class="chapter-link">CH 7: Expressivity of Feedforward Networks</a><div class="toc-sections ">
+<div class="toc-item "><a href="Ch07Expressivity.html#expressivity.ch">Expressivity of Feedforward Networks</a></div>
+<div class="toc-item toc-section"><a href="Ch07Expressivity.html#universal.approximation.sec">7.1 Universal Approximation by Shallow Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#function.spaces.subs">7.1.1 Function Spaces and Universal Approximators</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#shallow.relu.1d.subs">7.1.2 Shallow ReLU Networks in One Dimension</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#general.activations.subs">7.1.3 General Activation Functions</a></div>
+<div class="toc-item toc-section"><a href="Ch07Expressivity.html#depth.width.sec">7.2 Role of Depth and Width</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#sawtooth.subs">7.2.1 Depth: The Sawtooth Example</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#bounded.width.subs">7.2.2 Width: Deep Networks of Bounded Width</a></div>
+<div class="toc-item toc-section"><a href="Ch07Expressivity.html#pinns.sec">7.3 Physics-Informed Neural Networks for ODEs</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#hard-constrained-formulation">7.3.1 Hard-constrained Formulation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#soft-constrained-formulation">7.3.2 Soft-constrained Formulation</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#residual-and-cost-function">7.3.3 Residual and Cost Function</a></div>
+<div class="toc-item toc-subsection"><a href="Ch07Expressivity.html#training-algorithm">7.3.4 Training Algorithm</a></div>
+</div></div>
+<div class="toc-chapter current"><a href="Ch08AdvancedArchitectures.html" class="chapter-link">CH 8: Advanced Architectures</a><div class="toc-sections expanded">
+<div class="toc-item "><a href="Ch08AdvancedArchitectures.html#advanced.architectures.ch">Advanced Architectures</a></div>
+<div class="toc-item toc-section"><a href="Ch08AdvancedArchitectures.html#convolution.neural.network.sec">8.1 Convolutional Neural Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch08AdvancedArchitectures.html#one-dimensional-convolutional-layer">8.1.1 One-Dimensional Convolutional Layer</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch08AdvancedArchitectures.html#convolutional-layer">8.1.1.1 Convolutional Layer</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch08AdvancedArchitectures.html#multilayer-convolutional-networks">8.1.1.2 Multilayer Convolutional Networks</a></div>
+<div class="toc-item toc-subsection"><a href="Ch08AdvancedArchitectures.html#two-dimensional-convolutional-layer">8.1.2 Two-Dimensional Convolutional Layer</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch08AdvancedArchitectures.html#convolution-operator">8.1.2.1 Convolution Operator</a></div>
+<div class="toc-item toc-subsubsection"><a href="Ch08AdvancedArchitectures.html#2d-convolution-layer">8.1.2.2 2D Convolution Layer</a></div>
+</div></div>
+</div>
+    </div>
+    <div id="content">
+        <h1 id="advanced.architectures.ch">Chapter 8: Advanced Architectures</h1>
+So far, we have studied multi-layer perceptrons (MLPs), which are fully connected (dense) feedforward neural networks.  We have also seen that these networks perform well for a variety of pattern recognition problems that can be viewed as function approximation tasks. This is consistent with their property as universal approximators. We also studied their role in scientific computing through Physics-Informed Neural Networks (PINNs).
+</p><p>
+
+In this chapter, we focus on some special architectures that are designed for specific types of data or applications, like convolutional neural networks (CNNs), which are particularly suitable for image recognition, and recurrent neural networks (RNNs), which are suitable for language and sequence modelling.  We conclude the chapter with a discussion of a recent development called <b>Transformers</b>, which is an attention-based architecture that has revolutionized sequence modelling. Transformers provide a unified framework for learning from text, images, and beyond.
+</p><p>
+In <a href="Ch08AdvancedArchitectures.html#convolution.neural.network.sec" class="internal-link">Section 8.1</a>, we introduce convolutional neural networks. We first define the one-dimensional convolutional layer, together with stride, padding and pooling. We then extend these ideas to images and illustrate them with blurring and edge-detection kernels. In <a href="Ch08AdvancedArchitectures.html#transformers.sec" class="internal-link">Section &laquo;Click Here&raquo;</a>, we turn to sequence data. We first recall recurrent neural networks briefly and point out their limitations. We then introduce self-attention, positional encoding and causal attention. Finally, we assemble these components into the transformer block and use it to build a model for sequence prediction.
+<h2 id="convolution.neural.network.sec">8.1 Convolutional Neural Networks</h2>
+The dense structure of MLPs treats each input neuron independently and ignores the spatial structure of the input data. For example, in image data split into pixels, nearby pixels are highly correlated, and certain local features like edges or corners can appear at different locations in the image. The dense structure also leads to a very large number of parameters, which grows in proportion to the number of pixels. Convolutional Neural Networks (CNNs) overcome these limitations by incorporating the local spatial structure of data through <b>local connectivity</b> and <b>weight sharing</b>.
+</p><p>
+In local connectivity, each neuron is connected only to a small spatial region (patch) of the input in order to capture local patterns.  Through weight sharing, the same set of weights, referred to as a filter or kernel,  is used across different spatial locations. Weight sharing reduces the number of parameters. It also makes the layer translation equivariant, which means that a shift of the input produces the same shift of the output.  Pooling layers are often added to reduce spatial dimensions and to retain the most important features.  In this section, we briefly outline CNNs.
+<h3 id="one-dimensional-convolutional-layer">8.1.1 One-Dimensional Convolutional Layer</h3>
+In many applications, such as time-series analysis and speech recognition, the input is indexed by a single variable, namely, time or position in the sequence.  At each index, the input may contain one or several values (channels).  For such data, <b>one-dimensional convolutional neural networks</b> (1D CNNs) provide an efficient architecture that captures local dependencies along the temporal or sequential axis.
+</p><p>
+Let <span class="math">\(f, g : \mathbb{R} \to \mathbb{R}\)</span>. 
+The <b>continuous one-dimensional convolution</b> of <span class="math">\(f\)</span> and <span class="math">\(g\)</span>, denoted by <span class="math">\((f * g)\)</span>, is defined as
+<div class="math">\[
+(f * g)(x) = \int_{\mathbb{R}} f(\xi)\, g(x - \xi)\, d\xi,
+\]</div>
+whenever the integral exists.
+</p><p>
+Analogously, in the discrete case where the signals are sequences, say, <span class="math">\(f,g:\mathbb{Z}\rightarrow \mathbb{R}\)</span> given by
+<div class="math">\[
+f = \{f_i\}_{i \in \mathbb{Z}}, 
+\qquad 
+g = \{g_i\}_{i \in \mathbb{Z}},
+\]</div>
+the <b>discrete convolution</b> is defined by
+<div class="math">\[
+(f * g)_i = \sum_{j \in \mathbb{Z}} f_j \, g_{i - j},
+\]</div>
+whenever the series converges.
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.1 (Finitely Supported Signals):</b></div><p>
+In practice, we have signals of finite length.  In this case, we extend the signal by zero. Such a signal is called a signal with <b>finite support</b>.  For instance, if we have 
+<div class="math">\[\boldsymbol{g}=[g_1, g_2, \ldots, g_{N}],\]</div> 
+for some <span class="math">\(N>0\)</span>, then it should be understood as extending it by zero on either side and considering the signal of infinite length <span class="math">\(g=[\ldots, 0, \boldsymbol{g}, 0, \ldots]\)</span>.
+
+</div>
+In CNNs, it is customary to use the <b>cross-correlation</b> operation (instead of strict convolution), given by
+<div class="math">\[
+(\boldsymbol{w} \star \boldsymbol{x})_i = \sum_{j = 1}^{r}  w_j\, x_{i + j - 1}, ~~
+i = 1, 2, \ldots, N - r + 1,
+\]</div>
+where <span class="math">\(\boldsymbol{w} = [w_1, w_2, \ldots, w_{r}]\)</span> is the <b>kernel</b> or <b>filter</b> of size <span class="math">\(r\)</span> and <span class="math">\(\boldsymbol{x}=[x_1, x_2, \ldots, x_{N}]\)</span> is a finite input signal with <span class="math">\(0 < r \le N\)</span>. In the deep learning literature, the cross-correlation is also referred to as convolution. We follow this convention in the CNN context below.
+</p><div class="example">
+<div class="heading-container"><b class="heading">Example 8.1 (Moving Average as a Convolution Operation):</b></div>
+
+Let 
+<span class="math">\(
+\boldsymbol{x} = [x_1,\, x_2,\, \ldots,\, x_N]
+\)</span>
+be a discrete-time signal (or sequence).  
+A <b>moving average</b> with window size <span class="math">\(r\)</span> computes each output value as the average of <span class="math">\(r\)</span> consecutive inputs, given by
+<div class="math">\[
+y_i = \frac{1}{r}\sum_{j=1}^{r} x_{i+j-1},
+\quad i = 1, 2, \ldots, N - r + 1.
+\]</div><p>
+This can be viewed as a <b>cross-correlation</b> (or convolution without kernel flipping) between the input <span class="math">\(\boldsymbol{x}\)</span> and the kernel
+<div class="math">\[
+\boldsymbol{w} = \frac{1}{r}[1,\, 1,\, \ldots,\, 1],
+\]</div>
+that is,
+<div class="math">\[
+y_i = \sum_{j=1}^{r} w_j\, x_{i+j-1}.
+\]</div>
+Thus, the moving average is a special case of convolution where all kernel weights are equal and sum to one.
+
+</div>
+The one-dimensional moving average filter discussed above can be viewed as a <b>low-pass filter</b>, since it smooths rapid variations in the input signal. In two dimensions, the same idea extends naturally to image processing, where a smoothing kernel corresponds to <b>blurring</b> an image. 
+</p><p>
+In contrast, <b>edge detection</b> in images corresponds to emphasizing changes (differences) in the signal, i.e., high-frequency components.
+In one dimension, this can be seen directly through convolution with a <b>difference kernel</b> or <b>high-pass filter</b>.
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.2 (One-Dimensional Edge Detection):</b></div><p>
+Consider a one-dimensional input signal
+<span class="math">\(
+\boldsymbol{x} = [x_1,\, x_2,\, \ldots,\, x_6]
+\)</span>
+and a <b>difference kernel</b> (or <b>edge detection kernel</b>)
+<div class="math">\[
+\boldsymbol{w} = [-1, 1]
+\]</div>
+The convolution (or, in CNNs, the cross-correlation) of <span class="math">\(\boldsymbol{x}\)</span> and <span class="math">\(\boldsymbol{w}\)</span> produces the output
+<div class="math">\[
+y_i = (-1)\,x_i + (1)\,x_{i+1} = x_{i+1} - x_i, 
+\qquad i = 1, 2, \ldots, 5.
+\]</div>
+Hence,
+<div class="math">\[
+\boldsymbol{y} = [x_2 - x_1,\, x_3 - x_2,\, x_4 - x_3,\, x_5 - x_4,\, x_6 - x_5].
+\]</div>
+This output measures the <b>change</b> (or discrete gradient) between successive input values.
+Regions where <span class="math">\(\boldsymbol{x}\)</span> is approximately constant produce small responses, while sharp transitions yield large responses.  Such transitions correspond to <b>edges</b> in one-dimensional data.
+</p><p>
+In two dimensions, similar difference kernels (e.g., Sobel or Prewitt filters) are used to detect edges in images.
+
+</div>
+<h4 id="convolutional-layer">8.1.1.1 Convolutional Layer</h4>
+Let the input to a one-dimensional convolutional layer be a sequence (or signal)
+<div class="math">\[
+\boldsymbol{x} = [x_1, x_2, \ldots, x_N] \in \mathbb{R}^N,
+\]</div>
+and let the convolutional kernel (or filter) be
+<div class="math">\[
+\boldsymbol{w} = [w_1, w_2, \ldots, w_r] \in \mathbb{R}^r,
+\]</div>
+where the integer <span class="math">\(1\le r\le N\)</span> is called the <b>kernel size</b> or <b>receptive field length</b>. 
+<div class="definition">
+<div class="heading-container"><b class="heading">Definition 8.1 (One-Dimensional Convolutional Layer):</b></div>
+
+For a given integer <span class="math">\(s \ge 1\)</span>, a <b>one-dimensional convolutional layer</b> with activation function <span class="math">\(\mathscr{A}\)</span>, convolution kernel <span class="math">\(\boldsymbol{w}\)</span> and bias <span class="math">\(b\)</span> produces the output
+</p><div class="math numbered-math">\begin{eqnarray}
+a_i = \mathscr{A}\!\Bigg(\sum_{j=1}^{r} w_j\, x_{(i-1)s + j} +\,b\Bigg),
+\quad i = 1, 2, \ldots, n_{\text{out}},
+\end{eqnarray}<span class="eq-number">(8.1)</span></div><p>
+where
+</p><div class="math numbered-math">\begin{eqnarray}
+n_{\text{out}} = \Big\lfloor \frac{N - r}{s} \Big\rfloor + 1.
+\end{eqnarray}<span class="eq-number">(8.2)</span></div><p>
+The number <span class="math">\(s\)</span> is called the <b>stride</b>, which specifies the step size with which the kernel moves along the input.
+
+</div><p>
+The following example illustrates a one-dimensional convolutional layer with stride <span class="math">\(s=1\)</span>. Such a layer can be expressed as a layer of a feedforward neural network with two constraints on its weights. Many weights are set to zero and are kept at zero during training. The remaining weights are shared by all neurons of the layer. A general result is stated in <a href="Ch08AdvancedArchitectures.html#CNNs1FNN.pro">Problem 8.1</a>.
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.3 (Convolutional Layer with Stride <span class="math">\(s=1\)</span>):</b></div>
+
+Consider an input sequence
+<div class="math">\[
+\boldsymbol{x} = [x_1,\, x_2,\, x_3,\, x_4,\, x_5,\, x_6],
+\]</div>
+and a kernel (filter)
+<div class="math">\[
+\boldsymbol{w} = [w_1,\, w_2].
+\]</div>
+Here, the input dimension is <span class="math">\(N=6\)</span>, and the kernel size is <span class="math">\(r=2\)</span>. Let <span class="math">\(b\)</span> be the bias.
+</p><p>
+Let us take stride <span class="math">\(s = 1\)</span>. Then,
+<div class="math">\[
+n_{\text{out}} = \Big\lfloor \frac{N - r}{s} \Big\rfloor + 1
+= \Big\lfloor \frac{6 - 2}{1} \Big\rfloor + 1 = 5.
+\]</div>
+Therefore, from the convolutional layer definition, we have
+<div class="math">\[
+a_i = \mathscr{A}\!\Bigg(\sum_{j=1}^{2} w_j\, x_{(i-1) + j}+\,b\Bigg), 
+\quad i = 1, 2, \ldots, 5.
+\]</div>
+The layer output activations are given by
+<div class="math">\[
+\begin{aligned}
+a_1 &= \mathscr{A}(w_1 x_1 + w_2 x_2 +\,b),\\
+a_2 &= \mathscr{A}(w_1 x_2 + w_2 x_3 +\,b),\\
+a_3 &= \mathscr{A}(w_1 x_3 + w_2 x_4 +\,b),\\
+a_4 &= \mathscr{A}(w_1 x_4 + w_2 x_5 +\,b),\\
+a_5 &= \mathscr{A}(w_1 x_5 + w_2 x_6 +\,b).
+\end{aligned}
+\]</div>
+Hence, the output feature map (activation vector) of the convolutional layer is
+<div class="math">\[
+\boldsymbol{a} = [a_1,\, a_2,\, a_3,\, a_4,\, a_5].
+\]</div>
+Writing <span class="math">\(\boldsymbol{x}\)</span> and <span class="math">\(\boldsymbol{a}\)</span> as column vectors, we get
+<div class="math">\[
+\boldsymbol{a} = \underset{\overline{~~~~}}{\mathscr{A}}\big(W\boldsymbol{x} + b\,\boldsymbol{1}\big),
+\qquad
+W =
+\begin{bmatrix}
+w_1 & w_2 & 0 & 0 & 0 & 0\\
+0 & w_1 & w_2 & 0 & 0 & 0\\
+0 & 0 & w_1 & w_2 & 0 & 0\\
+0 & 0 & 0 & w_1 & w_2 & 0\\
+0 & 0 & 0 & 0 & w_1 & w_2
+\end{bmatrix}\in\mathbb{R}^{5\times 6},
+\]</div>
+where <span class="math">\(\boldsymbol{1}\in\mathbb{R}^5\)</span> is the vector of ones. This is the matrix form of a layer of a feedforward network. Most entries of <span class="math">\(W\)</span> are zero, and the nonzero entries are shared by all rows.
+
+</div>
+The convolutional layer replaces the affine transformation <span class="math">\(\boldsymbol{w}\cdot\boldsymbol{x}+\,b\)</span> of a neuron in an MLP by the local operation <span class="math">\(\boldsymbol{w} \star \boldsymbol{x} + b\)</span>. Each output activation (feature map entry) <span class="math">\(a_i\)</span> can still be viewed as a neuron. However, this neuron is connected only to the <span class="math">\(r\)</span> inputs <span class="math">\(x_{(i-1)s+1}, \ldots, x_{(i-1)s+r}\)</span>, which form its local receptive field. Moreover, all these neurons share the same weights <span class="math">\(\boldsymbol{w}\)</span> and the same bias <span class="math">\(b\)</span>. Nevertheless, the convolution operation can be equivalently expressed as a matrix-vector multiplication,  where the kernel <span class="math">\(\boldsymbol{w}\)</span> is expanded into a structured sparse matrix (a Toeplitz matrix when <span class="math">\(s=1\)</span>).  Thus, a convolutional layer can be viewed as a layer of a feedforward network with a constrained weight matrix.
+</p><div class="problem" id="CNNs1FNN.pro">
+<div class="heading-container"><b class="heading">Problem 8.1 (Convolution Layer as a Fully Connected Layer):</b></div>
+
+
+Show that a one-dimensional convolutional layer can be expressed as a fully connected (dense) layer with a specially structured weight (sparse Toeplitz) matrix, when the stride is <span class="math">\(s=1\)</span>.
+
+</div><div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+For a stride <span class="math">\(s>1\)</span>, row <span class="math">\(i\)</span> of the weight matrix starts at column <span class="math">\((i-1)s+1\)</span>. The matrix is still sparse and has shared weights. However, it is no longer a Toeplitz matrix.
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 8.2:</b></div>
+
+Consider an input vector <span class="math">\(\boldsymbol{x} = [x_1, x_2, x_3, x_4, x_5, x_6]\)</span>, a kernel (filter)
+<span class="math">\(\boldsymbol{w} = [w_1, w_2]\)</span>, and a bias term <span class="math">\(b\)</span>.
+Using the convolutional layer with stride <span class="math">\(s = 2\)</span> and activation function <span class="math">\(\mathscr{A}\)</span>,
+compute the output activations.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.2 (Padding):</b></div>
+ 
+The number of zeros <span class="math">\(p\)</span> added at each end of the input sequence before performing convolution is called <b>padding</b>.
+Padding allows the kernel to be applied at the two ends of the input, so that the boundary entries contribute to more outputs. 
+</p><p>
+Given an input of length <span class="math">\(N\)</span>, if we pad with <span class="math">\(p\)</span> zeros on each side, the effective input length becomes <span class="math">\(N + 2p\)</span>.  Thus, for a kernel size <span class="math">\(r\)</span>, a stride <span class="math">\(s\)</span>, and padding <span class="math">\(p\)</span>, 
+the convolutional layer is given by
+<div class="math">\[
+a_i = \mathscr{A}\!\Bigg(\sum_{j=1}^{r} w_j\, x_{(i-1)s + j - p}+\,b\Bigg),
+\quad i = 1, 2, \ldots, n_{\text{out}},
+\]</div>
+where
+<div class="math">\[
+n_{\text{out}} = \Bigg\lfloor \frac{N + 2p - r}{s} \Bigg\rfloor + 1.
+\]</div>
+Here, we use the convention <span class="math">\(x_k = 0\)</span> for <span class="math">\(k \le 0\)</span> and for <span class="math">\(k > N\)</span>.
+</p><p>
+With stride <span class="math">\(s=1\)</span> and <span class="math">\(p=(r-1)/2\)</span> for an odd kernel size <span class="math">\(r\)</span>, the output length equals the input length <span class="math">\(N\)</span>.
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 8.3:</b></div>
+
+Consider an input vector <span class="math">\(\boldsymbol{x} = [x_1, x_2, x_3, x_4, x_5, x_6]\)</span>, 
+a kernel <span class="math">\(\boldsymbol{w} = [w_1, w_2]\)</span>, and a bias term <span class="math">\(b\)</span>.
+Using the convolutional layer with stride <span class="math">\(s = 1\)</span>, 
+activation function <span class="math">\(\mathscr{A}\)</span>, and padding of one zero on each side 
+(<i>i.e.</i>, <span class="math">\(p=1\)</span>), compute the output activations.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.3 (Pooling Layer):</b></div><p>
+After a convolutional layer produces its output (called the <b>feature map</b>), it is often followed by a <b>pooling layer</b>. 
+Given an input feature map
+<div class="math">\[
+\boldsymbol{a} = [a_1, a_2, \ldots, a_{n_{\text{out}}}],
+\]</div>
+a <b>max-pooling</b> layer with pooling window of size <span class="math">\(r_p\)</span> and stride <span class="math">\(s_p\)</span> produces the output
+<div class="math">\[
+a_i^{(\text{pool})} = \max_{j \in \mathcal{N}(i)} a_j, \quad i = 1, 2, \ldots, n_{\text{pool}},
+\]</div>
+where <span class="math">\(\mathcal{N}(i)\)</span> denotes the <span class="math">\(i^{\rm th}\)</span> pooling window, given by
+<div class="math">\[
+\mathcal{N}(i) = \{(i-1)s_p + 1, (i-1)s_p + 2, \ldots, (i-1)s_p + r_p\},
+\]</div>
+and
+<div class="math">\[
+n_{\text{pool}} = \Big\lfloor \frac{n_{\text{out}} - r_p}{s_p} \Big\rfloor + 1.
+\]</div>
+If the maximum operation is replaced by the average, we obtain the <b>average pooling</b> layer. Similarly, if the maximum operation is replaced by the minimum operation, then we obtain the <b>min-pooling</b> layer.
+</p><p>
+Here, <span class="math">\(\boldsymbol{a}\)</span> denotes the output feature map obtained from the preceding convolutional layer.  
+The pooling operation acts on <span class="math">\(\boldsymbol{a}\)</span> to produce a lower-dimensional representation 
+<span class="math">\(\boldsymbol{a}^{(\text{pool})}\)</span>, which can be fed to the next convolutional or fully connected layer.
+Schematically, we have
+</p><div class="math numbered-math">\begin{eqnarray}
+\textbf{Input} 
+\;\xrightarrow{\text{}}\;
+\textbf{Convolution Layer} 
+\;\xrightarrow{\text{}}\;
+\textbf{Pooling}
+\;\xrightarrow{\text{}}\;
+\textbf{Next Layer}.
+\end{eqnarray}<span class="eq-number">(8.3)</span></div><p>
+  Thus, pooling serves two main purposes, namely,
+<ul><li>It reduces the spatial resolution (or length) of the feature map, thereby decreasing the computational cost and the number of parameters in the subsequent fully connected layers. The pooling layer itself has no learnable parameters.
+    </li><li>It increases <b>translational invariance</b>, meaning that small shifts or distortions in the input do not significantly change the pooled output.
+</li></ul>
+
+</div>
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.4 (1D Max Pooling):</b></div>
+
+Let the convolution output be
+</p><div class="math numbered-math">\begin{eqnarray}
+\boldsymbol{a} = [a_1, a_2, a_3, a_4, a_5, a_6],
+\end{eqnarray}<span class="eq-number">(8.4)</span></div><p>
+and consider max pooling with pooling size <span class="math">\(r_p=2\)</span> and stride <span class="math">\(s_p=2\)</span>.  
+Then,
+</p><div class="math numbered-math">\begin{eqnarray}
+\begin{aligned}
+a^{(\text{pool})}_1 &= \max(a_1, a_2),\\
+a^{(\text{pool})}_2 &= \max(a_3, a_4),\\
+a^{(\text{pool})}_3 &= \max(a_5, a_6).
+\end{aligned}
+\end{eqnarray}<span class="eq-number">(8.5)</span></div><p>
+Hence, the pooled output is
+</p><div class="math numbered-math">\begin{eqnarray}
+\boldsymbol{a}^{(\text{pool})} = [a^{(\text{pool})}_1,\, a^{(\text{pool})}_2,\, a^{(\text{pool})}_3],
+\end{eqnarray}<span class="eq-number">(8.6)</span></div><p>
+which has reduced length compared to the original feature map.
+
+</div>
+Let us now illustrate translational invariance through pooling.
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.5:</b></div>
+
+Consider the convolutional output
+<div class="math">\[
+\boldsymbol{a} = [5,\, 0,\, 4,\, 0].
+\]</div>
+Applying max pooling with window size <span class="math">\(2\)</span> and stride <span class="math">\(2\)</span> gives
+<div class="math">\[
+\boldsymbol{a}^{(\text{pool})} = [\max(5,0),\, \max(4,0)] = [5,\, 4].
+\]</div>
+If the input is shifted by one position to the right, then, by translation equivariance, the feature map is also shifted by one position, producing
+<div class="math">\[
+\boldsymbol{a}' = [0,\, 5,\, 0,\, 4],
+\]</div>
+then the pooled output remains
+<div class="math">\[
+\boldsymbol{a}^{\prime(\text{pool})} = [\max(0,5),\, \max(0,4)] = [5,\, 4].
+\]</div>
+Hence, pooling increases <b>translational invariance</b>, meaning that small shifts
+in the input signal do not significantly affect the pooled output. A shift by two positions gives <span class="math">\(\boldsymbol{a}'' = [0,\, 0,\, 5,\, 0]\)</span> and the pooled output <span class="math">\([0,\, 5]\)</span>. Hence, the invariance holds only for small shifts.
+</p><p>
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+In this example, the pooled output does not change, because each maximum stays inside its pooling window after the shift. If a maximum moves into another window, the pooled output changes. For instance, <span class="math">\(\boldsymbol{a} = [5,\, 0,\, 4,\, 100]\)</span> gives <span class="math">\([5,\, 100]\)</span>, whereas its shift <span class="math">\([0,\, 5,\, 0,\, 4]\)</span> gives <span class="math">\([5,\, 4]\)</span>. Hence, max pooling gives only an approximate invariance to small shifts.
+
+</div>
+<h4 id="multilayer-convolutional-networks">8.1.1.2 Multilayer Convolutional Networks</h4>
+A convolutional neural network is obtained by composing several convolutional layers, in the same way as a feedforward network is obtained by composing dense layers in <a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Chapter 1</a>. For simplicity, we consider layers with one kernel. The superscript <span class="math">\((l)\)</span> denotes the layer index, as in <a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Chapter 4</a>.
+<div class="definition">
+<div class="heading-container"><b class="heading">Definition 8.2 (Convolutional Neural Network):</b></div>
+
+Let <span class="math">\(L_c\in\mathbb{N}\)</span>. For <span class="math">\(l = 1, 2, \ldots, L_c\)</span>, let <span class="math">\(\boldsymbol{w}^{(l)}\in\mathbb{R}^{r^{(l)}}\)</span> be a kernel, <span class="math">\(b^{(l)}\in\mathbb{R}\)</span> a bias and <span class="math">\(\mathscr{A}^{(l)}\)</span> an activation function. Let the stride and the padding of layer <span class="math">\(l\)</span> be given. A <b>convolutional neural network</b> with <span class="math">\(L_c\)</span> convolutional layers computes
+<div class="math">\[
+\boldsymbol{a}^{(0)} = \boldsymbol{x},
+\qquad
+\boldsymbol{a}^{(l)} = \mathcal{P}^{(l)}\Big(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}\big(\boldsymbol{w}^{(l)} \star \boldsymbol{a}^{(l-1)} + b^{(l)}\big)\Big),
+\quad l = 1, 2, \ldots, L_c,
+\]</div>
+where
+<ul><li><span class="math">\(\boldsymbol{w}^{(l)} \star \boldsymbol{a}^{(l-1)}\)</span> is computed with the stride and the padding of layer <span class="math">\(l\)</span>,
+</li><li>the bias <span class="math">\(b^{(l)}\)</span> is added to every entry,
+</li><li><span class="math">\(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}\)</span> applies <span class="math">\(\mathscr{A}^{(l)}\)</span> to every entry, and
+</li><li><span class="math">\(\mathcal{P}^{(l)}\)</span> is a pooling operation or the identity map.
+</li></ul>
+The vector <span class="math">\(\boldsymbol{a}^{(L_c)}\)</span> is the input of a feedforward network, which gives the output
+<div class="math">\[
+\boldsymbol{y} = {\mathscr{F}_{L,\hat{n}}}\big(\boldsymbol{a}^{(L_c)};\boldsymbol{\Theta}\big).
+\]</div>
+The trainable parameters are the kernels <span class="math">\(\boldsymbol{w}^{(l)}\)</span> and the biases <span class="math">\(b^{(l)}\)</span>, together with the parameters <span class="math">\(\boldsymbol{\Theta}\)</span> of the feedforward network.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+The <b>depth</b> of the network is <span class="math">\(L_c + L\)</span>. It counts all layers with weights, including the output layer, as in <a href="Ch01FeedForwardArchitecture.html#feed.forward.architecture.ch">Chapter 1</a>. Pooling layers are not counted, since they have no parameters.
+
+</div>
+The length of <span class="math">\(\boldsymbol{a}^{(l)}\)</span> is obtained from the length of <span class="math">\(\boldsymbol{a}^{(l-1)}\)</span> by the output length formula in the remark on padding, followed by the formula for pooling. The network is trained by backpropagation (<a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Chapter 4</a>) and the optimization methods of <a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Chapter 5</a>. Since a kernel entry is shared by all neurons of a layer, its gradient is the sum of the contributions of all these neurons.
+The following example illustrates a one-dimensional convolutional neural network with <span class="math">\(L_c = 1\)</span> that predicts a time series, namely the price of a stock. Here, we choose the parameters by hand just for illustration purposes. In practice, the parameters are obtained by training, using the methods of <a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Chapter 4</a> and <a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Chapter 5</a>.
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.6 (A One-Dimensional CNN for Stock Price Prediction):</b></div>
+
+The closing prices of a stock on seven consecutive days are
+<div class="math">\[
+\boldsymbol{x} = [100,\, 102,\, 101,\, 104,\, 103,\, 107,\, 106].
+\]</div>
+We predict the change in the closing price on the next day with the following network.
+</p><p>
+<b>Convolutional layer.</b> Take the difference kernel <span class="math">\(\boldsymbol{w}^{(1)}=[-1,\,1]\)</span> of the edge-detection example, with bias <span class="math">\(b^{(1)}=0\)</span>, stride <span class="math">\(1\)</span>, no padding and activation <span class="math">\(\mathscr{A}^{(1)} = \texttt{ReLU}\)</span>. Then
+<div class="math">\[
+a_i = \texttt{ReLU}\big(x_{i+1}-x_i\big),\qquad i=1,2,\ldots,6.
+\]</div>
+The daily changes are <span class="math">\([2,\,-1,\,3,\,-1,\,4,\,-1]\)</span>. Hence, the feature map is
+<div class="math">\[
+\boldsymbol{a} = [2,\, 0,\, 3,\, 0,\, 4,\, 0].
+\]</div>
+Each entry is the rise of the price on one day. A fall gives the value zero.
+</p><p>
+<b>Pooling layer.</b> The pooling operation <span class="math">\(\mathcal{P}^{(1)}\)</span> is max pooling with window size <span class="math">\(r_p=2\)</span> and stride <span class="math">\(s_p=2\)</span>. It gives
+<div class="math">\[
+\boldsymbol{a}^{(1)} = [\max(2,0),\, \max(3,0),\, \max(4,0)] = [2,\, 3,\, 4].
+\]</div>
+Each entry is the largest rise in a window of two days.
+</p><p>
+<b>Output layer.</b> The feedforward network consists of the output layer only, so that <span class="math">\(L = 1\)</span>, <span class="math">\(n_0 = 3\)</span>, <span class="math">\(n_1 = 1\)</span> and <span class="math">\(\hat{n} = 0\)</span>. With weights <span class="math">\(\boldsymbol{v}=(0.1,\, 0.2,\, 0.3)\)</span>, bias <span class="math">\(c=0\)</span> and the identity activation, it gives the prediction
+<div class="math">\[
+\hat{y} = \boldsymbol{v}\cdot\boldsymbol{a}^{(1)} + c = 0.2 + 0.6 + 1.2 = 2.0.
+\]</div>
+Thus, the network (with manually chosen parameters) predicts that the price rises by <span class="math">\(2\)</span>, that is, from <span class="math">\(106\)</span> to <span class="math">\(108\)</span>. The larger weights on the later entries give more importance to recent days.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.4 (Training and Practical Models):</b></div>
+
+In the above example, the kernel and the weights are chosen by hand. In practice, the parameters <span class="math">\(\boldsymbol{w}^{(1)}\)</span>, <span class="math">\(b^{(1)}\)</span>, <span class="math">\(\boldsymbol{v}\)</span> and <span class="math">\(c\)</span> are learned from historical data. Each training example <span class="math">\((\boldsymbol{x}_i, y_i)\)</span> consists of a window <span class="math">\(\boldsymbol{x}_i\)</span> of past prices together with the observed change <span class="math">\(y_i\)</span> on the following day. The parameters minimize the mean squared error
+<div class="math">\[
+\mathcal{C}_{\tiny \texttt{MSE}}\big(\boldsymbol{w}^{(1)}, b^{(1)}, \boldsymbol{v}, c\big) = \frac{1}{N_{\rm train}}\sum_{i=1}^{N_{\rm train}} \big(\hat{y}(\boldsymbol{x}_i) - y_i\big)^2,
+\]</div>
+where <span class="math">\(\hat{y}(\boldsymbol{x}_i)\)</span> is the prediction of the network for the input <span class="math">\(\boldsymbol{x}_i\)</span>.
+Practical models use log returns instead of prices. They also use several kernels, several input channels (such as price and volume) and several layers. 
+
+</div><h3 id="two-dimensional-convolutional-layer">8.1.2 Two-Dimensional Convolutional Layer</h3>
+We now extend the one-dimensional convolutional layer to the two-dimensional case,
+which is the core operation in convolutional neural networks (CNNs) for image processing.
+<h4 id="convolution-operator">8.1.2.1 Convolution Operator</h4>
+In this subsection, we briefly recall the basic definitions concerning convolution. We start with convolution of two functions from <span class="math">\(\mathbb{R}^2\)</span> to <span class="math">\(\mathbb{R}\)</span>.
+<div class="definition">
+<div class="heading-container"><b class="heading">Definition 8.3 (Convolution of Functions):</b></div><p>
+Let <span class="math">\(f, g : \mathbb{R}^2 \to \mathbb{R}\)</span>. The <b>convolution</b> of <span class="math">\(f\)</span> and <span class="math">\(g\)</span>, denoted by <span class="math">\((f * g)\)</span>, is defined by
+<div class="math">\[
+(f * g)(x, y)
+= \int_{\mathbb{R}^2} f(\xi, \eta)\, g(x - \xi,\, y - \eta)\, d\xi\, d\eta,
+\]</div>
+whenever the integral exists. 
+
+</div>
+The continuous definition of the convolution operator can be restricted to the discrete case, leading to the definition of convolution between two matrices.
+<div class="definition">
+<div class="heading-container"><b class="heading">Definition 8.4 (Convolution of Matrices):</b></div><p>
+Let <span class="math">\(A = [a_{i,j}] \in \mathbb{R}^{m \times n}\)</span> and <span class="math">\(W = [w_{p,q}] \in \mathbb{R}^{r_h \times r_w}\)</span>. 
+The <b>discrete convolution</b> of <span class="math">\(A\)</span> and <span class="math">\(W\)</span>, denoted by <span class="math">\((W * A)\)</span>, is defined by
+<div class="math">\[
+(W * A)_{i,j}
+= \sum_{p=1}^{r_h} \sum_{q=1}^{r_w}
+w_{p,q}\, a_{\,i - p + 1,\, j - q + 1},
+\]</div>
+where <span class="math">\(a_{i - p + 1,\, j - q + 1} = 0\)</span> whenever the indices fall outside the range of <span class="math">\(A\)</span>.
+
+</div>
+CNNs typically use the <b>cross-correlation</b> operation given by
+<div class="math">\[
+(W \star A)_{i,j}
+= \sum_{p=1}^{r_h} \sum_{q=1}^{r_w}
+w_{p,q}\, a_{\,i + p - 1,\, j + q - 1}.
+\]</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+In the machine learning literature, the above cross-correlation itself is referred to as convolution. We follow this convention, and we write <span class="math">\(W * A\)</span> for <span class="math">\(W \star A\)</span> from now on.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.5:</b></div>
+
+The matrix <span class="math">\(A\)</span> can be viewed as an infinite matrix 
+<div class="math">\[
+A = [a_{i,j}]_{i,j=-\infty}^\infty
+\]</div>
+with finite support, which means that <span class="math">\(a_{i,j}=0\)</span> whenever <span class="math">\(i \notin \{1, \ldots, m\}\)</span> or <span class="math">\(j \notin \{1, \ldots, n\}\)</span>. In this case, we say that <span class="math">\(A\)</span> has an <span class="math">\(m\times n\)</span> support.
+
+</div>
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.7 (Moving average):</b></div><p>
+Given a two dimensional discrete signal <span class="math">\(A\)</span>, the <span class="math">\(2\times 2\)</span> supported kernel that produces a simple moving average is given by
+<div class="math">\[
+W = \left[\begin{array}{cccccc}
+	\tfrac{1}{4}&\tfrac{1}{4}\\
+	\tfrac{1}{4}&\tfrac{1}{4}\\
+	\end{array}\right],
+\]</div>
+where <span class="math">\(w_{1,1}=w_{1,2}=w_{2,1}=w_{2,2}=1/4\)</span>, and the matrix is extended by zeros in all four directions. A kernel whose entries are all equal and sum to one is called a <b>mean filter</b> (or <b>box filter</b>).  Then the cross-correlation leads to the simple moving average
+<div class="math">\[
+(W * A)_{i,j} = \sum_{p=1}^{r_h} \sum_{q=1}^{r_w} 
+w_{p,q}\, a_{\,i + p - 1,\, j + q - 1} = \frac{1}{4}\big(a_{i,j} + a_{i+1,j} + a_{i,j+1} + a_{i+1,j+1} \big).
+\]</div>
+This operation replaces each pixel value by the average of the entries of the <span class="math">\(2\times 2\)</span> block of <span class="math">\(A\)</span> given by
+<div class="math">\[
+B_{i,j} =
+\begin{bmatrix}
+a_{i,j} & a_{i,j+1}\\
+a_{i+1,j} & a_{i+1,j+1}
+\end{bmatrix}.
+\]</div>
+This produces a <b>blurred</b> or <b>smoothed</b> version of the image.
+</p><p>
+Averaging replaces each pixel by the mean of its local neighborhood, which suppresses rapid spatial variations (high-frequency components) while preserving slowly varying content (low-frequency components). Consequently, sharp transitions (edges) and noise are attenuated, yielding a <b>blurred</b> (smoothed) image. This relates it to the concept of a <b>low-pass filter</b>.
+
+</div>
+<div class="note">
+<div class="heading-container"><b class="heading">Note:</b></div>
+
+In the theoretical definition, convolution is expressed as an infinite sum 
+ranging from <span class="math">\(-\infty\)</span> to <span class="math">\(\infty\)</span>, assuming that the sequences are defined for all integer indices.  
+In practical settings, however, the input and kernel have finite support, and all values outside their valid ranges are treated as zero.  
+For computational convenience, we will omit the explicit zero extensions and write the summations only over the appropriate finite index ranges.
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 8.4 (Blurring Effect of a Mean Filter):</b></div>
+
+Consider a <span class="math">\(3\times3\)</span> mean filter (or box filter) kernel
+</p><div class="math numbered-math">\begin{eqnarray}
+W = \frac{1}{9}
+\begin{bmatrix}
+1 & 1 & 1\\
+1 & 1 & 1\\
+1 & 1 & 1
+\end{bmatrix}.
+\end{eqnarray}<span class="eq-number">(8.7)</span></div><p>
+Show that the operation produces a blurred image (equivalently, show that the kernel <span class="math">\(W\)</span> is a low-pass filter).
+
+</div>
+<div class="hint">
+<div class="heading-container"><b class="heading">Hint 8.1:</b></div>
+
+<ul><li>Write down the expression for <span class="math">\((W * X)_{i,j}\)</span>, where <span class="math">\(X = [x_{p,q}]\)</span> is a two-dimensional input signal (or image) and show that each output pixel <span class="math">\(a_{i,j}\)</span> is the average of the <span class="math">\(3\times3\)</span> neighborhood of <span class="math">\(X\)</span> whose top-left entry is <span class="math">\((i,j)\)</span>.
+</li><li>Explain why this operation produces a <b>blurred image</b> by giving an argument similar to the one given in the above example.
+</li></ul>
+
+</div>
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.8 (Gaussian Blurring):</b></div><p>
+A smoother and more natural way to blur an image is to use a <b>Gaussian blur kernel</b>,
+whose entries are proportional to a discrete approximation of a two-dimensional Gaussian function.  
+A commonly used <span class="math">\(3\times3\)</span> Gaussian blur kernel is
+<div class="math">\[
+W_{\text{G}} = \frac{1}{16}
+\begin{bmatrix}
+1 & 2 & 1\\
+2 & 4 & 2\\
+1 & 2 & 1
+\end{bmatrix}.
+\]</div>
+Convolving an image <span class="math">\(X\)</span> with <span class="math">\(W_{\text{G}}\)</span> produces the output
+<div class="math">\[
+(W_{\text{G}} * X)_{i,j}
+= \sum_{p=1}^{3}\sum_{q=1}^{3}
+w_{p,q}\, x_{i+p-1,\,j+q-1},
+\]</div>
+where <span class="math">\(w_{p,q}\)</span> are the entries of <span class="math">\(W_{\text{G}}\)</span>.
+</p><p>
+
+The weights are largest at the center and decrease symmetrically outward,
+so this filter performs a <b>weighted average</b> that preserves overall image brightness
+while reducing noise and small-scale variations.  
+Unlike the simple mean filter, the Gaussian kernel avoids sharp artifacts and
+produces a more visually natural <b>blurred</b> image.
+
+</div>
+The mean filter smooths (blurs) an image by averaging nearby pixels, whereas
+an <b>edge detection</b> filter highlights regions of sharp intensity change as illustrated in the following example. 
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.9 (Edge Detection via Convolution):</b></div><p>
+A simple <b>vertical edge detection kernel</b> is
+<div class="math">\[
+W_v =
+\begin{bmatrix}
+-1 & 0 & 1\\
+-1 & 0 & 1\\
+-1 & 0 & 1
+\end{bmatrix},
+\]</div>
+and a corresponding <b>horizontal edge detection kernel</b> is
+<div class="math">\[
+W_h =
+\begin{bmatrix}
+-1 & -1 & -1\\
+0 & 0 & 0\\
+1 & 1 & 1
+\end{bmatrix}.
+\]</div>
+For an input image <span class="math">\(X = [x_{i,j}]\)</span>, the feature maps are computed as
+<div class="math">\[
+A_v = W_v * X,
+\qquad
+A_h = W_h * X.
+\]</div>
+Each of these responds strongly where there is a vertical or horizontal edge, respectively.
+</p><p>
+The matrices <span class="math">\(W_v\)</span> and <span class="math">\(W_h\)</span> are called <b>Prewitt filters</b>. The <b>Sobel filters</b> give the weight <span class="math">\(2\)</span> to the central row or column, as in the next example.
+</p><p>
+
+The overall edge magnitude can be approximated by combining both directions:
+<div class="math">\[
+A_{\text{edge}} = \sqrt{A_v \odot A_v + A_h \odot A_h},
+\]</div>
+where <span class="math">\(\odot\)</span> denotes the Hadamard product introduced in <a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Chapter 4</a>, and the square root is taken entrywise.
+
+</div>
+The following example contrasts Gaussian blurring with edge detection by the Sobel and Laplacian kernels.
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.10 (Blurring vs. Edge Detection):</b></div>
+
+The <b>Gaussian blur</b> smooths an image by averaging pixel intensities with Gaussian weights.
+For instance, using the <span class="math">\(3\times3\)</span> Gaussian kernel
+<div class="math">\[
+W_{\text{G}} = \frac{1}{16}
+\begin{bmatrix}
+1 & 2 & 1\\
+2 & 4 & 2\\
+1 & 2 & 1
+\end{bmatrix},
+\]</div>
+the output
+</p><div class="math numbered-math">\begin{eqnarray}
+(W_{\text{G}} * X)_{i,j}
+= \sum_{p=1}^{3}\sum_{q=1}^{3} w_{p,q}\,x_{i+p-1,\,j+q-1},
+\end{eqnarray}<span class="eq-number">(8.8)</span></div><p>
+where <span class="math">\(w_{p,q}\)</span> are the entries of <span class="math">\(W_{\text{G}}\)</span>, replaces each pixel by a weighted local average.  
+This operation suppresses high-frequency components, resulting in a <b>blurred (low-pass)</b> image.
+</p><p>
+
+In contrast, an <b>edge detection</b> filter accentuates regions of sharp intensity change.
+Two common examples are the <b>Sobel</b> and <b>Laplacian</b> kernels.
+</p><ul><li><b>Sobel kernels:</b>
+</p><div class="math numbered-math">\begin{eqnarray}
+W_x =
+\begin{bmatrix}
+-1 & 0 & 1\\
+-2 & 0 & 2\\
+-1 & 0 & 1
+\end{bmatrix},
+\qquad
+W_y =
+\begin{bmatrix}
+-1 & -2 & -1\\
+0 & 0 & 0\\
+1 & 2 & 1
+\end{bmatrix}.
+\end{eqnarray}<span class="eq-number">(8.9)</span></div><p>
+These measure horizontal and vertical intensity gradients, respectively. For an input image <span class="math">\(X\)</span>, the feature maps are
+</p><div class="math numbered-math">\begin{eqnarray}
+A_x = W_x * X,
+\qquad
+A_y = W_y * X,
+\end{eqnarray}<span class="eq-number">(8.10)</span></div><p>
+and the edge magnitude is
+</p><div class="math numbered-math">\begin{eqnarray}
+A_{\text{edge}} = \sqrt{A_x \odot A_x + A_y \odot A_y},
+\end{eqnarray}<span class="eq-number">(8.11)</span></div><p>
+where the square root is taken entrywise.
+</p><p>
+</li><li><b>Laplacian kernel:</b>
+</p><div class="math numbered-math">\begin{eqnarray}
+W_{\text{L}} =
+\begin{bmatrix}
+0 & -1 & 0\\
+-1 & 4 & -1\\
+0 & -1 & 0
+\end{bmatrix}.
+\end{eqnarray}<span class="eq-number">(8.12)</span></div><p>
+This kernel approximates the negative of the Laplacian, <span class="math">\(-\Delta\)</span>, of the image intensity. The Laplacian emphasizes regions where intensity changes rapidly in multiple directions,
+producing strong responses along edges and contours.
+</li></ul><p>
+
+Thus, while the Gaussian blur removes detail by averaging neighboring pixels,
+edge-detection filters highlight rapid local variations.
+Together, these operations illustrate the fundamental duality between
+<b>low-pass filtering (smoothing)</b> and <b>high-pass filtering (edge detection)</b> in image processing.
+
+</div><h4 id="2d-convolution-layer">8.1.2.2 2D Convolution Layer</h4>
+Let us restrict to grayscale images, where the input and the kernel are two-dimensional arrays (matrices).
+</p><p>
+Let the input to the layer be a two-dimensional array
+<div class="math">\[
+X = [x_{i,j}]_{i=1,j=1}^{n_{0h},n_{0w}} \in \mathbb{R}^{n_{0h}\times n_{0w}},
+\]</div>
+where <span class="math">\(n_{0h}\)</span> and <span class="math">\(n_{0w}\)</span> denote the <b>height</b> and <b>width</b> of the input.
+</p><p>
+Let the convolutional kernel (or filter) be
+<div class="math">\[
+W = [w_{p,q}]_{p=1,q=1}^{r_h, r_w} \in \mathbb{R}^{r_h\times r_w},
+\]</div>
+where <span class="math">\(r_h\)</span> and <span class="math">\(r_w\)</span> denote the kernel height and width, respectively.
+Let <span class="math">\(b \in \mathbb{R}\)</span> be the bias term and <span class="math">\(\mathscr{A}\)</span> be a nonlinear activation function.
+<div class="definition">
+<div class="heading-container"><b class="heading">Definition 8.5 (Two-Dimensional Convolutional Layer):</b></div><p>
+For given stride values <span class="math">\(s_h, s_w \ge 1\)</span> in the vertical and horizontal directions, respectively,
+the <b>convolutional layer</b> produces the output
+<div class="math">\[
+a_{i,j} = \mathscr{A}\!\Bigg(
+\sum_{p=1}^{r_h}\sum_{q=1}^{r_w}
+w_{p,q}\, x_{(i-1)s_h + p,\,(j-1)s_w + q} +\,b
+\Bigg),
+\quad
+i=1,2,\ldots,n_{\text{out},h}, \;
+j=1,2,\ldots,n_{\text{out},w},
+\]</div>
+where
+<div class="math">\[
+n_{\text{out},h} = 
+\Big\lfloor \frac{n_{0h} - r_h}{s_h} \Big\rfloor + 1,
+\qquad
+n_{\text{out},w} =
+\Big\lfloor \frac{n_{0w} - r_w}{s_w} \Big\rfloor + 1,
+\]</div>
+are the output dimensions. The pair <span class="math">\((s_h, s_w)\)</span> is called the <b>stride</b>.
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.6 (Padding):</b></div><p>
+If zero-padding of size <span class="math">\(p_h\)</span> and <span class="math">\(p_w\)</span> is applied to the height and width directions,
+the effective input dimensions become
+<div class="math">\[
+\tilde{n}_{0h} = n_{0h} + 2p_h, \qquad \tilde{n}_{0w} = n_{0w} + 2p_w,
+\]</div>
+and the output dimensions are given by
+<div class="math">\[
+n_{\text{out},h} = 
+\Big\lfloor \frac{\tilde{n}_{0h} - r_h}{s_h} \Big\rfloor + 1,
+\qquad
+n_{\text{out},w} =
+\Big\lfloor \frac{\tilde{n}_{0w} - r_w}{s_w} \Big\rfloor + 1.
+\]</div>
+
+</div>
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.11 (2D Convolution with <span class="math">\(3\times3\)</span> Kernel and Stride <span class="math">\((1,1)\)</span>):</b></div>
+
+Consider the input image and the kernel, respectively,
+</p><div class="math numbered-math">\begin{eqnarray}
+X =
+\begin{bmatrix}
+x_{1,1} & x_{1,2} & x_{1,3} & x_{1,4} \\
+x_{2,1} & x_{2,2} & x_{2,3} & x_{2,4} \\
+x_{3,1} & x_{3,2} & x_{3,3} & x_{3,4} \\
+x_{4,1} & x_{4,2} & x_{4,3} & x_{4,4}
+\end{bmatrix},
+\qquad
+W =
+\begin{bmatrix}
+w_{1,1} & w_{1,2} & w_{1,3} \\
+w_{2,1} & w_{2,2} & w_{2,3} \\
+w_{3,1} & w_{3,2} & w_{3,3}
+\end{bmatrix}.
+\end{eqnarray}<span class="eq-number">(8.13)</span></div><p>
+Assume that the kernel <span class="math">\(W\)</span> slides over <span class="math">\(X\)</span> with stride <span class="math">\((s_h, s_w) = (1,1)\)</span> 
+and without padding.  
+Since <span class="math">\( n_{0h}= n_{0w} = 4\)</span> and <span class="math">\(r_h = r_w = 3\)</span>, the output dimensions are
+</p><div class="math numbered-math">\begin{eqnarray}
+n_{\text{out},h} = n_{\text{out},w} = (4 - 3)/1 + 1 = 2.
+\end{eqnarray}<span class="eq-number">(8.14)</span></div><p>
+Thus, the output activation map <span class="math">\(A = [a_{i,j}] \in \mathbb{R}^{2\times2}\)</span> is given by
+</p><div class="math numbered-math">\begin{eqnarray}
+a_{i,j} = \mathscr{A}\!\Bigg(
+\sum_{p=1}^{3}\sum_{q=1}^{3}
+w_{p,q}\, x_{i+p-1,\,j+q-1} +\,b
+\Bigg),
+\qquad i,j = 1,2.
+\end{eqnarray}<span class="eq-number">(8.15)</span></div><p>
+
+</div>
+<div class="problem">
+<div class="heading-container"><b class="heading">Problem 8.5 (Fixed Kernels in Convolutional Layers):</b></div>
+
+Consider a two-dimensional convolutional layer with the identity activation and zero bias,
+<div class="math">\[
+a_{i,j} = \sum_{p=1}^{r_h}\sum_{q=1}^{r_w} w_{p,q}\,x_{i+p-1,\,j+q-1}.
+\]</div>
+Suppose the kernel <span class="math">\(W\)</span> is fixed as the <span class="math">\(3\times3\)</span> Gaussian kernel
+<div class="math">\[
+W_{\text{G}} = \frac{1}{16}
+\begin{bmatrix}
+1 & 2 & 1\\
+2 & 4 & 2\\
+1 & 2 & 1
+\end{bmatrix}.
+\]</div>
+Show that this layer performs Gaussian smoothing (blurring) of the input.
+Explain what changes if the identity activation is replaced by <code>ReLU</code>.
+
+</div><div class="problem">
+<div class="heading-container"><b class="heading">Problem 8.6 (Computing Output Feature Map Dimensions):</b></div>
+
+In each of the following problems, determine the output feature map size <span class="math">\((n_{\text{out},h}, n_{\text{out},w})\)</span> of the two-dimensional convolutional layer defined above, with zero padding as in the remark on padding. The input size is <span class="math">\((n_{0h}, n_{0w})\)</span>, the kernel size is <span class="math">\((r_h, r_w)\)</span>, the stride is <span class="math">\((s_h, s_w)\)</span>, and the padding is <span class="math">\((p_h, p_w)\)</span>.
+</p><ol class="latex-enumerate"><li>An image of size <span class="math">\((32, 32)\)</span> is convolved with a <span class="math">\(3\times3\)</span> Gaussian blur kernel
+using stride <span class="math">\((1, 1)\)</span> and no padding <span class="math">\((p_h = p_w = 0)\)</span>.
+</p><p>
+</li><li>The same image is convolved with a <span class="math">\(5\times5\)</span> kernel
+using stride <span class="math">\((2, 2)\)</span> and no padding <span class="math">\((p_h = p_w = 0)\)</span>.
+</p><p>
+</li><li>Now apply a <span class="math">\(3\times3\)</span> Laplacian edge-detection kernel
+using stride <span class="math">\((1, 1)\)</span> and padding <span class="math">\((p_h = p_w = 1)\)</span> (“same” padding).
+Show that the output has the same spatial dimensions as the input.
+</p><p>
+</li><li>Let an input of size <span class="math">\((64, 64)\)</span> pass through two convolutional layers in sequence:
+<ul><li>Layer 1: kernel size <span class="math">\((3, 3)\)</span>, stride <span class="math">\((1, 1)\)</span>, padding <span class="math">\((1, 1)\)</span>,
+</li><li>Layer 2: kernel size <span class="math">\((5, 5)\)</span>, stride <span class="math">\((2, 2)\)</span>, padding <span class="math">\((2, 2)\)</span>.
+</li></ul>
+Compute the final output feature-map size after both layers.
+</li></ol>
+
+</div><div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.7 (Pooling in Two Dimensions):</b></div><p>
+A two-dimensional <b>max-pooling layer</b> with window size <span class="math">\(r_{p,h}\times r_{p,w}\)</span> and stride <span class="math">\((s_{p,h}, s_{p,w})\)</span>
+acts on the feature map <span class="math">\(A = [a_{i,j}]\)</span> as
+<div class="math">\[
+a^{(\text{pool})}_{i,j}
+= \max_{(k,l)\in\mathcal{N}_{i,j}} a_{k,l},
+\]</div>
+where
+<div class="math">\[
+\mathcal{N}_{i,j} = \big\{\big((i-1)s_{p,h} + u,\, (j-1)s_{p,w} + v\big) : u = 1, 2, \ldots, r_{p,h},~ v = 1, 2, \ldots, r_{p,w}\big\}
+\]</div>
+is the <span class="math">\((i,j)^{\rm th}\)</span> pooling window.
+This reduces the spatial resolution while improving translational invariance.
+</p><p>
+Similarly, <b>min-pooling layer</b> and <b>average-pooling layer</b> can also be defined.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.8 (Colour Images and Multiple Channels):</b></div>
+
+So far, the input has been a grayscale image, which has one intensity value at each pixel. A colour image has three values at each pixel, one for each of the colours red, green and blue (RGB). Such an image is stored as an array
+<div class="math">\[
+X = [x_{i,j,c}] \in \mathbb{R}^{n_{0h}\times n_{0w}\times C},\qquad C = 3,
+\]</div>
+where <span class="math">\(c\)</span> is the <b>channel</b> index. For a fixed <span class="math">\(c\)</span>, the matrix <span class="math">\([x_{i,j,c}]\)</span> is called the <span class="math">\(c^{\rm th}\)</span> channel of <span class="math">\(X\)</span>. A kernel for such an input has the same number of channels and is given by
+<div class="math">\[
+W = [w_{p,q,c}] \in \mathbb{R}^{r_h\times r_w\times C}.
+\]</div>
+The output of the layer at position <span class="math">\((i,j)\)</span> is
+<div class="math">\[
+a_{i,j} = \mathscr{A}\Bigg(\sum_{c=1}^{C}\sum_{p=1}^{r_h}\sum_{q=1}^{r_w} w_{p,q,c}\, x_{(i-1)s_h + p,\,(j-1)s_w + q,\,c} + b\Bigg).
+\]</div><p>
+The above layer has one kernel and produces one feature map. In practice, a layer has several kernels of the same size. Their number <span class="math">\(K\)</span> is chosen by the designer of the network, in the same way as the width of a layer in a feedforward network. We write the entries of the <span class="math">\(k^{\rm th}\)</span> kernel as <span class="math">\(w_{p,q,c,k}\)</span> and its bias as <span class="math">\(b_k\)</span>. Each kernel is applied to the same input and gives its own feature map:
+<div class="math">\[
+a_{i,j,k} = \mathscr{A}\Bigg(\sum_{c=1}^{C}\sum_{p=1}^{r_h}\sum_{q=1}^{r_w} w_{p,q,c,k}\, x_{(i-1)s_h + p,\,(j-1)s_w + q,\,c} + b_k\Bigg),\qquad k = 1, 2, \ldots, K.
+\]</div>
+The <span class="math">\(K\)</span> feature maps together form an output with <span class="math">\(K\)</span> channels, which is the input of the next layer. The entries of all kernels are learned in training. Such a layer has <span class="math">\(K(r_h r_w C + 1)\)</span> parameters. This number does not depend on the size of the image.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.9 (Multilayer Networks in Two Dimensions):</b></div>
+
+The convolutional neural network defined for one-dimensional inputs carries over to two dimensions. The feature maps <span class="math">\(A^{(l)}\)</span> are then matrices, with <span class="math">\(A^{(0)} = X\)</span> and
+<div class="math">\[
+A^{(l)} = \mathcal{P}^{(l)}\Big(\underset{\overline{~~~~}}{\mathscr{A}}^{(l)}\big(W^{(l)} * A^{(l-1)} + b^{(l)}\big)\Big),
+\quad l = 1, 2, \ldots, L_c,
+\]</div>
+where <span class="math">\(W^{(l)}\in\mathbb{R}^{r^{(l)}_h\times r^{(l)}_w}\)</span> is the kernel of layer <span class="math">\(l\)</span>. Before the feedforward network, the matrix <span class="math">\(A^{(L_c)}\)</span> is <b>flattened</b>, that is, its entries are listed row by row to form a vector. For inputs with several channels, each layer uses several kernels, as in the remark on colour images and multiple channels. Each <span class="math">\(A^{(l)}\)</span> is then an array with several channels.
+
+</div>
+<div class="example">
+<div class="heading-container"><b class="heading">Example 8.12 (A Small CNN for Digit Images):</b></div>
+
+Consider grayscale images of handwritten digits of size <span class="math">\(28\times28\)</span>, which are to be classified into the <span class="math">\(10\)</span> classes <span class="math">\(0, 1, \ldots, 9\)</span>. Take a network with two convolutional layers. Each layer has a <span class="math">\(5\times5\)</span> kernel, stride <span class="math">\(1\)</span>, no padding and the activation <code>ReLU</code>. Each layer is followed by max pooling with a <span class="math">\(2\times2\)</span> window and stride <span class="math">\(2\)</span>. The sizes are as follows.
+<ul><li>Layer 1: the convolution gives <span class="math">\((28-5)+1 = 24\)</span>, and pooling gives <span class="math">\(\lfloor (24-2)/2\rfloor + 1 = 12\)</span>. Hence, <span class="math">\(A^{(1)}\in\mathbb{R}^{12\times12}\)</span>.
+</li><li>Layer 2: the convolution gives <span class="math">\((12-5)+1 = 8\)</span>, and pooling gives <span class="math">\(\lfloor (8-2)/2\rfloor + 1 = 4\)</span>. Hence, <span class="math">\(A^{(2)}\in\mathbb{R}^{4\times4}\)</span>.
+</li><li>Flattening <span class="math">\(A^{(2)}\)</span> gives a vector in <span class="math">\(\mathbb{R}^{16}\)</span>. An output layer with <span class="math">\(10\)</span> neurons and the softmax function <span class="math">\(\texttt{sm}\)</span> gives the class probabilities.
+</li></ul>
+The number of parameters is <span class="math">\(25+1 = 26\)</span> for each convolutional layer and <span class="math">\(16\times10 + 10 = 170\)</span> for the output layer, that is, <span class="math">\(222\)</span> in total. For comparison, a single dense layer from the <span class="math">\(784\)</span> pixels to the <span class="math">\(10\)</span> outputs has <span class="math">\(784\times10 + 10 = 7850\)</span> parameters.
+
+</div>
+<div class="remark">
+<div class="heading-container"><b class="heading">Remark 8.10:</b></div>
+
+A network with one kernel per layer is too small for practical use. Practical networks use several kernels in each layer, as described in the remark on colour images and multiple channels. For example, the network LeNet-5  has the same structure as the above example, with <span class="math">\(6\)</span> kernels in its first convolutional layer and <span class="math">\(16\)</span> kernels in its second. We omit these details for this course.
+
+</div>
+    </div>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 03-Nov-2026</footer>
+    <script>
+    document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "s")) {
+            e.preventDefault();
+        }
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocButton = document.getElementById('toc-button');
+            const tocPanel = document.getElementById('toc-panel');
+            const closeToc = document.getElementById('close-toc');
+
+            if (localStorage.getItem('tocOpen') === 'true') {
+                tocPanel.classList.add('open');
+                localStorage.removeItem('tocOpen');
+            }
+
+            tocButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tocPanel.classList.toggle('open');
+            });
+
+            function closeTocPanel() {
+                tocPanel.classList.remove('open');
+            }
+
+            closeToc.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeTocPanel();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!tocPanel.contains(e.target) && e.target !== tocButton) {
+                    closeTocPanel();
+                }
+            });
+
+            tocPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            document.querySelectorAll('#toc-panel a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.getAttribute('href').startsWith('#')) {
+                        localStorage.setItem('tocOpen', 'true');
+                    }
+                    if (this.hash) {
+                        e.preventDefault();
+                        const target = document.getElementById(this.hash.substring(1));
+                        if (target) {
+                            window.scrollTo({
+                                top: target.offsetTop - 70,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, this.hash);
+                            if (window.innerWidth < 768) {
+                                closeTocPanel();
+                            }
+                        }
+                    }
+                });
+            });
+
+            if (window.location.hash) {
+                const target = document.getElementById(window.location.hash.substring(1));
+                if (target) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: target.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

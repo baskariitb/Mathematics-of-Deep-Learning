@@ -136,6 +136,7 @@
 <div class="toc-item toc-subsection"><a href="Ch08AdvancedArchitectures.html#two-dimensional-convolutional-layer">8.1.2 Two-Dimensional Convolutional Layer</a></div>
 <div class="toc-item toc-subsubsection"><a href="Ch08AdvancedArchitectures.html#convolution-operator">8.1.2.1 Convolution Operator</a></div>
 <div class="toc-item toc-subsubsection"><a href="Ch08AdvancedArchitectures.html#2d-convolution-layer">8.1.2.2 2D Convolution Layer</a></div>
+<div class="toc-item toc-subsection"><a href="Ch08AdvancedArchitectures.html#vgg16.subs">8.1.3 A Real Architecture: VGG-16</a></div>
 </div></div>
 </div>
     </div>
@@ -990,8 +991,35 @@ The number of parameters is <span class="math">\(25+1 = 26\)</span> for each con
 A network with one kernel per layer is too small for practical use. Practical networks use several kernels in each layer, as described in the remark on colour images and multiple channels. For example, the network LeNet-5  has the same structure as the above example, with <span class="math">\(6\)</span> kernels in its first convolutional layer and <span class="math">\(16\)</span> kernels in its second. We omit these details for this course.
 
 </div>
+<h3 id="vgg16.subs">8.1.3 A Real Architecture: VGG-16</h3>
+We conclude the discussion of CNNs with a network that is used in practice. VGG-16 was introduced by Simonyan and Zisserman in 2014. It classifies colour images of size <span class="math">\(224\times224\times3\)</span> into the <span class="math">\(1000\)</span> classes of the ImageNet data set, such as animals, vehicles and everyday objects. Its architecture is shown in <a href="Ch08AdvancedArchitectures.html#vgg16.fig">Figure 8.2</a>.
+<div class="latex-figure" id="vgg16.fig">
+<img src="Figures/Ch08VGG16CNN.png" alt="">
+<div class="figure-caption"><p>Figure 8.2: The architecture of VGG-16. The height of each box shows the spatial size of the feature map, and its width shows the number of channels.</p></div>
+</div>
+In the notation of <a href="Ch08AdvancedArchitectures.html#convolution.neural.network.sec" class="internal-link">Section 8.1</a>, VGG-16 is a convolutional neural network with the following structure.
+<ol class="latex-enumerate"><li><b>Convolutional layers.</b> There are <span class="math">\(13\)</span> convolutional layers, arranged in five blocks of <span class="math">\(2\)</span>, <span class="math">\(2\)</span>, <span class="math">\(3\)</span>, <span class="math">\(3\)</span> and <span class="math">\(3\)</span> layers. Every layer uses kernels of spatial size <span class="math">\(3\times3\)</span>, stride <span class="math">\(1\)</span>, padding <span class="math">\(1\)</span> and the activation <code>ReLU</code>. Hence, every convolutional layer keeps the spatial size of its input.
+</li><li><b>Channels.</b> Each layer has several kernels, as in the remark on colour images and multiple channels. The number of kernels is <span class="math">\(64\)</span> in the first block, and it doubles in each of the next blocks up to <span class="math">\(512\)</span>. For example, each kernel of the first layer has size <span class="math">\(3\times3\times3\)</span>, and each kernel of the second layer has size <span class="math">\(3\times3\times64\)</span>.
+</li><li><b>Pooling.</b> Each block ends with max pooling with a <span class="math">\(2\times2\)</span> window and stride <span class="math">\(2\)</span>. The pooling operation of every other layer is the identity map. The spatial size is halved by each pooling, from <span class="math">\(224\)</span> to <span class="math">\(112\)</span>, <span class="math">\(56\)</span>, <span class="math">\(28\)</span>, <span class="math">\(14\)</span> and finally <span class="math">\(7\)</span>.
+</li><li><b>Feedforward network.</b> The output of size <span class="math">\(7\times7\times512\)</span> is flattened into a vector of length <span class="math">\(25\,088\)</span>. A feedforward network with two hidden layers of width <span class="math">\(4096\)</span> and the activation <code>ReLU</code>, and an output layer with <span class="math">\(1000\)</span> neurons, maps this vector to the class scores. The softmax function <span class="math">\(\texttt{sm}\)</span> turns these scores into the probabilities of the <span class="math">\(1000\)</span> classes.
+</li></ol>
+The depth of VGG-16 is <span class="math">\(13 + 3 = 16\)</span>, which gives the network its name. The pooling layers are not counted, since they have no parameters. The network has about <span class="math">\(138\)</span> million parameters. Most of them, about <span class="math">\(103\)</span> million, belong to the first dense layer. All parameters were learned on about <span class="math">\(1.2\)</span> million labelled ImageNet images, using backpropagation and gradient-based optimization as in <a href="Ch04NetworkGradientEvaluation.html#network.gradient.evaluation.ch">Chapter 4</a> and <a href="Ch05OptimizationAlgorithms.html#optimization.algorithms.ch">Chapter 5</a>.
+</p><div class="code">
+<div class="heading-container"><b class="heading">Code 8.1:</b></div>
+
+The Colab notebook
+<a href="https://drive.google.com/file/d/11ddy1PA-9L2SbUFrRdsuoSZqNwa0HePd/view?usp=sharing" target="_blank"><code>ImageClassificationVGG16</code></a>
+applies the trained VGG-16 to an image of your choice. It
+<ol class="latex-enumerate"><li>loads VGG-16 with the parameters learned on ImageNet,
+</li><li>preprocesses the uploaded image into an input of size <span class="math">\(224\times224\times3\)</span>,
+</li><li>prints the five most probable classes and their probabilities, and
+</li><li>plots the <span class="math">\(64\)</span> feature maps of the first two convolutional layers.
+</li></ol>
+Run the notebook with a few images of your own. Locate in the code the preprocessing, the output of the feedforward part and the feature maps. Also try an image whose main object is not one of the ImageNet classes, for example a person, and explain the result.
+
+</div>
     </div>
-    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 03-Nov-2026</footer>
+    <footer>&copy; S. Baskar, Department of Mathematics, IIT Bombay. &mdash; Updated: 05-Nov-2026</footer>
     <script>
     document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
     document.addEventListener("keydown", function(e) {

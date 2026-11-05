@@ -1,0 +1,533 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Optimization Algorithms}\label{optimization.algorithms.ch}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{-0.8in}
+An artificial neural network (ANN) consists of several parameters, which can be broadly categorized into two types, namely, trainable (or learnable) parameters and hyperparameters. Training a neural network is the process of determining appropriate values of the trainable parameters (weights and biases) such that the ANN function (defined in \defi{artificial.neural.network.def}) approximates the required input-output mapping. Often, such mappings are implicitly represented in training data and the trainable parameters of the network are iteratively updated to minimize the error between the predicted outputs and the true outputs. The error is quantified by an appropriately chosen \hl{loss function}, and when averaged over the entire dataset, it is referred to as a \hl{cost function} (see \defi{loss.cost.function.def}).
+
+The minimization of a cost function depends on the knowledge of how the changes in the network parameters affect the cost.  This requires the computation of the gradient of the cost function with respect to the parameters. The backpropagation algorithm discussed in the previous chapter can be used to efficiently compute these gradients by propagating errors backward through the network, starting from the output layer to the first hidden layer. Once gradients are available, the parameters are updated using gradient-based optimization algorithms. The most basic method is the gradient descent method (GD), where parameters are iteratively updated in the direction opposite to the gradient in order to reduce the cost. We also have some important variants of the GD method, such as the stochastic gradient descent (SGD) method and the SGD method with momentum to improve training efficiency and stability.
+
+In this chapter, we discuss the GD method and some of its variants.  We first introduce the fundamental idea of the GD method in \sect{gradient.descent.methods.sec} and give three ways to implement this method, namely, the batch GD method, the SGD method, and the mini-batch GD method. In \sect{momentum.adaptive.GD.sec}, we discuss some important modifications of the mini-batch GD method mainly to accelerate the convergence. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Gradient Descent Methods}
+\label{gradient.descent.methods.sec}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Consider a cost function $\mathcal{C}(\bfm{\Theta})$ as given in \defi{loss.cost.function.def}. The aim is to obtain a $\bfm{\Theta}^*$ 
+such that
+$$\bfm{\Theta}^* = \argmin_{\bfm{\Theta}} \mathcal{C}(\bfm{\Theta}).$$
+In simple cases (like linear regression), we can obtain $\bfm{\Theta}^*$ analytically. But in deep learning, $\mathcal{C}(\bfm{\Theta})$ is nonlinear and has a large number of parameters. Hence, we need an efficient method to obtain (at least approximately) $\bfm{\Theta}^*$. 
+
+To iteratively minimize the cost function, we need to know in which direction to move $\bfm{\Theta}$ to decrease the cost most efficiently.  This direction is determined by the gradient $\nabla_{\boldsymbol{\Theta}}\mathcal{C}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Batch Gradient Descent Method}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Let us consider a simple case of $\bfm{\Theta}=(w_1, w_2, \ldots, w_n)\in \R^n$ to motivate why we update the weights in the gradient direction $\nabla_{\boldsymbol{\Theta}}\mathcal{C}$.  
+
+Let us start with an arbitrarily chosen vector $\bfm{w}_0\in \R^n$. We want to move to a new vector 
+$$\bfm{w}_1 = \bfm{w}_0 + \eta \bfm{v},$$ 
+for a small step size $\eta>0$, where the direction $\bfm{v}$ is chosen such that $\mathcal{C}(\bfm{w}_1) < \mathcal{C}(\bfm{w}_0)$. 
+
+Using the first-order Taylor expansion, we have
+\nbea
+\mathcal{C}(\bfm{w}_1) = \mathcal{C}(\bfm{w}_0) + \eta \, \langle \nabla_{\bfm{w}} \mathcal{C}(\bfm{w}_0), \bfm{v} \rangle + O(\eta^2).
+\neea
+Neglecting higher-order terms of $O(\eta^2)$, the change in the cost function is approximately
+$$
+\mathcal{C}(\bfm{w}_1) - \mathcal{C}(\bfm{w}_0) \approx  \eta \, \langle \nabla_{\bfm{w}} \mathcal{C}(\bfm{w}_0), \bfm{v} \rangle.
+$$
+To achieve a rapid decrease, we need to choose the direction vector $\bfm{v}$ such that $\mathcal{C}(\bfm{w}_1) - \mathcal{C}(\bfm{w}_0)$ gives the largest decrease in the linear approximation (neglecting $O(\eta^2)$ terms).
+
+Using the Cauchy-Schwarz inequality, we get
+$$
+\langle \nabla_{\bfm{w}} \mathcal{C}(\bfm{w}_0), \bfm{v} \rangle \ge -\| \nabla_{\bfm{w}} \mathcal{C}(\bfm{w}_0)\| \, \|\bfm{v}\|,
+$$
+and equality occurs when
+$$\bfm{v} = -\nabla_{\bfm{w}} \mathcal{C}(\bfm{w}_0).$$
+Thus, the direction of \hl{steepest descent} is the negative gradient, and the update rule becomes
+$$
+\bfm{w}_1 = \bfm{w}_0 - \eta \, \nabla_{\bfm{w}} \mathcal{C}(\bfm{w}_0).
+$$
+In general, we may not reach the optimal vector $\bfm{w}^*$ in a single step. So, we need to apply the update rule repeatedly in order to move step by step in the direction of the negative gradient, until the cost function stops decreasing significantly.
+This leads to the general iterative \hl{gradient descent method} (GDM), given by
+\bea\label{batchGD.eq}
+\bfm{\Theta}_{k+1} = \bfm{\Theta}_{k} - \eta \, \nabla_{\boldsymbol{\Theta}} \mathcal{C}(\bfm{\Theta}_{k}), 
+\quad k = 0,1,2,\dots,
+\eea
+where $\eta > 0$ is the \hl{learning rate} and $\bfm{\Theta}_{0}$ is an initial guess.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}[Gradient System]
+\label{gradient.system.rem}
+Again, for the sake of simplicity, let us consider $\bfm{\Theta} = \bfm{w} \in \R^n$, an $n$-dimensional vector. 
+The gradient descent iteration \eqref{batchGD.eq} can be written as 
+$$
+\frac{\bfm{w}_{k+1} - \bfm{w}_{k}}{\eta} = - \nabla_{\bfm{w}} \mathcal{C}(\bfm{w}_{k}), 
+\quad k = 0,1,2,\dots
+$$
+with step size $\eta>0$.
+
+Interpreting $t_k=k\eta$ as a discrete time, the above scheme is the explicit (forward) Euler discretization of the system of ordinary differential equations
+$$
+\dot{\bfm{w}} = - \nabla_{\bfm{w}} \mathcal{C}(\bfm{w}).
+$$
+Such a system is called a \hl{gradient system}.  Thus, the gradient descent update rule can be viewed as an approximation  of the gradient system or the \hl{gradient flow}.
+
+Further, assume that $\mathcal{C}\in C^2(\mathbb{R}^n)$ and the Hessian $\nabla_{\bfm{w}}^2 \mathcal{C}$ is bounded (the gradient $\nabla_{\bfm{w}}\mathcal{C}$ is Lipschitz) in a neighborhood of a nondegenerate local minimum $\bfm{w}^*$ (strict minimum). Then, by choosing $\bfm{w}_0$ in this neighborhood, the piecewise linearly interpolated trajectory computed using the above Euler scheme converges (uniformly on any compact time interval) to the  solution of the above gradient system as $\eta \rightarrow 0$.
+
+As a consequence, a minimizer of a $C^2$ cost function can be viewed as an equilibrium point of the above gradient system in the parameter space. It is known that strict (nondegenerate) minima of $\mathcal{C}$ are asymptotically stable equilibrium points of the above gradient system.
+
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Consider the gradient flow
+$$
+\dot{\bfm{w}}(t) \;=\; -\,\nabla_{\bfm{w}} \mathcal{C}(\bfm{w}(t)), 
+\qquad \bfm{w}(0)=\bfm{w}_0,
+$$
+associated with a cost function $\mathcal{C}:\mathbb{R}^n \to \mathbb{R}$. Show that the cost function is non-increasing along the trajectories of this gradient system, i.e.
+$$
+\frac{d}{dt}\,\mathcal{C}(\bfm{w}(t)) \;\leq\; 0, \qquad t\ge0.
+$$
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{algorithm}[Batch Gradient Descent Method]
+
+\textbf{Input:} 
+\begin{enumerate}
+\item Initial guess $\bfm{\Theta}_0 \in \R^n$;
+\item Learning rate (step size) $\eta>0$;
+\item Maximum iterations $K$.
+\end{enumerate}
+\textbf{Processing:}\\
+For $k = 0,1,2,\dots,K-1$\\
+\begin{itemize}[leftmargin=6em]
+    \item[\textbf{Step 1:}] 
+    	Compute the gradient 
+$\bfm{g}_k = \nabla_{\bfm{\Theta}} \mathcal{C}(\bfm{\Theta}_k)$\\
+(using the backpropagation algorithm for the neural network).
+    \item[\textbf{Step 2:}]  Update the parameter:
+    $$
+    \bfm{\Theta}_{k+1} = \bfm{\Theta}_k - \eta \, \bfm{g}_k.
+    $$
+\end{itemize}
+\textbf{Output:} Approximate minimizer $\bfm{\Theta}_K$.
+
+\end{algorithm}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{note}
+The gradient descent method is also called as the \hl{steepest descent method}.  Since the cost function includes the loss function evaluated at all the examples of a dataset, the method in the above algorithm is also called the \hl{batch gradient descent method} or \hl{batch steepest descent method}.
+\end{note}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Stochastic Gradient Descent (SGD)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Recall, from \defi{loss.cost.function.def}, that the cost function is defined as
+$$
+\mathcal{C}(\bfm{\Theta}) = \frac{1}{N}\sum_{i=1}^N \ell_i(\bfm{\Theta}),~~ \ell_i(\bfm{\Theta}) = \ell\big(\bfm{y}_i,\tilde{\bfm{y}}_i;\bfm{\Theta}\big),
+$$
+where $\ell$ is the loss corresponding to a single example $(\bfm{x}_i, \bfm{y}_i)$ of the dataset $\mathcal{D}$, and $\tilde{\bfm{y}}_i$($=\tilde{\bfm{y}}_i(\bfm{\Theta})$) is the network prediction for the input $\bfm{x}_i$. The gradient is therefore given by
+$$
+\nabla_{\bfm{\Theta}} \mathcal{C}(\bfm{\Theta})
+= \frac{1}{N}\sum_{i=1}^N \nabla_{\bfm{\Theta}} \ell\big(\bfm{y}_i,\tilde{\bfm{y}}_i;\bfm{\Theta}\big).
+$$
+
+Since, for each iteration of GDM, the gradient has to be computed using the entire dataset of size $N$, the computational cost of evaluating \eqref{batchGD.eq} per iteration grows linearly with $N$. Since deep learning often involves large-scale datasets, the batch gradient descent method becomes prohibitively expensive.
+
+An alternate approach is the \hl{stochastic gradient descent} method (SGD) which replaces the gradient  of the cost function by the gradient of the per-sample cost $\ell_{i_k}(\bfm{\Theta})$ for a randomly chosen sample $(\bfm{x}_{i_k},\bfm{y}_{i_k})$. For an initial choice $\bfm{\Theta}_{0}$, the update rule for each iteration is
+\bea\label{SGD}
+\bfm{\Theta}_{k+1} = \bfm{\Theta}_k - \eta \, \nabla_{\bfm{\Theta}} \ell_{i_k}(\bfm{\Theta}_k),
+\eea
+where  $i_k \sim
+\operatorname{Uniform}\{1,\ldots,N\}$ (i.i.d.), for each $k=0,1,2, \ldots.$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Write the algorithm for the stochastic gradient descent method.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The iterate $\bfm{\Theta}_k$ depends only on $\bfm{\Theta}_0$ and $i_0,\ldots,i_{k-1}$.  Since $i_k$ is uniformly sampled, we have
+$$
+\mathbb{E}\!\left[\nabla_{\bfm{\Theta}} \ell_{i_k}(\bfm{\Theta}_k)\, | \, \bfm{\Theta}_k \right]
+= \nabla_{\bfm{\Theta}} \mathcal{C}(\bfm{\Theta}_k).
+$$
+and therefore, $\nabla_{\bfm{\Theta}} \ell_{i_k}(\bfm{\Theta}_k)$ is an unbiased estimator of the cost gradient.
+
+
+Thus, SGD can be viewed as a noisy discretization of the gradient system. The  stochasticity introduced by the procedure often helps in escaping saddle points and shallow local minima. However, it causes fluctuations in the trajectory and leads to slow convergence.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+\begin{figure}
+\input{Figures/Ch05LossVsCost.png}
+\caption{The two individual loss surfaces $\ell_1$ and $\ell_2$ corresponding to two training examples, and their average, the cost function $\mathcal{C}$ given in \exam{LossVsCost.ex} is depicted. Each individual loss is a parabolic cylinder with an infinitely extended valley, whereas their average is an elliptic paraboloid with a unique minimum.}
+\label{LossVsCost.fig}
+\end{figure}
+\end{center}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{example}\label{LossVsCost.ex}
+
+Consider a linear model 
+$$ \widehat{y}=w_1x+w_2 $$ 
+and a training dataset with two examples 
+$$\mathcal{D} = \big\{ (x_1,y_1)=(-1,1),~ (x_2,y_2)=(1,2) \big\}. $$ 
+Using the squared-error loss 
+$$ \ell_i(w_1,w_2) = \frac{1}{2}\left(y_i-\widehat{y}_i\right)^2, ~i=1,2,$$ 
+the losses corresponding to the two examples are 
+$$\begin{array}{rcl} 
+\ell_1(w_1,w_2) &=& \frac12(1+w_1-w_2)^2, \\
+\ell_2(w_1,w_2) &=& \frac12(2-w_1-w_2)^2. 
+\end{array}$$
+The cost function is given by
+$$\begin{array}{rcl} 
+\mathcal{C}(w_1,w_2) &=& \dfrac{\ell_1(w_1,w_2)+\ell_2(w_1,w_2)}{2} \\ 
+&=& \dfrac14\left[(1+w_1-w_2)^2 +(2-w_1-w_2)^2\right]. 
+\end{array}$$
+Geometrically, each individual loss is a parabolic cylinder, as depicted in \figu{LossVsCost.fig}, where there is a whole line along which the loss remains zero. Thus, each individual loss surface has a valley that is infinitely extended in one direction. In contrast, the cost function surface is an elliptic paraboloid with a unique minimum, as observed in \figu{LossVsCost.fig}. 
+\end{example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We observed that the mean-square cost function in the above example has a unique minimum. However, this is not always the case, even for linear models.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Consider a linear model
+$$
+\widehat{y}_i=\mathbf{x}_i^{T}\mathbf{w},
+\qquad i=1,\ldots,N,
+$$
+and the squared-error cost function
+$$
+\mathcal{C}(\mathbf{w})
+=
+\frac{1}{2N}\sum_{i=1}^{N}
+\left(y_i-\mathbf{x}_i^{T}\mathbf{w}\right)^2.
+$$
+Suppose that the Hessian matrix
+$$
+H=\nabla^2\mathcal{C}(\mathbf{w})
+$$
+is positive definite. Prove that the cost function $\mathcal{C}$ has a unique minimum.
+
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The uniqueness of the minimizer $\bfm{w}^*$ established above is a consequence of the cost function $\mathcal{C}$ being \hl{strict convexity}. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+With the assumptions of the above problem, show that the cost function $\mathcal{C}$ is strictly convex.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{remark}[Global versus Local Convexity]
+
+For the linear model considered above, the Hessian
+$$
+\nabla^2\mathcal{C}(\bfm{w})=H=\frac{1}{N}X^TX
+$$
+is independent of $\bfm{w}$, and it is positive definite at \emph{every} point of $\mathbb{R}^n$ whenever $X$ has full column rank. Consequently, $\mathcal{C}$ is strictly convex on the whole of $\mathbb{R}^n$. Hence $\bfm{w}^*$ is the global minimizer.
+
+For a genuinely nonlinear model, the Hessian of $\mathcal{C}$ typically varies with $\bfm{w}$, and hence need not be positive definite everywhere. Consequently, $\mathcal{C}$ need not be globally convex.  Therefore, as in \rema{gradient.system.rem}, the positive definiteness of the Hessian near a nondegenerate critical point $\bfm{w}^*$ gives strict convextiy of $\mathcal{C}$ only locally, in a small neighborhood of $\bfm{w}^*$. So, we can only expect $\bfm{w}^*$ to be a local minimizer.
+\end{remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mini-batch Gradient Descent}\label{mini.batch.gd.subs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The batch GD method uses the gradient of the cost surface, which is the average of the gradient of the loss function evaluated at all the training examples.  This results in a path that smoothly descends towards the minimum, but it is computationally expensive. On the other hand, the stochastic GD method uses the gradient corresponding to a randomly selected training example at each iteration. This improves computational efficiency, but its path is more irregular. \figu{BatchVsStocGD.fig} depicts a visual illustration of the typical paths followed by the batch GD and stochastic GD methods.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}
+\centering
+\input{Figures/Ch05BatchVsStochastic.png}
+\caption{Typical paths followed by batch GD and stochastic GD from the same starting point. The ellipses represent level curves of the cost function, with the innermost curve surrounding its minimum.}
+\label{BatchVsStocGD.fig}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A compromise between batch GD and SGD is to average the gradients over a small randomly chosen subset (mini-batch) $\mathcal{B}_k\subset \{1,\dots,N\}$ with $|\mathcal{B}_k|=M\ll N$. The update reads
+\bea\label{miniGD}
+\bfm{\Theta}_{k+1}
+= \bfm{\Theta}_k -  \eta \nabla_{\bfm{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\bfm{\Theta}_k) ,
+\eea
+where
+$$
+\mathcal{C}_{\mathcal{B}_k}(\bfm{\Theta}_k) = \frac{1}{M}\sum_{i\in \mathcal{B}_k}
+\ell_i(\bfm{\Theta}_k).
+$$
+This method is called the \hl{mini-batch gradient descent method}.
+Mini-batches reduce the variance of the stochastic gradient and provide a better computational efficiency than GD method. In practice, batch sizes such as $32$, $64$, or $128$ are widely used.
+
+Another approach in mini-batch gradient descent method, which is common in practice, is the epoch-wise training. Here, in each epoch, the entire training dataset is first randomly shuffled and then divided into mini-batches of size $M\ll N$.  This results in at least $N/M$ mini-batches, which are used to update $\bfm{\Theta}$ sequentially within that epoch.  If $N$ is not exactly divisible by $M$, then the last mini-batch of the epoch contains the remaining number of examples.  Thus, each mini-batch produces one parameter update, and one epoch corresponds to a complete pass over the training dataset, where all mini-batches are processed once. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Write the algorithm for the epoch-wise training of a mini-batch gradient descent method.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Consider the mini-batch gradient estimator
+$$
+\bfm{g}_{\mathcal{B}_k}(\bfm{\Theta}) = \frac{1}{M}\sum_{i\in \mathcal{B}_k} \bfm{g}_i(\bfm{\Theta}), \qquad \bfm{g}_i(\bfm{\Theta}) := \nabla_{\bfm{\Theta}} \ell_i(\bfm{\Theta}),
+$$
+where the indices in $\mathcal{B}_k\subset\{1,\ldots,N\}$, with $|\mathcal{B}_k|=M$, are drawn independently and uniformly from $\{1,\ldots,N\}$, as in the SGD sampling scheme. Let
+$$
+\sigma^2(\bfm{\Theta}) := \mathbb{E}\left[\|\bfm{g}_{i_k}(\bfm{\Theta}) - \nabla_{\bfm{\Theta}}\mathcal{C}(\bfm{\Theta})\|^2 \,|\, \bfm{\Theta}\right]
+$$
+denote the variance of the single-sample SGD gradient estimator. Show that
+$$
+\mathbb{E}\left[\|\bfm{g}_{\mathcal{B}_k}(\bfm{\Theta}) - \nabla_{\bfm{\Theta}}\mathcal{C}(\bfm{\Theta})\|^2 \,|\, \bfm{\Theta}\right] = \frac{\sigma^2(\bfm{\Theta})}{M}.
+$$
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Momentum and Adaptive Gradient Methods}
+\label{momentum.adaptive.GD.sec}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this section, we discuss some variants of the GD method discussed in the previous section.  These variants are proposed to accelerate the convergence of the GD method.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Momentum Method}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Recall, in physics, the momentum of a moving particle is defined as the product of mass and velocity of the particle. Taking the physical motivation, we add an extra term $\mu \bfm{v}$ to the mini-batch SGD method to get
+\begin{equation}
+\bfm{\Theta}_{k+1} = \bfm{\Theta}_{k} - \eta \nabla_{\bfm{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\bfm{\Theta}_k) + \mu \bfm{v}_k,~k=1,2,\ldots,\label{mbSGD.momentum.eq}
+\end{equation}
+is the mini-batch cost function, $\mu\in [0, 1)$ is the \hl{momentum parameter}, and
+$$
+\bfm{v}_k = \bfm{\Theta}_{k} - \bfm{\Theta}_{k-1},
+$$
+which carries the memory of the previous update direction into the future updates. As will be seen from the physical derivation below, $\mu$ plays the role of a friction (damping) coefficient, while $\bfm{v}_k$ resembles the velocity of a moving particle.
+
+By taking $\bfm{v}_0=\bfm{0}$, the iterative formula \eqref{mbSGD.momentum.eq} can be rewritten as
+\begin{equation}
+\left.\begin{array}{lcl}
+\bfm{v}_{k+1} &=& \mu \bfm{v}_k - \eta \nabla_{\bfm{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\bfm{\Theta}_k), \\
+\bfm{\Theta}_{k+1} &=& \bfm{\Theta}_k + \bfm{v}_{k+1}, ~k=1,2,\ldots,
+\end{array}\right\}\label{momentum.formula.eq}
+\end{equation}
+and is referred to as the \hl{momentum method}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Recall, the Newton's second law states 
+\begin{center}
+mass $\times$ acceleration = force
+\end{center}
+For a particle moving on the cost surface, we have
+$$\begin{array}{rcl}
+\text{force} &=& \text{frictional force}\\
+&&~~ + \text{gravitational force driving the particle towards regions of lower cost}
+\end{array}$$
+Mathematically, the Newton's second law can be written as
+$$
+m \ddot{\bfm{\Theta}} =
+ - m\gamma\dot{\mathbf{\Theta}}  -\nabla \mathcal{C}_{\mathcal{B}_k}(\mathbf{\Theta}),
+$$
+where $\gamma>0$ is the damping coefficient and $m>0$ is the mass of the particle.
+
+Considering the approximations
+$$
+\ddot{\bfm{\Theta}} \approx \frac{ \mathbf{\Theta}_{k+1} -2\mathbf{\Theta}_k +\mathbf{\Theta}_{k-1} }{h^2}
+~\text{and}~
+\dot{\mathbf{\Theta}} \approx \frac{\mathbf{\Theta}_k-\mathbf{\Theta}_{k-1}}{h},
+$$
+for some sufficiently small $h>0$, find the learning rate $\eta$ and the momentum parameter $\mu$, such that the Newton's second law reduces to the iterative formula \eqref{momentum.formula.eq} of the momentum method.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The momentum term can also be interpreted from a control-theoretic perspective. 
+Treating $\bfm{v}_k$ as a control input, the term $\mu \bfm{v}_k$ acts as a feedback term with $\mu$ playing the role of a \hl{feedback gain}. 
+This feedback regulates how strongly past velocity influences the current update, smoothing oscillations and accelerating convergence along consistent descent directions.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Let $\{\bfm{\Theta}_k\}$ be computed using the momentum method, and suppose the gradient $\nabla_{\bfm{\Theta}} \mathcal{C}_{\mathcal{B}_k}(\bfm{\Theta}_k) \approx \bfm{g}$, for every $k$, where $\bfm{g}$ is a constant vector. Show that 
+$$
+\lim_{k\to \infty} \bfm{v}_k \approx -\frac{\eta}{1-\mu}\,\bfm{g}.
+$$
+In other words, show that the momentum method reduces to the mini-batch gradient descent method with an effective learning rate $\eta/(1-\mu)$ in regions of low curvature.
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Nesterov Accelerated GD Method}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The momentum method discussed in the above subsection evaluates the gradient of the cost function at the current iteration value $\bfm{\Theta}_k$ while updating the next iteration. Since the momentum is in the direction $\mu \bfm{v}_k$, the convergence can be further improved by evaluating the cost gradient at the \hl{look-ahead} point
+$$\widetilde{\bfm{\Theta}}_k = \bfm{\Theta}_k + \mu \bfm{v}_k.$$
+This method is called the \hl{Nesterov Accelerated Gradient Descent} (NAGD) method, and is given by
+\begin{equation}
+\left.\begin{array}{lcl}
+\bfm{v}_{k+1} &=& \mu \bfm{v}_k - \eta \nabla_{\bfm{\Theta}}
+\mathcal{C}_{\mathcal{B}_k}(\widetilde{\bfm{\Theta}}_k), \\
+\bfm{\Theta}_{k+1} &=& \bfm{\Theta}_k + \bfm{v}_{k+1}, ~k=1,2,\ldots,
+\end{array}\right\}\label{NAGD.formula.eq}
+\end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Let $\Theta \in \mathbb{R}$ and consider the quadratic cost $\mathcal{C}(\Theta) = \frac12 a \Theta^2$, $a>0$. Let $(\Theta_k, v_k)$ be obtained using the Nesterov update rule \eqref{NAGD.formula.eq}.
+\begin{enumerate}
+\item Show that $(\Theta_k, v_k)$ satisfies the linear recursion
+$$
+\begin{pmatrix}\Theta_{k+1}\\ v_{k+1}\end{pmatrix}
+= M_{\mathrm{NAG}} \begin{pmatrix}\Theta_{k}\\ v_{k}\end{pmatrix}, \qquad
+M_{\mathrm{NAG}} = \begin{pmatrix}1-\eta a & \mu(1-\eta a)\\ -\eta a & \mu(1-\eta a)\end{pmatrix}.
+$$
+\item Compare $M_{\mathrm{NAG}}$ with the matrix $M$ obtained for the classical momentum method on the same quadratic cost. Identify the extra factor contributed by the look-ahead point.
+\item Fix $a=1$, $\eta=0.1$, and $\mu=0.9$. Compute the eigenvalues and the spectral radius of both $M$ and $M_{\mathrm{NAG}}$ for these values, and verify that $\rho(M_{\mathrm{NAG}}) < \rho(M)$, where $\rho(M)$ is the spectral radius of the matrix M defined as
+$$
+\rho(M) := \max\{ |\lambda| : \lambda \text{ is an eigenvalue of } M \}.
+$$
+\end{enumerate}
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{note}
+For any iterative method of the form
+$$
+\bfm{x}_{k+1} = M \bfm{x}_k, \qquad k=0,1,2,\ldots,
+$$
+where $M$ is the iteration matrix. Let $\lambda$ be an eigenvalue of $M$ with $|\lambda|=\rho(M)$. If $\bfm{x}_0$ has a nonzero component along the eigenspace of $\lambda$, then
+$$
+\|\bfm{x}_k\| \approx C\, \rho(M)^k,
+$$
+for large values of $k$, for some constant $C>0$ depending on $\bfm{x}_0$. If $\bfm{x}_0$ has zero component along this eigenspace, the same asymptotic form holds with $\rho(M)$ replaced by the largest $|\lambda'|$ among the eigenvalues $\lambda'$ for which $\bfm{x}_0$ has a nonzero component.
+
+The following statement, however, holds for every initial vector $\bfm{x}_0$, with no such qualification: $\bfm{x}_k \to \bfm{0}$ as $k\to\infty$ if and only if $\rho(M) < 1$. Further, whenever the geometric estimate above applies, a smaller spectral radius means a faster rate of convergence, and $\rho(M)$ is the number that governs this rate.
+\end{note}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Adaptive Step Size Methods}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+So far, we have kept the learning rate $\eta$ constant for all the parameters and across all the iterations.  This is the simplest form of a GD method, whereas the learning rate can depend on the iteration as
+$$
+\bfm{\Theta}_{k+1} = \bfm{\Theta}_k  - \eta_k \nabla_{\bfm{\Theta}}
+\mathcal{C}(\bfm{\Theta}_k), k=0,1,2,\ldots.
+$$
+In fact, it has been proved (omitted for this course) that the stochastic GD method
+$$
+\bfm{\Theta}_{k+1} = \bfm{\Theta}_k  - \eta_k\, \nabla_{\bfm{\Theta}} \ell_{i_k}(\bfm{\Theta}_k), k=0,1,2,\ldots.
+$$
+converges if the sequence $\{\eta_k\}$ satisfies the \hl{Robbins–Monro conditions}
+$$
+\sum_{k=0}^\infty \eta_k = \infty,~~\sum_{k=0}^\infty \eta_k^2 < \infty.
+$$
+For instance, the sequence of learning rate
+$$\eta_k = \frac{C_0}{C_1+k},$$
+for some positive constants $C_0$ and $C_1$, satisfies the above two conditions.
+
+Further, to accelerate the convergence, it is also possible to vary the learning rate across parameters. In this subsection, we present some of the important such methods.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{AdaGrad.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Each parameter $\Theta_j$ has its own effective learning rate scaled by the accumulated squared gradients given by
+$$
+\Theta_{j,k+1} = \Theta_{j,k} - \frac{\eta}{\sqrt{G_{j,k} + \epsilon}} \, g_{j,k},
+$$
+where $g_{j,k}$ is the $j$th component of the gradient $\bfm{g}_k = \nabla_\Theta \mathcal{C}(\Theta_k)$ at step $k$, 
+$$
+G_{j,k} = \sum_{i=0}^k g_{j,i}^2,
+$$
+and $\epsilon>0$ is a small constant added to avoid blow-up of the learning rate.
+
+The main advantage of AdaGrad is its ability to assign a different effective learning rate to each parameter based on its gradients of the past iterations. Thus, parameters with large gradients in the past receive smaller learning rates while parameters with smaller gradients retain larger updates. This is particularly important for sparse-gradient problems.  However, the disadvantage is that the accumulation $G_{j,k}$ only increases and consequently, the learning rate only decreases.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Root Mean Square Propagation (RMSProp)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In order to address AdaGrad’s disadvantage of decay in learning rate, RMSProp uses an exponential moving average of squared gradients given by
+$$
+G_{j,k} = \rho G_{j,k-1} + (1-\rho) g_{j,k}^2,
+$$
+where $0<\rho<1$. In this update, the effective learning rate depends more strongly on the gradients of the recent iterations, whereas the older ones get less weightage.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Adaptive Moments (Adam).}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We have seen that the AdaGrad updates the effective learning rates through cummulative history, whereas the RMSProp updates with a decaying memory.
+
+The \hl{Adam} method combines RMSProp with momentum by including the exponentially weighted moving averages of both gradients and squared gradients. The update rule for the \hl{Adam method} is given by
+$$\begin{array}{rcl}
+m_{j,k} &=& \beta_1 m_{j,k-1} + (1-\beta_1) g_{j,k}, \\
+v_{j,k} &=& \beta_2 v_{j,k-1} + (1-\beta_2) g_{j,k}^2, \\
+\Theta_{j,k+1} &=& \Theta_{j,k} - \frac{\eta}{\sqrt{\widehat{v}_{j,k}}+\epsilon}\, \widehat{m}_{j,k},~~k=0,1,2,\ldots,
+\end{array}$$
+for $\beta_1, \beta_2\in (0,1)$, and
+$$
+m_{j,-1} = 0,~~v_{j,-1} = 0,
+$$
+where $\widehat{m}_{j,k}$ and $\widehat{v}_{j,k}$ are \hl{bias-corrected estimates} given by
+$$
+\widehat{m}_{j,k} = \frac{m_{j,k}}{1-\beta_1^{k+1}},~~\widehat{v}_{j,k} = \frac{v_{j,k}}{1-\beta_2^{k+1}}.
+$$ 
+Adam is the most widely used optimizer in deep learning practice.
+
+The following problem clarifies the role of $\widehat{m}$ and $\widehat{v}$ through the concept of bias correction in statistical estimation.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{problem}
+Let $X$ be a random variable with mean $\mu$ and let $\{X_0,X_1,\ldots, X_N\}$ be independent and identically distributed samples from $X$. Consider the exponential moving average 
+$$
+\mu_{-1}=0,~~\mu_{k} = \beta \mu_{k-1} + (1-\beta) X_{k},~~k=0,1,2,\ldots, N,
+$$
+where $0< \beta < 1$.  Also define
+$$
+\widehat{\mu}_k = \frac{\mu_k}{1-\beta^{k+1}}.
+$$
+\begin{enumerate}
+\item Show that $\mu_k$ is a biased estimator of $\mu$. 
+\item Show that $\widehat{\mu}_k$ is an unbiased estimator of $\mu$.
+\end{enumerate}
+
+\end{problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{AdamW}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A commonly used variant of Adam is \hl{AdamW}, which uses a decoupled weight-decay term. Formally, one may
+consider the regularized cost
+$$
+\mathcal{C}_\lambda(\bfm{\Theta})
+=
+\mathcal{C}(\bfm{\Theta})
++
+\frac{\lambda}{2}
+\sum_j \Theta_j^2.
+$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{note}
+The details and motivation for the $L^2$ penalty will be discussed in the
+next chapter.
+\end{note}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In AdamW, the weight-decay term is applied separately from the adaptive
+gradient update. In componentwise form, the update is
+$$
+\Theta_{j,k+1}
+=
+\Theta_{j,k}
+-
+\eta\,
+\frac{\widehat m_{j,k}}
+{\sqrt{\widehat v_{j,k}}+\epsilon}
+-
+\eta\lambda\Theta_{j,k},
+$$
+where the bias-corrected estimates are obtained as in Adam, with the gradients computed without the penalty term.
+
+AdamW is widely used in the training of Transformer-based models and large language models. In particular, it is the default optimizer in the current (at the time of writing these notes) Hugging Face Transformers training framework.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
